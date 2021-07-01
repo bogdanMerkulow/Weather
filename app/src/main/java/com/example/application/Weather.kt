@@ -20,7 +20,7 @@ data class Weather(
 	}
 
 	fun getIconUrl(): String? {
-		return "https://openweathermap.org/img/wn/${iconName}.png"
+		return "https://openweathermap.org/img/wn/${iconName}@4x.png"
 	}
 
 	fun getTitle(): String? {

@@ -7,6 +7,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -20,8 +22,8 @@ import com.bumptech.glide.Glide
 class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener {
 	private lateinit var adapter: WeatherListRecyclerViewAdapter
 	private var q: String = ""
-	private var headerImageUrl = ""
 	private var title: String? = null
+
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -32,15 +34,18 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 
 	@SuppressLint("SetTextI18n")
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-		var firstElement: Boolean = true
+		var firstElement = true
 		val rootView = inflater.inflate(R.layout.fragment_weather_list, container, false)
 		val rcWeatherList: RecyclerView = rootView.findViewById(R.id.rv_weather_list)
 		val progress: ProgressBar = rootView.findViewById(R.id.progress_circular)
 		val headerText: TextView = rootView.findViewById(R.id.header_text)
+		val imageAnimation = rootView.findViewById<ImageView>(R.id.header_image_animation)
 		val headerImage: ImageView = rootView.findViewById(R.id.header_image)
 		val viewModel = ViewModelProvider(this)[WeatherViewModel::class.java]
 		val vmLocationData = viewModel.getLocation()
 		val changeCityButton = rootView.findViewById<Button>(R.id.change_city)
+
+		imageAnimation.visibility = View.INVISIBLE
 
 		val fragmentContainer = rootView.findViewById<SwipeRefreshLayout>(R.id.swipe_refresh)
 		fragmentContainer.setOnRefreshListener{
@@ -70,16 +75,25 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 			val vmData = viewModel.getData(q, location[0], location[1], false, "")
 			vmData?.observe(viewLifecycleOwner, { data ->
 				if(data[0].getError()){
-					headerText.text = "city not found"
-					activity?.title = ""
+					headerText.text = ""
+					activity?.title = "city not found"
 					progress.visibility = View.INVISIBLE
 					return@observe
 				}
 				if(firstElement){
-					headerImageUrl = data[0].getIconUrl().toString()
+					val headerIconUrl = data[0].getIconUrl().toString()
+
+					if(headerIconUrl in animWeather){
+						val animationRotateCenter: Animation = AnimationUtils.loadAnimation(
+							activity, R.anim.gray_spinner_png
+						)
+						imageAnimation.visibility = View.VISIBLE
+						imageAnimation.startAnimation(animationRotateCenter)
+					}
+
 					Glide
 						.with(this)
-						.load(headerImageUrl)
+						.load(headerIconUrl)
 						.into(headerImage)
 					firstElement = false
 				}
@@ -92,6 +106,7 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 				title = data[0].getCity()
 			})
 		})
+
 		return rootView
 	}
 
@@ -115,5 +130,14 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 		val fragment = WeatherListFragment()
 		transaction?.replace(R.id.fragment_container, fragment)
 		transaction?.commit()
+	}
+
+	companion object{
+		val animWeather = listOf(
+			"https://openweathermap.org/img/wn/02d@4x.png",
+			"https://openweathermap.org/img/wn/10d@4x.png",
+			"https://openweathermap.org/img/wn/02d@4x.png",
+			"https://openweathermap.org/img/wn/02n@4x.png",
+		)
 	}
 }

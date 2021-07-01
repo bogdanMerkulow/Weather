@@ -1,5 +1,6 @@
 package com.example.application
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -23,10 +24,6 @@ class WeatherDetailFragment : Fragment() {
 		val viewModel = ViewModelProvider(this)[WeatherViewModel::class.java]
 		val vmData = viewModel.getData(arguments?.getString("q")!!, arguments?.getString("lat")!!, arguments?.getString("lon")!!, true, arguments?.getString("date")!!)
 
-		actionBar = (activity as AppCompatActivity).supportActionBar!!
-		actionBar.setDisplayHomeAsUpEnabled(true)
-		actionBar.setHomeButtonEnabled(true)
-
 		activity?.title = arguments?.getString("title")
 		vmData?.observe(viewLifecycleOwner, { data ->
 			rcWeatherList.layoutManager = LinearLayoutManager(activity)
@@ -35,6 +32,13 @@ class WeatherDetailFragment : Fragment() {
 			progress.visibility = View.INVISIBLE
 		})
 		return rootView
+	}
+
+	override fun onAttach(context: Context) {
+		super.onAttach(context)
+		actionBar = (activity as AppCompatActivity).supportActionBar!!
+		actionBar.setDisplayHomeAsUpEnabled(true)
+		actionBar.setHomeButtonEnabled(true)
 	}
 
 	override fun onDetach() {
