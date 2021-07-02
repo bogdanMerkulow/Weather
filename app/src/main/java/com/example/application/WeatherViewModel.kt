@@ -21,11 +21,10 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
         get() = field
     val location: MutableLiveData<MutableList<String>> = MutableLiveData<MutableList<String>>()
         get() = field
-    var reload: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    val reload: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
         get() = field
-    var error: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    val error: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
         get() = field
-        private set
 
     fun loadData(q: String, lat: String, lon: String, detail: Boolean, day: String = "0") {
         reload.postValue(true)

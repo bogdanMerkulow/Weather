@@ -45,10 +45,7 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 		val headerText: TextView = rootView.findViewById(R.id.header_text)
 		val imageAnimation = rootView.findViewById<ImageView>(R.id.header_image_animation)
 		val headerImage: ImageView = rootView.findViewById(R.id.header_image)
-
 		val changeCityButton = rootView.findViewById<Button>(R.id.change_city)
-
-		imageAnimation.visibility = View.INVISIBLE
 
 		val fragmentContainer = rootView.findViewById<SwipeRefreshLayout>(R.id.swipe_refresh)
 		fragmentContainer.setOnRefreshListener{
@@ -91,7 +88,9 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 				}
 
 				val headerIconUrl = data[0].getIconUrl().toString()
-
+				imageAnimation.visibility = View.GONE
+				imageAnimation.clearAnimation()
+				Log.e("test123", headerIconUrl)
 				if (headerIconUrl in animWeather) {
 					val animationRotateCenter: Animation = AnimationUtils.loadAnimation(
 						activity, R.anim.gray_spinner_png
