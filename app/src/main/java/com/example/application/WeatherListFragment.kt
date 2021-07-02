@@ -36,7 +36,6 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 
 	@SuppressLint("SetTextI18n")
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-		var firstElement = true
 		val rootView = inflater.inflate(R.layout.fragment_weather_list, container, false)
 		val rcWeatherList: RecyclerView = rootView.findViewById(R.id.rv_weather_list)
 		val progress: ProgressBar = rootView.findViewById(R.id.progress_circular)
@@ -80,23 +79,22 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 					progress.visibility = View.INVISIBLE
 					return@observe
 				}
-				if (firstElement) {
-					val headerIconUrl = data[0].getIconUrl().toString()
 
-					if (headerIconUrl in animWeather) {
-						val animationRotateCenter: Animation = AnimationUtils.loadAnimation(
-							activity, R.anim.gray_spinner_png
-						)
-						imageAnimation.visibility = View.VISIBLE
-						imageAnimation.startAnimation(animationRotateCenter)
-					}
+				val headerIconUrl = data[0].getIconUrl().toString()
 
-					Glide
-						.with(this)
-						.load(headerIconUrl)
-						.into(headerImage)
-					firstElement = false
+				if (headerIconUrl in animWeather) {
+					val animationRotateCenter: Animation = AnimationUtils.loadAnimation(
+						activity, R.anim.gray_spinner_png
+					)
+					imageAnimation.visibility = View.VISIBLE
+					imageAnimation.startAnimation(animationRotateCenter)
 				}
+
+				Glide
+					.with(this)
+					.load(headerIconUrl)
+					.into(headerImage)
+
 				headerText.text = data[0].getTemp()
 				rcWeatherList.layoutManager = LinearLayoutManager(activity)
 				adapter = WeatherListRecyclerViewAdapter(data, this)
