@@ -23,6 +23,9 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
         get() = field
     var reload: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
         get() = field
+    var error: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+        get() = field
+        private set
 
     fun loadData(q: String, lat: String, lon: String, detail: Boolean, day: String = "0") {
         reload.postValue(true)
@@ -34,18 +37,15 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
         val call: Call<WeatherResponse> = service.getCurrentWeatherData(q = q, lat = lat, lon = lon, app_id = AppId)
 
         call.enqueue(object : Callback<WeatherResponse> {
-            @SuppressLint("SimpleDateFormat")
             override fun onResponse(call: Call<WeatherResponse>, response: Response<WeatherResponse>) {
                 if (response.code() == 200) {
                     val weatherResponse = response.body()!!
                     val weather =  mutableListOf<Weather>()
                     var lastTime = 0
                     weatherResponse.list.forEach{ list ->
-                        val sdf = SimpleDateFormat("E dd.MM hh:mm")
-                        val sdfCheck = SimpleDateFormat("dd")
                         val date = list.dt?.toLong()?.times(1000)?.let { Date(it) }
-                        val time = sdf.format(date)
-                        val checkTime = sdfCheck.format(date)
+                        val time = dateFormatTimeStamp.format(date)
+                        val checkTime = dateFormatDay.format(date)
 
                         val filterVariant: Boolean = if(detail){
                             day.equals(checkTime)
@@ -83,7 +83,7 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
             }
 
             override fun onFailure(call: Call<WeatherResponse>, t: Throwable) {
-                Log.e("failure", t.message.toString())
+                error.postValue(true)
             }
         })
     }
@@ -100,17 +100,21 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
             override fun onResponse(call: Call<LocationResponse>, response: Response<LocationResponse>) {
                 if (response.code() == 200) {
                     val locationResponse = response.body()!!
-                    location?.postValue(mutableListOf(locationResponse.lat.toString(), locationResponse.lon.toString()))
+                    location.postValue(mutableListOf(locationResponse.lat.toString(), locationResponse.lon.toString()))
                 }
             }
 
             override fun onFailure(call: Call<LocationResponse>, t: Throwable) {
-                Log.e("failure", t.message.toString())
+                error.postValue(true)
             }
         })
     }
 
     companion object {
+        @SuppressLint("SimpleDateFormat")
+        val dateFormatTimeStamp = SimpleDateFormat("E dd.MM hh:mm")
+        @SuppressLint("SimpleDateFormat")
+        val dateFormatDay = SimpleDateFormat("dd")
         const val locationUrl = "http://ip-api.com/json/"
         const val BaseUrl = "https://api.openweathermap.org/"
         const val AppId = "c46b6b253436ddd455030408be9b19bf"

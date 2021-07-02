@@ -2,6 +2,8 @@ package com.example.application
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -22,6 +24,7 @@ import com.bumptech.glide.Glide
 class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener {
 	private lateinit var adapter: WeatherListRecyclerViewAdapter
 	private lateinit var viewModel: WeatherViewModel
+	private var noInternet = false
 	private var city: String = ""
 	private var title: String? = null
 
@@ -63,6 +66,13 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 				viewModel.loadData(editText.text.toString(), "", "", false, "")
 			}
 			builder.show()
+		}
+
+
+		viewModel.error.observe(viewLifecycleOwner){
+			activity?.title = "no internet connection  pull to refresh"
+			noInternet = true
+			progress.visibility = View.INVISIBLE
 		}
 
 		viewModel.reload.observe(viewLifecycleOwner){ reload ->
@@ -127,6 +137,13 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 	}
 
 	private fun refreshData() {
+		if(noInternet){
+			val transaction = activity?.supportFragmentManager?.beginTransaction()
+			val fragment = WeatherListFragment()
+			transaction?.replace(R.id.fragment_container, fragment)
+			transaction?.commit()
+			return
+		}
 		viewModel.loadData(this.city, "", "", false, "")
 	}
 
