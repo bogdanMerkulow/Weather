@@ -59,13 +59,7 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 			val editText  = dialogLayout.findViewById<EditText>(R.id.city_edit_text)
 			builder.setView(dialogLayout)
 			builder.setPositiveButton("enter") { _, _ ->
-				val transaction = activity?.supportFragmentManager?.beginTransaction()
-				val fragment = WeatherListFragment()
-				val bundle = Bundle()
-				bundle.putString("q", editText.text.toString())
-				fragment.arguments = bundle
-				transaction?.replace(R.id.fragment_container, fragment)
-				transaction?.commit()
+				viewModel.loadData(editText.text.toString(), "", "", false, "")
 			}
 			builder.show()
 		}
