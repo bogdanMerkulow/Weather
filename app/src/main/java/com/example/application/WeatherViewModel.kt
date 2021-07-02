@@ -40,10 +40,10 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
                     val weatherResponse = response.body()!!
                     val weather =  mutableListOf<Weather>()
                     var lastTime = 0
-                    for(i in 0 until 35){
+                    weatherResponse.list.forEach{ list ->
                         val sdf = SimpleDateFormat("E dd.MM hh:mm")
                         val sdfCheck = SimpleDateFormat("dd")
-                        val date = weatherResponse.list[i].dt?.toLong()?.times(1000)?.let { Date(it) }
+                        val date = list.dt?.toLong()?.times(1000)?.let { Date(it) }
                         val time = sdf.format(date)
                         val checkTime = sdfCheck.format(date)
 
@@ -56,10 +56,10 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
                         if(filterVariant) {
                             weather.add(
                                 Weather(
-                                    iconName = weatherResponse.list[i].weather[0].icon,
+                                    iconName = list.weather[0].icon,
                                     title = time,
-                                    temp = (floor(weatherResponse.list[i].main.temp - 272.15)).toFloat(),
-                                    state = weatherResponse.list[i].weather[0].description,
+                                    temp = (floor(list.main.temp - 272.15)).toFloat(),
+                                    state = list.weather[0].description,
                                     city = weatherResponse.city.name,
                                     lat = weatherResponse.city.coord?.lat.toString(),
                                     lon = weatherResponse.city.coord?.lon.toString(),
