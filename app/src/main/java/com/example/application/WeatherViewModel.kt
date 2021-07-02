@@ -27,15 +27,15 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
     fun loadData(q: String, lat: String, lon: String, detail: Boolean, day: String = "0") {
         reload.postValue(true)
         val retrofit = Retrofit.Builder()
-            .baseUrl(BaseUrl)
+            .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val service = retrofit.create(WeatherService::class.java)
-        val call: Call<WeatherResponse> = service.getCurrentWeatherData(q = q, lat = lat, lon = lon, app_id = AppId)
+        val call: Call<WeatherResponse> = service.getCurrentWeatherData(q = q, lat = lat, lon = lon, app_id = APP_ID)
 
         call.enqueue(object : Callback<WeatherResponse> {
             override fun onResponse(call: Call<WeatherResponse>, response: Response<WeatherResponse>) {
-                if (response.code() == 200) {
+                if (response.code() == RESPONSE_CODE_OK) {
                     val weatherResponse = response.body()!!
                     val weather =  mutableListOf<Weather>()
                     var lastTime = 0
@@ -55,7 +55,7 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
                                 Weather(
                                     iconName = list.weather[0].icon,
                                     title = time,
-                                    temp = (floor(list.main.temp - 272.15)).toFloat(),
+                                    temp = (floor(list.main.temp - KELVIN)).toFloat(),
                                     state = list.weather[0].description,
                                     city = weatherResponse.city.name,
                                     lat = weatherResponse.city.coord?.lat.toString(),
@@ -87,7 +87,7 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
 
     fun loadLocation(){
         val retrofit = Retrofit.Builder()
-            .baseUrl(locationUrl)
+            .baseUrl(LOCATION_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val service = retrofit.create(WeatherService::class.java)
@@ -95,7 +95,7 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
 
         call.enqueue(object : Callback<LocationResponse> {
             override fun onResponse(call: Call<LocationResponse>, response: Response<LocationResponse>) {
-                if (response.code() == 200) {
+                if (response.code() == RESPONSE_CODE_OK) {
                     val locationResponse = response.body()!!
                     location.postValue(mutableListOf(locationResponse.lat.toString(), locationResponse.lon.toString()))
                 }
@@ -108,12 +108,15 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
     }
 
     companion object {
+
         @SuppressLint("SimpleDateFormat")
         val dateFormatTimeStamp = SimpleDateFormat("E dd.MM hh:mm")
         @SuppressLint("SimpleDateFormat")
         val dateFormatDay = SimpleDateFormat("dd")
-        const val locationUrl = "http://ip-api.com/json/"
-        const val BaseUrl = "https://api.openweathermap.org/"
-        const val AppId = "c46b6b253436ddd455030408be9b19bf"
+        const val RESPONSE_CODE_OK = 200
+        const val LOCATION_URL = "http://ip-api.com/json/"
+        const val BASE_URL = "https://api.openweathermap.org/"
+        const val APP_ID = "c46b6b253436ddd455030408be9b19bf"
+        const val KELVIN = 272.15
     }
 }

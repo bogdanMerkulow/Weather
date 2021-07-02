@@ -15,15 +15,21 @@ import androidx.recyclerview.widget.RecyclerView
 
 class WeatherDetailFragment : Fragment() {
 	private lateinit var adapter: WeatherDetailRecyclerViewAdapter
+	private lateinit var viewModel: WeatherViewModel
 	private lateinit var actionBar: ActionBar
+
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
+		viewModel = ViewModelProvider(this)[WeatherViewModel::class.java]
+	}
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
 		val rootView = inflater.inflate(R.layout.fragment_weather_detail, container, false)
 		val rcWeatherList: RecyclerView = rootView.findViewById(R.id.rv_weather_list)
 		val progress: ProgressBar = rootView.findViewById(R.id.progress_circular)
-		val viewModel = ViewModelProvider(this)[WeatherViewModel::class.java]
-		activity?.title = arguments?.getString("title")
-		viewModel.loadData(arguments?.getString("q")!!, arguments?.getString("lat")!!, arguments?.getString("lon")!!, true, arguments?.getString("date")!!)
+		activity?.title = arguments?.getString(TITLE)
+		viewModel.loadData(arguments?.getString(CITY)!!, arguments?.getString(LAT)!!, arguments?.getString(
+			LON)!!, true, arguments?.getString(SELECTED_DATE)!!)
 
 		viewModel.data.observe(viewLifecycleOwner) { data ->
 			onLiveDataChangeData(data, rcWeatherList, progress)
@@ -54,5 +60,13 @@ class WeatherDetailFragment : Fragment() {
 		super.onDetach()
 		actionBar.setDisplayHomeAsUpEnabled(false)
 		actionBar.setHomeButtonEnabled(false)
+	}
+
+	companion object{
+		const val CITY = "q"
+		const val LON = "lon"
+		const val LAT = "lat"
+		const val TITLE = "title"
+		const val SELECTED_DATE = "date"
 	}
 }

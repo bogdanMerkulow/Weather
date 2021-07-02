@@ -29,7 +29,7 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		viewModel = ViewModelProvider(this)[WeatherViewModel::class.java]
-		val city = arguments?.getString("q").toString()
+		val city = arguments?.getString(CITY).toString()
 		if(!city.equals("null"))
 			this.city = city
 	}
@@ -114,7 +114,6 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 		val headerIconUrl = data[0].getIconUrl().toString()
 		imageAnimation.visibility = View.GONE
 		imageAnimation.clearAnimation()
-		Log.e("test123", headerIconUrl)
 		if (headerIconUrl in animWeather) {
 			val animationRotateCenter: Animation = AnimationUtils.loadAnimation(
 				activity, R.anim.gray_spinner_png
@@ -153,11 +152,11 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 		val transaction = activity?.supportFragmentManager?.beginTransaction()
 		val fragment = WeatherDetailFragment()
 		val bundle = Bundle()
-		bundle.putString("q", this.city)
-		bundle.putString("lat", weather.getCoords()[0])
-		bundle.putString("lon", weather.getCoords()[1])
-		bundle.putString("title", title)
-		bundle.putString("date", weather.getDayNumber())
+		bundle.putString(CITY, this.city)
+		bundle.putString(LAT, weather.getCoords()[0])
+		bundle.putString(LON, weather.getCoords()[1])
+		bundle.putString(TITLE, title)
+		bundle.putString(SELECTED_DATE, weather.getDayNumber())
 		fragment.arguments = bundle
 		transaction?.addToBackStack(null)
 		transaction?.replace(R.id.fragment_container, fragment)
@@ -177,6 +176,11 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 	}
 
 	companion object{
+		const val CITY = "q"
+		const val LON = "lon"
+		const val LAT = "lat"
+		const val TITLE = "title"
+		const val SELECTED_DATE = "date"
 		val animWeather = listOf(
 			"https://openweathermap.org/img/wn/02d@4x.png",
 			"https://openweathermap.org/img/wn/10d@4x.png",
