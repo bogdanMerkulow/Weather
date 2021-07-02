@@ -51,15 +51,15 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 		}
 
 
-		viewModel.error.observe(viewLifecycleOwner){
+		viewModel.getError().observe(viewLifecycleOwner){
 			onLiveDataChangeError(progress)
 		}
 
-		viewModel.reload.observe(viewLifecycleOwner){ reload ->
+		viewModel.isReload().observe(viewLifecycleOwner){ reload ->
 			onLiveDataChangeReload(reload, progress)
 		}
 
-		viewModel.location.observe(viewLifecycleOwner) { location ->
+		viewModel.getLocation().observe(viewLifecycleOwner) { location ->
 			onLiveDataChangeLocation(location, headerText, progress, imageAnimation, rcWeatherList, headerImage)
 		}
 
@@ -89,13 +89,13 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 		headerImage: ImageView
 	) {
 		viewModel.loadData(this.city, location.lat, location.lon, false, "")
-		viewModel.data.observe(viewLifecycleOwner) { data ->
+		viewModel.getData().observe(viewLifecycleOwner) { data ->
 			onLiveDataChangeData(data, headerText, progress, imageAnimation, rcWeatherList, headerImage)
 		}
 	}
 
 	private fun onLiveDataChangeData(
-		data: MutableList<Weather>,
+		data: List<Weather>,
 		headerText: TextView,
 		progress: ProgressBar,
 		imageAnimation: ImageView,

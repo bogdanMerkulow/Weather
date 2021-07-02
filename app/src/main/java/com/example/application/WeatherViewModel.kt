@@ -3,6 +3,7 @@ package com.example.application
 import android.annotation.SuppressLint
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import retrofit2.Call
 import retrofit2.Callback
@@ -14,14 +15,26 @@ import java.util.*
 import kotlin.math.floor
 
 class WeatherViewModel(application: Application) : AndroidViewModel(application) {
-    val data: MutableLiveData<MutableList<Weather>> = MutableLiveData<MutableList<Weather>>()
-        get() = field
-    val location: MutableLiveData<Coord> = MutableLiveData<Coord>()
-        get() = field
-    val reload: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
-        get() = field
-    val error: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
-        get() = field
+    private val data: MutableLiveData<MutableList<Weather>> = MutableLiveData<MutableList<Weather>>()
+    private val location: MutableLiveData<Coord> = MutableLiveData<Coord>()
+    private val reload: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    private val error: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+
+    fun getData(): LiveData<List<Weather>>{
+        return data as LiveData<List<Weather>>
+    }
+
+    fun getLocation(): LiveData<Coord>{
+        return location
+    }
+
+    fun isReload(): LiveData<Boolean>{
+        return reload
+    }
+
+    fun getError(): LiveData<Boolean>{
+        return error
+    }
 
     fun loadData(q: String, lat: String, lon: String, detail: Boolean, day: String = "0") {
         reload.postValue(true)

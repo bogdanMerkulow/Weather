@@ -31,7 +31,7 @@ class WeatherDetailFragment : Fragment() {
 		viewModel.loadData(arguments?.getString(CITY)!!, arguments?.getString(LAT)!!, arguments?.getString(
 			LON)!!, true, arguments?.getString(SELECTED_DATE)!!)
 
-		viewModel.data.observe(viewLifecycleOwner) { data ->
+		viewModel.getData().observe(viewLifecycleOwner) { data ->
 			onLiveDataChangeData(data, rcWeatherList, progress)
 		}
 
@@ -39,7 +39,7 @@ class WeatherDetailFragment : Fragment() {
 	}
 
 	private fun onLiveDataChangeData(
-		data: MutableList<Weather>,
+		data: List<Weather>,
 		rcWeatherList: RecyclerView,
 		progress: ProgressBar
 	) {
