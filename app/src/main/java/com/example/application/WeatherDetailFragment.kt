@@ -22,16 +22,25 @@ class WeatherDetailFragment : Fragment() {
 		val rcWeatherList: RecyclerView = rootView.findViewById(R.id.rv_weather_list)
 		val progress: ProgressBar = rootView.findViewById(R.id.progress_circular)
 		val viewModel = ViewModelProvider(this)[WeatherViewModel::class.java]
+		activity?.title = arguments?.getString("title")
 		viewModel.loadData(arguments?.getString("q")!!, arguments?.getString("lat")!!, arguments?.getString("lon")!!, true, arguments?.getString("date")!!)
 
-		activity?.title = arguments?.getString("title")
-		viewModel.data.observe(viewLifecycleOwner, { data ->
-			rcWeatherList.layoutManager = LinearLayoutManager(activity)
-			adapter = WeatherDetailRecyclerViewAdapter(data)
-			rcWeatherList.adapter = adapter
-			progress.visibility = View.INVISIBLE
-		})
+		viewModel.data.observe(viewLifecycleOwner) { data ->
+			onLiveDataChangeData(data, rcWeatherList, progress)
+		}
+
 		return rootView
+	}
+
+	private fun onLiveDataChangeData(
+		data: MutableList<Weather>,
+		rcWeatherList: RecyclerView,
+		progress: ProgressBar
+	) {
+		rcWeatherList.layoutManager = LinearLayoutManager(activity)
+		adapter = WeatherDetailRecyclerViewAdapter(data)
+		rcWeatherList.adapter = adapter
+		progress.visibility = View.INVISIBLE
 	}
 
 	override fun onAttach(context: Context) {

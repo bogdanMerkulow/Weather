@@ -1,9 +1,6 @@
 package com.example.application
 
-import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -37,7 +34,6 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 			this.city = city
 	}
 
-	@SuppressLint("SetTextI18n")
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		val rootView = inflater.inflate(R.layout.fragment_weather_list, container, false)
 		val rcWeatherList: RecyclerView = rootView.findViewById(R.id.rv_weather_list)
@@ -46,78 +42,111 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 		val imageAnimation = rootView.findViewById<ImageView>(R.id.header_image_animation)
 		val headerImage: ImageView = rootView.findViewById(R.id.header_image)
 		val changeCityButton = rootView.findViewById<Button>(R.id.change_city)
-
 		val fragmentContainer = rootView.findViewById<SwipeRefreshLayout>(R.id.swipe_refresh)
+
 		fragmentContainer.setOnRefreshListener{
-			refreshData()
-			fragmentContainer.isRefreshing = false
+			onRefreshData(fragmentContainer)
 		}
 
 		changeCityButton.setOnClickListener{
-			val builder = AlertDialog.Builder(activity)
-			builder.setTitle("change city")
-			val dialogLayout = inflater.inflate(R.layout.fragment_city_dialog, null)
-			val editText  = dialogLayout.findViewById<EditText>(R.id.city_edit_text)
-			builder.setView(dialogLayout)
-			builder.setPositiveButton("enter") { _, _ ->
-				viewModel.loadData(editText.text.toString(), "", "", false, "")
-			}
-			builder.show()
+			onClickChangeCityButton(inflater)
 		}
 
 
 		viewModel.error.observe(viewLifecycleOwner){
-			activity?.title = "no internet connection  pull to refresh"
-			noInternet = true
-			progress.visibility = View.INVISIBLE
+			onLiveDataChangeError(progress)
 		}
 
 		viewModel.reload.observe(viewLifecycleOwner){ reload ->
-			if(reload)
-				progress.visibility = View.VISIBLE
+			onLiveDataChangeReload(reload, progress)
 		}
 
 		viewModel.location.observe(viewLifecycleOwner) { location ->
-			viewModel.loadData(this.city, location[0], location[1], false, "")
-			viewModel.data.observe(viewLifecycleOwner, { data ->
-				if (data[0].getError()) {
-					headerText.text = ""
-					activity?.title = "city not found"
-					progress.visibility = View.INVISIBLE
-					return@observe
-				}
-
-				val headerIconUrl = data[0].getIconUrl().toString()
-				imageAnimation.visibility = View.GONE
-				imageAnimation.clearAnimation()
-				Log.e("test123", headerIconUrl)
-				if (headerIconUrl in animWeather) {
-					val animationRotateCenter: Animation = AnimationUtils.loadAnimation(
-						activity, R.anim.gray_spinner_png
-					)
-					imageAnimation.visibility = View.VISIBLE
-					imageAnimation.startAnimation(animationRotateCenter)
-				}
-
-				Glide
-					.with(this)
-					.load(headerIconUrl)
-					.into(headerImage)
-
-				headerText.text = data[0].getTemp()
-				rcWeatherList.layoutManager = LinearLayoutManager(activity)
-				adapter = WeatherListRecyclerViewAdapter(data, this)
-				rcWeatherList.adapter = adapter
-				progress.visibility = View.INVISIBLE
-				activity?.title = data[0].getCity()
-				title = data[0].getCity()
-				this.city = data[0].getCity().toString()
-			})
+			onLiveDataChangeLocation(location, headerText, progress, imageAnimation, rcWeatherList, headerImage)
 		}
 
 		viewModel.loadLocation()
 
 		return rootView
+	}
+
+	private fun onClickChangeCityButton(inflater: LayoutInflater) {
+		val builder = AlertDialog.Builder(activity)
+		builder.setTitle("change city")
+		val dialogLayout = inflater.inflate(R.layout.fragment_city_dialog, null)
+		val editText  = dialogLayout.findViewById<EditText>(R.id.city_edit_text)
+		builder.setView(dialogLayout)
+		builder.setPositiveButton("enter") { _, _ ->
+			viewModel.loadData(editText.text.toString(), "", "", false, "")
+		}
+		builder.show()
+	}
+
+	private fun onLiveDataChangeLocation(
+		location: MutableList<String>,
+		headerText: TextView,
+		progress: ProgressBar,
+		imageAnimation: ImageView,
+		rcWeatherList: RecyclerView,
+		headerImage: ImageView
+	) {
+		viewModel.loadData(this.city, location[0], location[1], false, "")
+		viewModel.data.observe(viewLifecycleOwner) { data ->
+			onLiveDataChangeData(data, headerText, progress, imageAnimation, rcWeatherList, headerImage)
+		}
+	}
+
+	private fun onLiveDataChangeData(
+		data: MutableList<Weather>,
+		headerText: TextView,
+		progress: ProgressBar,
+		imageAnimation: ImageView,
+		rcWeatherList: RecyclerView,
+		headerImage: ImageView
+	) {
+		if (data[0].getError()) {
+			headerText.text = ""
+			activity?.title = "city not found"
+			progress.visibility = View.INVISIBLE
+			return
+		}
+
+		val headerIconUrl = data[0].getIconUrl().toString()
+		imageAnimation.visibility = View.GONE
+		imageAnimation.clearAnimation()
+		Log.e("test123", headerIconUrl)
+		if (headerIconUrl in animWeather) {
+			val animationRotateCenter: Animation = AnimationUtils.loadAnimation(
+				activity, R.anim.gray_spinner_png
+			)
+			imageAnimation.visibility = View.VISIBLE
+			imageAnimation.startAnimation(animationRotateCenter)
+		}
+
+		Glide
+			.with(this)
+			.load(headerIconUrl)
+			.into(headerImage)
+
+		headerText.text = data[0].getTemp()
+		rcWeatherList.layoutManager = LinearLayoutManager(activity)
+		adapter = WeatherListRecyclerViewAdapter(data, this)
+		rcWeatherList.adapter = adapter
+		progress.visibility = View.INVISIBLE
+		activity?.title = data[0].getCity()
+		title = data[0].getCity()
+		this.city = data[0].getCity().toString()
+	}
+
+	private fun onLiveDataChangeReload(reload: Boolean, progress: ProgressBar) {
+		if(reload)
+			progress.visibility = View.VISIBLE
+	}
+
+	private fun onLiveDataChangeError(progress: ProgressBar) {
+		activity?.title = "no internet connection  pull to refresh"
+		noInternet = true
+		progress.visibility = View.INVISIBLE
 	}
 
 	override fun onItemClick(weather: Weather) {
@@ -135,7 +164,7 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 		transaction?.commit()
 	}
 
-	private fun refreshData() {
+	private fun onRefreshData(fragmentContainer: SwipeRefreshLayout) {
 		if(noInternet){
 			val transaction = activity?.supportFragmentManager?.beginTransaction()
 			val fragment = WeatherListFragment()
@@ -144,6 +173,7 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 			return
 		}
 		viewModel.loadData(this.city, "", "", false, "")
+		fragmentContainer.isRefreshing = false
 	}
 
 	companion object{
