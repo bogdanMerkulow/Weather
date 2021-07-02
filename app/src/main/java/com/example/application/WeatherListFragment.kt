@@ -50,7 +50,6 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 			onClickChangeCityButton(inflater)
 		}
 
-
 		viewModel.getError().observe(viewLifecycleOwner){
 			onLiveDataChangeError(progress)
 		}
@@ -60,7 +59,11 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 		}
 
 		viewModel.getLocation().observe(viewLifecycleOwner) { location ->
-			onLiveDataChangeLocation(location, headerText, progress, imageAnimation, rcWeatherList, headerImage)
+			onLiveDataChangeLocation(location)
+		}
+
+		viewModel.getData().observe(viewLifecycleOwner) { data ->
+			onLiveDataChangeData(data, headerText, progress, imageAnimation, rcWeatherList, headerImage)
 		}
 
 		viewModel.loadLocation()
@@ -80,18 +83,8 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 		builder.show()
 	}
 
-	private fun onLiveDataChangeLocation(
-		location: Coord,
-		headerText: TextView,
-		progress: ProgressBar,
-		imageAnimation: ImageView,
-		rcWeatherList: RecyclerView,
-		headerImage: ImageView
-	) {
+	private fun onLiveDataChangeLocation(location: Coord) {
 		viewModel.loadData(this.city, location.lat, location.lon, false, "")
-		viewModel.getData().observe(viewLifecycleOwner) { data ->
-			onLiveDataChangeData(data, headerText, progress, imageAnimation, rcWeatherList, headerImage)
-		}
 	}
 
 	private fun onLiveDataChangeData(
