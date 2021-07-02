@@ -21,15 +21,17 @@ import com.bumptech.glide.Glide
 @Suppress("LABEL_NAME_CLASH")
 class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener {
 	private lateinit var adapter: WeatherListRecyclerViewAdapter
-	private var q: String = ""
+	private lateinit var viewModel: WeatherViewModel
+	private var city: String = ""
 	private var title: String? = null
 
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
+		viewModel = ViewModelProvider(this)[WeatherViewModel::class.java]
 		val city = arguments?.getString("q").toString()
 		if(!city.equals("null"))
-			q = city
+			this.city = city
 	}
 
 	@SuppressLint("SetTextI18n")
@@ -41,7 +43,7 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 		val headerText: TextView = rootView.findViewById(R.id.header_text)
 		val imageAnimation = rootView.findViewById<ImageView>(R.id.header_image_animation)
 		val headerImage: ImageView = rootView.findViewById(R.id.header_image)
-		val viewModel = ViewModelProvider(this)[WeatherViewModel::class.java]
+
 		val changeCityButton = rootView.findViewById<Button>(R.id.change_city)
 
 		imageAnimation.visibility = View.INVISIBLE
@@ -64,8 +66,13 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 			builder.show()
 		}
 
+		viewModel.reload.observe(viewLifecycleOwner){ reload ->
+			if(reload)
+				progress.visibility = View.VISIBLE
+		}
+
 		viewModel.location.observe(viewLifecycleOwner) { location ->
-			viewModel.loadData(q, location[0], location[1], false, "")
+			viewModel.loadData(this.city, location[0], location[1], false, "")
 			viewModel.data.observe(viewLifecycleOwner, { data ->
 				if (data[0].getError()) {
 					headerText.text = ""
@@ -97,6 +104,7 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 				progress.visibility = View.INVISIBLE
 				activity?.title = data[0].getCity()
 				title = data[0].getCity()
+				this.city = data[0].getCity().toString()
 			})
 		}
 
@@ -109,7 +117,7 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 		val transaction = activity?.supportFragmentManager?.beginTransaction()
 		val fragment = WeatherDetailFragment()
 		val bundle = Bundle()
-		bundle.putString("q", q)
+		bundle.putString("q", this.city)
 		bundle.putString("lat", weather.getCoords()[0])
 		bundle.putString("lon", weather.getCoords()[1])
 		bundle.putString("title", title)
@@ -121,10 +129,7 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 	}
 
 	private fun refreshData() {
-		val transaction = activity?.supportFragmentManager?.beginTransaction()
-		val fragment = WeatherListFragment()
-		transaction?.replace(R.id.fragment_container, fragment)
-		transaction?.commit()
+		viewModel.loadData(this.city, "", "", false, "")
 	}
 
 	companion object{

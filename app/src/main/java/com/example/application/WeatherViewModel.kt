@@ -21,9 +21,11 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
         get() = field
     val location: MutableLiveData<MutableList<String>> = MutableLiveData<MutableList<String>>()
         get() = field
-
+    var reload: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+        get() = field
 
     fun loadData(q: String, lat: String, lon: String, detail: Boolean, day: String = "0") {
+        reload.postValue(true)
         val retrofit = Retrofit.Builder()
             .baseUrl(BaseUrl)
             .addConverterFactory(GsonConverterFactory.create())
