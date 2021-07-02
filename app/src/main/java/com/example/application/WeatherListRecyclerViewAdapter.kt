@@ -40,9 +40,9 @@ class WeatherListRecyclerViewAdapter(private val weather: List<Weather>, private
 	}
 	
 	override fun onBindViewHolder(holder: WeatherViewHolder, position: Int) {
-		holder.title?.text = weather[position].getTitle()
+		holder.title?.text = weather[position].title
 		holder.desc?.text = weather[position].getTemp()
-		holder.state?.text = weather[position].getState()
+		holder.state?.text = weather[position].state
 		holder.itemView.setOnClickListener {
 			listener.onItemClick(weather[position])
 		}

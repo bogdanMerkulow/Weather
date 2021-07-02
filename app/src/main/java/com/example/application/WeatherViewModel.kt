@@ -13,7 +13,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.floor
 
-@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS", "NAME_SHADOWING")
 class WeatherViewModel(application: Application) : AndroidViewModel(application) {
     val data: MutableLiveData<MutableList<Weather>> = MutableLiveData<MutableList<Weather>>()
         get() = field
@@ -90,7 +89,7 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
             .baseUrl(LOCATION_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-        val service = retrofit.create(WeatherService::class.java)
+        val service = retrofit.create(LocationService::class.java)
         val call: Call<LocationResponse> = service.getLocation()
 
         call.enqueue(object : Callback<LocationResponse> {

@@ -32,9 +32,10 @@ class WeatherDetailRecyclerViewAdapter(private val weather: List<Weather>):
 	}
 	
 	override fun onBindViewHolder(holder: WeatherDetailViewHolder, position: Int) {
-		holder.title?.text = weather[position].getTitle()
+		holder.title?.text = weather[position].title
 		holder.desc?.text = weather[position].getTemp()
-		holder.state?.text = weather[position].getState()
+		holder.state?.text = weather[position].state
+
 		Glide
 			.with(holder.itemView)
 			.load(weather[position].getIconUrl())

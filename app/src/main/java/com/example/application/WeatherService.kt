@@ -13,7 +13,4 @@ interface WeatherService {
         @Query("APPID") app_id: String,
         @Query("cnt") cnt: String = "35",
         @Query("lang") lang: String = "ru"): Call<WeatherResponse>
-
-    @GET("?234")
-    fun getLocation(): Call<LocationResponse>
 }

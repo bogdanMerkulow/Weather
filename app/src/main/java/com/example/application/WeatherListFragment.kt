@@ -16,8 +16,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 
-
-@Suppress("LABEL_NAME_CLASH")
 class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener {
 	private lateinit var adapter: WeatherListRecyclerViewAdapter
 	private lateinit var viewModel: WeatherViewModel
@@ -104,7 +102,7 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 		rcWeatherList: RecyclerView,
 		headerImage: ImageView
 	) {
-		if (data[0].getError()) {
+		if (data[0].wrongCity) {
 			headerText.text = ""
 			activity?.title = "city not found"
 			progress.visibility = View.INVISIBLE
@@ -132,9 +130,9 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 		adapter = WeatherListRecyclerViewAdapter(data, this)
 		rcWeatherList.adapter = adapter
 		progress.visibility = View.INVISIBLE
-		activity?.title = data[0].getCity()
-		title = data[0].getCity()
-		this.city = data[0].getCity().toString()
+		activity?.title = data[0].city
+		title = data[0].city
+		this.city = data[0].city.toString()
 	}
 
 	private fun onLiveDataChangeReload(reload: Boolean, progress: ProgressBar) {
@@ -153,10 +151,10 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 		val fragment = WeatherDetailFragment()
 		val bundle = Bundle()
 		bundle.putString(CITY, this.city)
-		bundle.putString(LAT, weather.getCoords()[0])
-		bundle.putString(LON, weather.getCoords()[1])
+		bundle.putString(LAT, weather.getCoords().lat)
+		bundle.putString(LON, weather.getCoords().lon)
 		bundle.putString(TITLE, title)
-		bundle.putString(SELECTED_DATE, weather.getDayNumber())
+		bundle.putString(SELECTED_DATE, weather.dayNumber)
 		fragment.arguments = bundle
 		transaction?.addToBackStack(null)
 		transaction?.replace(R.id.fragment_container, fragment)

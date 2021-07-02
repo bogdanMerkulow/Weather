@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 
 class WeatherResponse {
     @SerializedName("list")
-    var list = ArrayList<List_>()
+    var list = ArrayList<WeatherList>()
     @SerializedName("id")
     var id: Int = 0
     @SerializedName("city")
@@ -20,24 +20,24 @@ class City{
     @SerializedName("name")
     var name: String = ""
     @SerializedName("coord")
-    var coord: Coord? = null
+    var coord: WeatherCoord? = null
 }
 
-class List_{
+class WeatherList{
     @SerializedName("dt")
     var dt: Int? = null
     @SerializedName("main")
-    var main = Main_()
+    var main = WeatherMain()
     @SerializedName("weather")
-    var weather = ArrayList<Weather_>()
+    var weather = ArrayList<WeatherToday>()
 }
 
-class Main_{
+class WeatherMain{
     @SerializedName("temp")
     var temp: Float = 0.toFloat()
 }
 
-class Weather_ {
+class WeatherToday {
     @SerializedName("id")
     var id: Int = 0
     @SerializedName("description")
@@ -46,7 +46,7 @@ class Weather_ {
     var icon: String? = "10d"
 }
 
-class Coord {
+class WeatherCoord {
     @SerializedName("lon")
     var lon: Float = 0.toFloat()
     @SerializedName("lat")
