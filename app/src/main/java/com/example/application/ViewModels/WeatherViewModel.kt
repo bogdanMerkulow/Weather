@@ -1,10 +1,16 @@
-package com.example.application
+package com.example.application.ViewModels
 
 import android.annotation.SuppressLint
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.application.*
+import com.example.application.api.LocationResponse
+import com.example.application.api.LocationService
+import com.example.application.api.WeatherService
+import com.example.application.models.Coord
+import com.example.application.models.Weather
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

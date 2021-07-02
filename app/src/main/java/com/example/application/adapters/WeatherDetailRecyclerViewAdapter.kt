@@ -1,4 +1,4 @@
-package com.example.application
+package com.example.application.adapters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +7,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.application.R
+import com.example.application.models.Weather
 
 class WeatherDetailRecyclerViewAdapter(private val weather: List<Weather>):
 	RecyclerView.Adapter<WeatherDetailRecyclerViewAdapter.WeatherDetailViewHolder>() {

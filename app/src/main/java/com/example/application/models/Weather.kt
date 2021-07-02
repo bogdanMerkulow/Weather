@@ -1,4 +1,4 @@
-package com.example.application
+package com.example.application.models
 
 data class Weather(
 	var iconName: String? = "",
@@ -11,7 +11,7 @@ data class Weather(
 	val dayNumber: String = "",
 	var wrongCity: Boolean = false
 ) {
-	fun getCoords() : Coord{
+	fun getCoords() : Coord {
 		return Coord(lat = lat, lon = lon)
 	}
 

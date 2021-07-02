@@ -1,4 +1,4 @@
-package com.example.application
+package com.example.application.fragments
 
 import android.content.Context
 import android.os.Bundle
@@ -12,6 +12,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.application.R
+import com.example.application.models.Weather
+import com.example.application.adapters.WeatherDetailRecyclerViewAdapter
+import com.example.application.ViewModels.WeatherViewModel
 
 class WeatherDetailFragment : Fragment() {
 	private lateinit var adapter: WeatherDetailRecyclerViewAdapter
@@ -29,7 +33,8 @@ class WeatherDetailFragment : Fragment() {
 		val progress: ProgressBar = rootView.findViewById(R.id.progress_circular)
 		activity?.title = arguments?.getString(TITLE)
 		viewModel.loadData(arguments?.getString(CITY)!!, arguments?.getString(LAT)!!, arguments?.getString(
-			LON)!!, true, arguments?.getString(SELECTED_DATE)!!)
+			LON
+		)!!, true, arguments?.getString(SELECTED_DATE)!!)
 
 		viewModel.getData().observe(viewLifecycleOwner) { data ->
 			onLiveDataChangeData(data, rcWeatherList, progress)

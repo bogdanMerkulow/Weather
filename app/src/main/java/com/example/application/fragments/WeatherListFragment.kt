@@ -1,8 +1,7 @@
-package com.example.application
+package com.example.application.fragments
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +14,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
+import com.example.application.*
+import com.example.application.ViewModels.WeatherViewModel
+import com.example.application.adapters.WeatherListRecyclerViewAdapter
+import com.example.application.models.Coord
+import com.example.application.models.Weather
 
 class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener {
 	private lateinit var adapter: WeatherListRecyclerViewAdapter

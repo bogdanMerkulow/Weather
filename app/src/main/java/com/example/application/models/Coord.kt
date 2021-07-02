@@ -1,4 +1,4 @@
-package com.example.application
+package com.example.application.models
 
 data class Coord(
     val lat: String = "",
