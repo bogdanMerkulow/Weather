@@ -16,7 +16,7 @@ import kotlin.math.floor
 class WeatherViewModel(application: Application) : AndroidViewModel(application) {
     val data: MutableLiveData<MutableList<Weather>> = MutableLiveData<MutableList<Weather>>()
         get() = field
-    val location: MutableLiveData<MutableList<String>> = MutableLiveData<MutableList<String>>()
+    val location: MutableLiveData<Coord> = MutableLiveData<Coord>()
         get() = field
     val reload: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
         get() = field
@@ -96,7 +96,7 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
             override fun onResponse(call: Call<LocationResponse>, response: Response<LocationResponse>) {
                 if (response.code() == RESPONSE_CODE_OK) {
                     val locationResponse = response.body()!!
-                    location.postValue(mutableListOf(locationResponse.lat.toString(), locationResponse.lon.toString()))
+                    location.postValue(Coord(locationResponse.lat.toString(), locationResponse.lon.toString()))
                 }
             }
 

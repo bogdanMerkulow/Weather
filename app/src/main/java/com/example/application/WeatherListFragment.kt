@@ -81,14 +81,14 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 	}
 
 	private fun onLiveDataChangeLocation(
-		location: MutableList<String>,
+		location: Coord,
 		headerText: TextView,
 		progress: ProgressBar,
 		imageAnimation: ImageView,
 		rcWeatherList: RecyclerView,
 		headerImage: ImageView
 	) {
-		viewModel.loadData(this.city, location[0], location[1], false, "")
+		viewModel.loadData(this.city, location.lat, location.lon, false, "")
 		viewModel.data.observe(viewLifecycleOwner) { data ->
 			onLiveDataChangeData(data, headerText, progress, imageAnimation, rcWeatherList, headerImage)
 		}
