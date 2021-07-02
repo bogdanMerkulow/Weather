@@ -17,26 +17,13 @@ import kotlin.math.floor
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS", "NAME_SHADOWING")
 class WeatherViewModel(application: Application) : AndroidViewModel(application) {
-    var data: MutableLiveData<MutableList<Weather>>? = null
-    var location: MutableLiveData<MutableList<String>>? = null
+    val data: MutableLiveData<MutableList<Weather>> = MutableLiveData<MutableList<Weather>>()
+        get() = field
+    val location: MutableLiveData<MutableList<String>> = MutableLiveData<MutableList<String>>()
+        get() = field
 
-    fun getData(q: String = "" ,lat: String, lon: String, detail: Boolean, day: String): LiveData<MutableList<Weather>>?{
-        if(data == null){
-            data = MutableLiveData<MutableList<Weather>>()
-            loadData(q, lat, lon, detail, day)
-        }
-        return data
-    }
 
-    fun getLocation(): LiveData<MutableList<String>>?{
-        if(location == null){
-            location = MutableLiveData<MutableList<String>>()
-            fetchLocation()
-        }
-        return location
-    }
-
-    private fun loadData(q: String, lat: String, lon: String, detail: Boolean, day: String = "0") {
+    fun loadData(q: String, lat: String, lon: String, detail: Boolean, day: String = "0") {
         val retrofit = Retrofit.Builder()
             .baseUrl(BaseUrl)
             .addConverterFactory(GsonConverterFactory.create())
@@ -81,7 +68,7 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
                         }
                         lastTime = checkTime.toInt()
                     }
-                    data?.postValue(weather)
+                    data.postValue(weather)
                 }else{
                     val weather =  mutableListOf<Weather>()
                     weather.add(
@@ -89,7 +76,7 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
                             wrongCity = true
                         )
                     )
-                    data?.postValue(weather)
+                    data.postValue(weather)
                 }
             }
 
@@ -99,7 +86,7 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
         })
     }
 
-    private fun fetchLocation(){
+    fun loadLocation(){
         val retrofit = Retrofit.Builder()
             .baseUrl(locationUrl)
             .addConverterFactory(GsonConverterFactory.create())

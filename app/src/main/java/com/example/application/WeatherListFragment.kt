@@ -42,7 +42,6 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 		val imageAnimation = rootView.findViewById<ImageView>(R.id.header_image_animation)
 		val headerImage: ImageView = rootView.findViewById(R.id.header_image)
 		val viewModel = ViewModelProvider(this)[WeatherViewModel::class.java]
-		val vmLocationData = viewModel.getLocation()
 		val changeCityButton = rootView.findViewById<Button>(R.id.change_city)
 
 		imageAnimation.visibility = View.INVISIBLE
@@ -71,19 +70,19 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 			builder.show()
 		}
 
-		vmLocationData?.observe(viewLifecycleOwner, { location ->
-			val vmData = viewModel.getData(q, location[0], location[1], false, "")
-			vmData?.observe(viewLifecycleOwner, { data ->
-				if(data[0].getError()){
+		viewModel.location.observe(viewLifecycleOwner) { location ->
+			viewModel.loadData(q, location[0], location[1], false, "")
+			viewModel.data.observe(viewLifecycleOwner, { data ->
+				if (data[0].getError()) {
 					headerText.text = ""
 					activity?.title = "city not found"
 					progress.visibility = View.INVISIBLE
 					return@observe
 				}
-				if(firstElement){
+				if (firstElement) {
 					val headerIconUrl = data[0].getIconUrl().toString()
 
-					if(headerIconUrl in animWeather){
+					if (headerIconUrl in animWeather) {
 						val animationRotateCenter: Animation = AnimationUtils.loadAnimation(
 							activity, R.anim.gray_spinner_png
 						)
@@ -105,7 +104,9 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 				activity?.title = data[0].getCity()
 				title = data[0].getCity()
 			})
-		})
+		}
+
+		viewModel.loadLocation()
 
 		return rootView
 	}
