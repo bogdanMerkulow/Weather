@@ -49,7 +49,8 @@ class WeatherDetailFragment : Fragment() {
 		progress: ProgressBar
 	) {
 		rcWeatherList.layoutManager = LinearLayoutManager(activity)
-		adapter = WeatherDetailRecyclerViewAdapter(data)
+		adapter = WeatherDetailRecyclerViewAdapter()
+		adapter.addWeather(data as MutableList<Weather>)
 		rcWeatherList.adapter = adapter
 		progress.visibility = View.INVISIBLE
 	}

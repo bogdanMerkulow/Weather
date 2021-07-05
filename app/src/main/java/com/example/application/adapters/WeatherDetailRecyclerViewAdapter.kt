@@ -10,9 +10,11 @@ import com.bumptech.glide.Glide
 import com.example.application.R
 import com.example.application.models.Weather
 
-class WeatherDetailRecyclerViewAdapter(private val weather: List<Weather>):
+class WeatherDetailRecyclerViewAdapter():
 	RecyclerView.Adapter<WeatherDetailRecyclerViewAdapter.WeatherDetailViewHolder>() {
-	
+
+	private var weather: MutableList<Weather> = mutableListOf()
+
 	class WeatherDetailViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
 		var icon: ImageView? = null
 		var title: TextView? = null
@@ -26,6 +28,10 @@ class WeatherDetailRecyclerViewAdapter(private val weather: List<Weather>):
 			desc = itemView.findViewById(R.id.weather_desc)
 			state = itemView.findViewById(R.id.weather_state)
 		}
+	}
+	
+	fun addWeather(weather: MutableList<Weather>){
+		this.weather = weather
 	}
 	
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherDetailViewHolder {

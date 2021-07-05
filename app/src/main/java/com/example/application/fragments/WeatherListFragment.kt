@@ -67,7 +67,7 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 		}
 
 		viewModel.getData().observe(viewLifecycleOwner) { data ->
-			onLiveDataChangeData(data, headerText, progress, imageAnimation, rcWeatherList, headerImage)
+			onLiveDataChangeData(data as MutableList<Weather>, headerText, progress, imageAnimation, rcWeatherList, headerImage)
 		}
 
 		viewModel.loadLocation()
@@ -92,7 +92,7 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 	}
 
 	private fun onLiveDataChangeData(
-		data: List<Weather>,
+		data: MutableList<Weather>,
 		headerText: TextView,
 		progress: ProgressBar,
 		imageAnimation: ImageView,
@@ -124,7 +124,8 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 
 		headerText.text = data[0].getTemp()
 		rcWeatherList.layoutManager = LinearLayoutManager(activity)
-		adapter = WeatherListRecyclerViewAdapter(data, this)
+		adapter = WeatherListRecyclerViewAdapter(this)
+		adapter.addWeather(data)
 		rcWeatherList.adapter = adapter
 		progress.visibility = View.INVISIBLE
 		activity?.title = data[0].city
