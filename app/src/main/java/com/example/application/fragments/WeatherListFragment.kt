@@ -23,7 +23,6 @@ import com.example.application.models.Weather
 class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener {
 	private lateinit var adapter: WeatherListRecyclerViewAdapter
 	private lateinit var viewModel: WeatherViewModel
-	private var noInternet = false
 	private var city: String = ""
 	private var title: String? = null
 
@@ -140,7 +139,6 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 
 	private fun onLiveDataChangeError() {
 		activity?.title = "no internet connection  pull to refresh"
-		noInternet = true
 	}
 
 	override fun onItemClick(weather: Weather) {
@@ -159,13 +157,6 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 	}
 
 	private fun onRefreshData(fragmentContainer: SwipeRefreshLayout) {
-		if(noInternet){
-			val transaction = activity?.supportFragmentManager?.beginTransaction()
-			val fragment = WeatherListFragment()
-			transaction?.replace(R.id.fragment_container, fragment)
-			transaction?.commit()
-			return
-		}
 		viewModel.loadData(this.city, "", "", false, "")
 		fragmentContainer.isRefreshing = false
 	}
