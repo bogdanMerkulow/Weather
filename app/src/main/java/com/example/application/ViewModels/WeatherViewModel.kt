@@ -92,8 +92,8 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
     private fun weatherResponseToWeather(weatherResponse: WeatherResponse, detail: Boolean, day: String): MutableList<Weather>{
         val weather =  mutableListOf<Weather>()
         var lastTime = 0
-        weatherResponse.list.forEach{ list ->
-            val date = list.dt?.toLong()?.times(1000)?.let { Date(it) }
+        weatherResponse.list.forEach{ weatherItem ->
+            val date = weatherItem.dt?.toLong()?.times(1000)?.let { Date(it) }
             val time = dateFormatTimeStamp.format(date)
             val checkTime = dateFormatDay.format(date)
 
@@ -106,10 +106,10 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
             if(filterVariant) {
                 weather.add(
                     Weather(
-                        iconName = list.weather[0].icon,
+                        iconName = weatherItem.weather[0].icon,
                         title = time,
-                        temp = (floor(list.main.temp - KELVIN)).toFloat(),
-                        state = list.weather[0].description,
+                        temp = (floor(weatherItem.main.temp - KELVIN)).toFloat(),
+                        state = weatherItem.weather[0].description,
                         city = weatherResponse.city.name,
                         lat = weatherResponse.city.coord?.lat.toString(),
                         lon = weatherResponse.city.coord?.lon.toString(),
