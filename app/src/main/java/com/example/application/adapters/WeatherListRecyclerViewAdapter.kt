@@ -20,20 +20,35 @@ class WeatherListRecyclerViewAdapter(private val listener: Listener) :
 		fun onItemClick(weather: Weather)
 	}
 	
-	class WeatherViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-		var icon: ImageView? = null
-		var title: TextView? = null
-		var desc: TextView? = null
-		var state: TextView? = null
-		var progress: ProgressBar? = null
-		
-		
+	class WeatherViewHolder(inflater: LayoutInflater, parent: ViewGroup, private val listener: Listener):
+		RecyclerView.ViewHolder(inflater.inflate(R.layout.weather_list, parent, false)) {
+
+		private var icon: ImageView? = null
+		private var title: TextView? = null
+		private var desc: TextView? = null
+		private var state: TextView? = null
+		private var progress: ProgressBar? = null
+
 		init {
 			icon = itemView.findViewById(R.id.weather_icon)
 			title = itemView.findViewById(R.id.weather_title)
 			desc = itemView.findViewById(R.id.weather_desc)
 			state = itemView.findViewById(R.id.weather_state)
 			progress = itemView.findViewById(R.id.progress_circular)
+		}
+
+		fun bindWeather(weather: Weather){
+			title?.text = weather.title
+			desc?.text = weather.getTemp()
+			state?.text = weather.state
+			itemView.setOnClickListener {
+				this.listener.onItemClick(weather)
+			}
+
+			Glide
+				.with(itemView)
+				.load(weather.getIconUrl())
+				.into(icon!!)
 		}
 	}
 
@@ -42,22 +57,12 @@ class WeatherListRecyclerViewAdapter(private val listener: Listener) :
 	}
 	
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherViewHolder {
-		val itemView = LayoutInflater.from(parent.context).inflate(R.layout.weather_list, parent, false)
-		return WeatherViewHolder(itemView)
+		val inflater = LayoutInflater.from(parent.context)
+		return WeatherViewHolder(inflater, parent, listener)
 	}
 	
 	override fun onBindViewHolder(holder: WeatherViewHolder, position: Int) {
-		holder.title?.text = weather[position].title
-		holder.desc?.text = weather[position].getTemp()
-		holder.state?.text = weather[position].state
-		holder.itemView.setOnClickListener {
-			listener.onItemClick(weather[position])
-		}
-
-		Glide
-			.with(holder.itemView)
-			.load(weather[position].getIconUrl())
-			.into(holder.icon!!)
+		holder.bindWeather(weather[position])
 	}
 	
 	override fun getItemCount(): Int {

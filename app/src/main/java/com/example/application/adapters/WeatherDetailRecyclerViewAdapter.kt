@@ -5,49 +5,55 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.application.R
 import com.example.application.models.Weather
 
-class WeatherDetailRecyclerViewAdapter():
+class WeatherDetailRecyclerViewAdapter:
 	RecyclerView.Adapter<WeatherDetailRecyclerViewAdapter.WeatherDetailViewHolder>() {
 
 	private var weather: MutableList<Weather> = mutableListOf()
 
-	class WeatherDetailViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-		var icon: ImageView? = null
-		var title: TextView? = null
-		var desc: TextView? = null
-		var state: TextView? = null
-		
-		
+	class WeatherDetailViewHolder(inflater: LayoutInflater, parent: ViewGroup):
+		RecyclerView.ViewHolder(inflater.inflate(R.layout.weather_list, parent, false)) {
+
+		private var icon: ImageView? = null
+		private var title: TextView? = null
+		private var desc: TextView? = null
+		private var state: TextView? = null
+
 		init {
 			icon = itemView.findViewById(R.id.weather_icon)
 			title = itemView.findViewById(R.id.weather_title)
 			desc = itemView.findViewById(R.id.weather_desc)
 			state = itemView.findViewById(R.id.weather_state)
 		}
+
+		fun bindWeather(weather: Weather){
+			title?.text = weather.title
+			desc?.text = weather.getTemp()
+			state?.text = weather.state
+
+			Glide
+				.with(itemView)
+				.load(weather.getIconUrl())
+				.into(icon!!)
+		}
 	}
-	
+
 	fun addWeather(weather: MutableList<Weather>){
 		this.weather = weather
 	}
 	
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherDetailViewHolder {
-		val itemView = LayoutInflater.from(parent.context).inflate(R.layout.weather_list, parent, false)
-		return WeatherDetailViewHolder(itemView)
+		val inflater = LayoutInflater.from(parent.context)
+		return WeatherDetailViewHolder(inflater, parent)
 	}
 	
 	override fun onBindViewHolder(holder: WeatherDetailViewHolder, position: Int) {
-		holder.title?.text = weather[position].title
-		holder.desc?.text = weather[position].getTemp()
-		holder.state?.text = weather[position].state
-
-		Glide
-			.with(holder.itemView)
-			.load(weather[position].getIconUrl())
-			.into(holder.icon!!)
+		holder.bindWeather(weather[position])
 	}
 	
 	override fun getItemCount(): Int {
