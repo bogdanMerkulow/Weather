@@ -55,10 +55,12 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
             override fun onResponse(call: Call<WeatherResponse>, response: Response<WeatherResponse>) {
                 val weather = weatherResponseToWeather(response.body()!!, detail, day)
                 data.postValue(weather)
+                reload.postValue(false)
             }
 
             override fun onFailure(call: Call<WeatherResponse>, t: Throwable) {
                 error.postValue(true)
+                reload.postValue(false)
             }
         })
     }
@@ -76,11 +78,13 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
                 if (response.code() == RESPONSE_CODE_OK) {
                     val locationResponse = response.body()!!
                     location.postValue(Coord(locationResponse.lat.toString(), locationResponse.lon.toString()))
+                    reload.postValue(false)
                 }
             }
 
             override fun onFailure(call: Call<LocationResponse>, t: Throwable) {
                 error.postValue(true)
+                reload.postValue(false)
             }
         })
     }

@@ -55,7 +55,7 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 		}
 
 		viewModel.getError().observe(viewLifecycleOwner){
-			onLiveDataChangeError(progress)
+			onLiveDataChangeError()
 		}
 
 		viewModel.isReload().observe(viewLifecycleOwner){ reload ->
@@ -67,7 +67,7 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 		}
 
 		viewModel.getData().observe(viewLifecycleOwner) { data ->
-			onLiveDataChangeData(data as MutableList<Weather>, headerText, progress, imageAnimation, rcWeatherList, headerImage)
+			onLiveDataChangeData(data as MutableList<Weather>, headerText, imageAnimation, rcWeatherList, headerImage)
 		}
 
 		viewModel.loadLocation()
@@ -94,7 +94,6 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 	private fun onLiveDataChangeData(
 		data: MutableList<Weather>,
 		headerText: TextView,
-		progress: ProgressBar,
 		imageAnimation: ImageView,
 		rcWeatherList: RecyclerView,
 		headerImage: ImageView
@@ -102,11 +101,10 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 		if (data[0].wrongCity) {
 			headerText.text = ""
 			activity?.title = "city not found"
-			progress.visibility = View.INVISIBLE
 			return
 		}
 
-		val headerIconUrl = data[0].getIconUrl().toString()
+		val headerIconUrl = data[0].getIconUrl()
 		imageAnimation.visibility = View.GONE
 		imageAnimation.clearAnimation()
 		if (headerIconUrl in animWeather) {
@@ -127,21 +125,22 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 		adapter = WeatherListRecyclerViewAdapter(this)
 		adapter.addWeather(data)
 		rcWeatherList.adapter = adapter
-		progress.visibility = View.INVISIBLE
 		activity?.title = data[0].city
 		title = data[0].city
 		this.city = data[0].city.toString()
 	}
 
 	private fun onLiveDataChangeReload(reload: Boolean, progress: ProgressBar) {
-		if(reload)
+		if(reload){
 			progress.visibility = View.VISIBLE
+		}else{
+			progress.visibility = View.INVISIBLE
+		}
 	}
 
-	private fun onLiveDataChangeError(progress: ProgressBar) {
+	private fun onLiveDataChangeError() {
 		activity?.title = "no internet connection  pull to refresh"
 		noInternet = true
-		progress.visibility = View.INVISIBLE
 	}
 
 	override fun onItemClick(weather: Weather) {

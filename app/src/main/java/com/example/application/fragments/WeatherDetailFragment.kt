@@ -37,7 +37,11 @@ class WeatherDetailFragment : Fragment() {
 		)!!, true, arguments?.getString(SELECTED_DATE)!!)
 
 		viewModel.getData().observe(viewLifecycleOwner) { data ->
-			onLiveDataChangeData(data, rcWeatherList, progress)
+			onLiveDataChangeData(data, rcWeatherList)
+		}
+
+		viewModel.isReload().observe(viewLifecycleOwner) { reload ->
+			onLiveDataChangeReload(reload, progress)
 		}
 
 		return rootView
@@ -45,14 +49,20 @@ class WeatherDetailFragment : Fragment() {
 
 	private fun onLiveDataChangeData(
 		data: List<Weather>,
-		rcWeatherList: RecyclerView,
-		progress: ProgressBar
+		rcWeatherList: RecyclerView
 	) {
 		rcWeatherList.layoutManager = LinearLayoutManager(activity)
 		adapter = WeatherDetailRecyclerViewAdapter()
 		adapter.addWeather(data as MutableList<Weather>)
 		rcWeatherList.adapter = adapter
-		progress.visibility = View.INVISIBLE
+	}
+
+	private fun onLiveDataChangeReload(reload: Boolean, progress: ProgressBar) {
+		if(reload){
+			progress.visibility = View.VISIBLE
+		}else{
+			progress.visibility = View.INVISIBLE
+		}
 	}
 
 	override fun onAttach(context: Context) {
