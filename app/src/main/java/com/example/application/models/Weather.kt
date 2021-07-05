@@ -1,7 +1,7 @@
 package com.example.application.models
 
 data class Weather(
-	var iconName: String? = "",
+	val iconName: String? = "",
 	val title: String? = "",
 	val temp: Float = 0.0f,
 	val state: String? = "",
