@@ -19,27 +19,20 @@ class WeatherDetailRecyclerViewAdapter:
 	class WeatherDetailViewHolder(inflater: LayoutInflater, parent: ViewGroup):
 		RecyclerView.ViewHolder(inflater.inflate(R.layout.weather_list, parent, false)) {
 
-		private var icon: ImageView? = null
-		private var title: TextView? = null
-		private var desc: TextView? = null
-		private var state: TextView? = null
-
-		init {
-			icon = itemView.findViewById(R.id.weather_icon)
-			title = itemView.findViewById(R.id.weather_title)
-			desc = itemView.findViewById(R.id.weather_desc)
-			state = itemView.findViewById(R.id.weather_state)
-		}
+		private var icon: ImageView = itemView.findViewById(R.id.weather_icon)
+		private var title: TextView = itemView.findViewById(R.id.weather_title)
+		private var desc: TextView = itemView.findViewById(R.id.weather_desc)
+		private var state: TextView = itemView.findViewById(R.id.weather_state)
 
 		fun bindWeather(weather: Weather){
-			title?.text = weather.title
-			desc?.text = weather.getTemp()
-			state?.text = weather.state
+			title.text = weather.title
+			desc.text = weather.getTemp()
+			state.text = weather.state
 
 			Glide
 				.with(itemView)
 				.load(weather.getIconUrl())
-				.into(icon!!)
+				.into(icon)
 		}
 	}
 

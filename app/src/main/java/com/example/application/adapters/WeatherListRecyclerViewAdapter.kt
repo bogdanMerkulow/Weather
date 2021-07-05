@@ -23,24 +23,15 @@ class WeatherListRecyclerViewAdapter(private val listener: Listener) :
 	class WeatherViewHolder(inflater: LayoutInflater, parent: ViewGroup, private val listener: Listener):
 		RecyclerView.ViewHolder(inflater.inflate(R.layout.weather_list, parent, false)) {
 
-		private var icon: ImageView? = null
-		private var title: TextView? = null
-		private var desc: TextView? = null
-		private var state: TextView? = null
-		private var progress: ProgressBar? = null
-
-		init {
-			icon = itemView.findViewById(R.id.weather_icon)
-			title = itemView.findViewById(R.id.weather_title)
-			desc = itemView.findViewById(R.id.weather_desc)
-			state = itemView.findViewById(R.id.weather_state)
-			progress = itemView.findViewById(R.id.progress_circular)
-		}
+		private var icon: ImageView = itemView.findViewById(R.id.weather_icon)
+		private var title: TextView = itemView.findViewById(R.id.weather_title)
+		private var desc: TextView = itemView.findViewById(R.id.weather_desc)
+		private var state: TextView = itemView.findViewById(R.id.weather_state)
 
 		fun bindWeather(weather: Weather){
-			title?.text = weather.title
-			desc?.text = weather.getTemp()
-			state?.text = weather.state
+			title.text = weather.title
+			desc.text = weather.getTemp()
+			state.text = weather.state
 			itemView.setOnClickListener {
 				this.listener.onItemClick(weather)
 			}
@@ -48,7 +39,7 @@ class WeatherListRecyclerViewAdapter(private val listener: Listener) :
 			Glide
 				.with(itemView)
 				.load(weather.getIconUrl())
-				.into(icon!!)
+				.into(icon)
 		}
 	}
 
@@ -60,7 +51,7 @@ class WeatherListRecyclerViewAdapter(private val listener: Listener) :
 		val inflater = LayoutInflater.from(parent.context)
 		return WeatherViewHolder(inflater, parent, listener)
 	}
-	
+
 	override fun onBindViewHolder(holder: WeatherViewHolder, position: Int) {
 		holder.bindWeather(weather[position])
 	}
