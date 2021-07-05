@@ -53,48 +53,8 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
 
         call.enqueue(object : Callback<WeatherResponse> {
             override fun onResponse(call: Call<WeatherResponse>, response: Response<WeatherResponse>) {
-                if (response.code() == RESPONSE_CODE_OK) {
-                    val weatherResponse = response.body()!!
-                    val weather =  mutableListOf<Weather>()
-                    var lastTime = 0
-                    weatherResponse.list.forEach{ list ->
-                        val date = list.dt?.toLong()?.times(1000)?.let { Date(it) }
-                        val time = dateFormatTimeStamp.format(date)
-                        val checkTime = dateFormatDay.format(date)
-
-                        val filterVariant: Boolean = if(detail){
-                            day.equals(checkTime)
-                        }else{
-                            !lastTime.equals(checkTime.toInt())
-                        }
-
-                        if(filterVariant) {
-                            weather.add(
-                                Weather(
-                                    iconName = list.weather[0].icon,
-                                    title = time,
-                                    temp = (floor(list.main.temp - KELVIN)).toFloat(),
-                                    state = list.weather[0].description,
-                                    city = weatherResponse.city.name,
-                                    lat = weatherResponse.city.coord?.lat.toString(),
-                                    lon = weatherResponse.city.coord?.lon.toString(),
-                                    dayNumber = checkTime
-                                )
-                            )
-
-                        }
-                        lastTime = checkTime.toInt()
-                    }
-                    data.postValue(weather)
-                }else{
-                    val weather =  mutableListOf<Weather>()
-                    weather.add(
-                        Weather(
-                            wrongCity = true
-                        )
-                    )
-                    data.postValue(weather)
-                }
+                val weather = weatherResponseToWeather(response.body()!!, detail, day)
+                data.postValue(weather)
             }
 
             override fun onFailure(call: Call<WeatherResponse>, t: Throwable) {
@@ -123,6 +83,40 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
                 error.postValue(true)
             }
         })
+    }
+
+    private fun weatherResponseToWeather(weatherResponse: WeatherResponse, detail: Boolean, day: String): MutableList<Weather>{
+        val weather =  mutableListOf<Weather>()
+        var lastTime = 0
+        weatherResponse.list.forEach{ list ->
+            val date = list.dt?.toLong()?.times(1000)?.let { Date(it) }
+            val time = dateFormatTimeStamp.format(date)
+            val checkTime = dateFormatDay.format(date)
+
+            val filterVariant: Boolean = if(detail){
+                day.equals(checkTime)
+            }else{
+                !lastTime.equals(checkTime.toInt())
+            }
+
+            if(filterVariant) {
+                weather.add(
+                    Weather(
+                        iconName = list.weather[0].icon,
+                        title = time,
+                        temp = (floor(list.main.temp - KELVIN)).toFloat(),
+                        state = list.weather[0].description,
+                        city = weatherResponse.city.name,
+                        lat = weatherResponse.city.coord?.lat.toString(),
+                        lon = weatherResponse.city.coord?.lon.toString(),
+                        dayNumber = checkTime
+                    )
+                )
+
+            }
+            lastTime = checkTime.toInt()
+        }
+        return weather
     }
 
     companion object {
