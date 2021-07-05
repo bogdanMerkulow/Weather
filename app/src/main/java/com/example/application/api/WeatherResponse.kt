@@ -5,50 +5,50 @@ import com.google.gson.annotations.SerializedName
 
 data class WeatherResponse (
     @SerializedName("list")
-    var list:ArrayList<WeatherList> = ArrayList<WeatherList>(),
+    val list:ArrayList<WeatherList> = ArrayList<WeatherList>(),
     @SerializedName("id")
-    var id: Int = 0,
+    val id: Int = 0,
     @SerializedName("city")
-    var city: City = City(),
+    val city: City = City(),
     @SerializedName("message")
-    var message: String = ""
+    val message: String = ""
 )
 
 data class City (
     @SerializedName("id")
-    var id: Int = 0,
+    val id: Int = 0,
     @SerializedName("name")
-    var name: String = "",
+    val name: String = "",
     @SerializedName("coord")
-    var coord: WeatherCoord? = null
+    val coord: WeatherCoord? = null
 )
 
 data class WeatherList(
     @SerializedName("dt")
-    var dt: Int? = null,
+    val dt: Int? = null,
     @SerializedName("main")
-    var main:WeatherMain = WeatherMain(),
+    val main:WeatherMain = WeatherMain(),
     @SerializedName("weather")
-    var weather: ArrayList<WeatherToday> = ArrayList<WeatherToday>()
+    val weather: ArrayList<WeatherToday> = ArrayList<WeatherToday>()
 )
 
 data class WeatherMain(
     @SerializedName("temp")
-    var temp: Float = 0.toFloat()
+    val temp: Float = 0.toFloat()
 )
 
 data class WeatherToday (
     @SerializedName("id")
-    var id: Int = 0,
+    val id: Int = 0,
     @SerializedName("description")
-    var description: String? = null,
+    val description: String? = null,
     @SerializedName("icon")
-    var icon: String? = "10d"
+    val icon: String? = "10d"
 )
 
 data class WeatherCoord (
     @SerializedName("lon")
-    var lon: Float = 0.toFloat(),
+    val lon: Float = 0.toFloat(),
     @SerializedName("lat")
-    var lat: Float = 0.toFloat()
+    val lat: Float = 0.toFloat()
 )

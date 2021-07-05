@@ -9,7 +9,7 @@ data class Weather(
 	private val lat: String = "",
 	private val lon: String = "",
 	val dayNumber: String = "",
-	var wrongCity: Boolean = false
+	val wrongCity: Boolean = false
 ) {
 	fun getCoords() : Coord {
 		return Coord(lat = lat, lon = lon)

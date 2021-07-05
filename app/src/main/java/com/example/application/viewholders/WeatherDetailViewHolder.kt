@@ -12,10 +12,10 @@ import com.example.application.models.Weather
 class WeatherDetailViewHolder(inflater: LayoutInflater, parent: ViewGroup):
     RecyclerView.ViewHolder(inflater.inflate(R.layout.weather_list, parent, false)) {
 
-    private var icon: ImageView = itemView.findViewById(R.id.weather_icon)
-    private var title: TextView = itemView.findViewById(R.id.weather_title)
-    private var desc: TextView = itemView.findViewById(R.id.weather_desc)
-    private var state: TextView = itemView.findViewById(R.id.weather_state)
+    private val icon: ImageView = itemView.findViewById(R.id.weather_icon)
+    private val title: TextView = itemView.findViewById(R.id.weather_title)
+    private val desc: TextView = itemView.findViewById(R.id.weather_desc)
+    private val state: TextView = itemView.findViewById(R.id.weather_state)
 
     fun bindWeather(weather: Weather){
         title.text = weather.title
