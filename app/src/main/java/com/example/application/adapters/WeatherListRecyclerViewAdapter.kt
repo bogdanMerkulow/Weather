@@ -9,7 +9,7 @@ import com.example.application.viewholders.WeatherListViewHolder
 class WeatherListRecyclerViewAdapter(private val listener: Listener) :
 	RecyclerView.Adapter<WeatherListViewHolder>() {
 
-	private var weather: MutableList<Weather> = mutableListOf()
+	private var weather: List<Weather> = listOf()
 
 	interface Listener{
 		fun onItemClick(weather: Weather)

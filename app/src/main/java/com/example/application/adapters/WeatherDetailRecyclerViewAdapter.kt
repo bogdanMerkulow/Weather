@@ -9,7 +9,7 @@ import com.example.application.viewholders.WeatherDetailViewHolder
 class WeatherDetailRecyclerViewAdapter:
 	RecyclerView.Adapter<WeatherDetailViewHolder>() {
 
-	private var weather: MutableList<Weather> = mutableListOf()
+	private var weather: List<Weather> = listOf()
 
 	fun addWeather(weather: MutableList<Weather>){
 		this.weather = weather
