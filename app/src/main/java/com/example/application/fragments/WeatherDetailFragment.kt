@@ -25,12 +25,17 @@ class WeatherDetailFragment : Fragment() {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		viewModel = ViewModelProvider(this)[WeatherViewModel::class.java]
+		adapter = WeatherDetailRecyclerViewAdapter()
 	}
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
 		val rootView = inflater.inflate(R.layout.fragment_weather_detail, container, false)
 		val rcWeatherList: RecyclerView = rootView.findViewById(R.id.rv_weather_list)
 		val progress: ProgressBar = rootView.findViewById(R.id.progress_circular)
+
+		rcWeatherList.layoutManager = LinearLayoutManager(activity)
+		rcWeatherList.adapter = adapter
+
 		activity?.title = arguments?.getString(TITLE)
 
 		viewModel.loadData(
@@ -42,7 +47,7 @@ class WeatherDetailFragment : Fragment() {
 		)
 
 		viewModel.getData().observe(viewLifecycleOwner) { data ->
-			onLiveDataChangeData(data, rcWeatherList)
+			onLiveDataChangeData(data as MutableList<Weather>)
 		}
 
 		viewModel.isReload().observe(viewLifecycleOwner) { reload ->
@@ -52,14 +57,8 @@ class WeatherDetailFragment : Fragment() {
 		return rootView
 	}
 
-	private fun onLiveDataChangeData(
-		data: List<Weather>,
-		rcWeatherList: RecyclerView
-	) {
-		rcWeatherList.layoutManager = LinearLayoutManager(activity)
-		adapter = WeatherDetailRecyclerViewAdapter()
-		adapter.addWeather(data as MutableList<Weather>)
-		rcWeatherList.adapter = adapter
+	private fun onLiveDataChangeData(data: MutableList<Weather>) {
+		adapter.addWeather(data)
 	}
 
 	private fun onLiveDataChangeReload(reload: Boolean, progress: ProgressBar) {

@@ -13,6 +13,7 @@ class WeatherDetailRecyclerViewAdapter:
 
 	fun addWeather(weather: MutableList<Weather>){
 		this.weather = weather
+		notifyDataSetChanged()
 	}
 	
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherDetailViewHolder {

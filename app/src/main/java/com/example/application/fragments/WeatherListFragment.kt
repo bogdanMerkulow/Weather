@@ -30,6 +30,8 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		viewModel = ViewModelProvider(this)[WeatherViewModel::class.java]
+		adapter = WeatherListRecyclerViewAdapter(this)
+
 		val city = arguments?.getString(WeatherDetailFragment.CITY).toString()
 		if(!city.equals("null"))
 			this.city = city
@@ -44,6 +46,9 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 		val headerImage: ImageView = rootView.findViewById(R.id.header_image)
 		val changeCityButton = rootView.findViewById<Button>(R.id.change_city)
 		val fragmentContainer = rootView.findViewById<SwipeRefreshLayout>(R.id.swipe_refresh)
+
+		rcWeatherList.layoutManager = LinearLayoutManager(activity)
+		rcWeatherList.adapter = adapter
 
 		fragmentContainer.setOnRefreshListener{
 			onRefreshData(fragmentContainer)
@@ -66,7 +71,7 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 		}
 
 		viewModel.getData().observe(viewLifecycleOwner) { data ->
-			onLiveDataChangeData(data as MutableList<Weather>, headerText, imageAnimation, rcWeatherList, headerImage)
+			onLiveDataChangeData(data as MutableList<Weather>, headerText, imageAnimation, headerImage)
 		}
 
 		viewModel.loadLocation()
@@ -94,7 +99,6 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 		data: MutableList<Weather>,
 		headerText: TextView,
 		imageAnimation: ImageView,
-		rcWeatherList: RecyclerView,
 		headerImage: ImageView
 	) {
 		if (data[0].wrongCity) {
@@ -120,10 +124,9 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 			.into(headerImage)
 
 		headerText.text = data[0].getTemp()
-		rcWeatherList.layoutManager = LinearLayoutManager(activity)
-		adapter = WeatherListRecyclerViewAdapter(this)
+
 		adapter.addWeather(data)
-		rcWeatherList.adapter = adapter
+
 		activity?.title = data[0].city
 		title = data[0].city
 		this.city = data[0].city.toString()
