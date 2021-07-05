@@ -53,7 +53,29 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
 
         call.enqueue(object : Callback<WeatherResponse> {
             override fun onResponse(call: Call<WeatherResponse>, response: Response<WeatherResponse>) {
-                val weather = weatherResponseToWeather(response.body()!!, detail, day)
+                val weatherResponse = response.body()!!
+                val weather =  mutableListOf<Weather>()
+                var lastTime = 0
+                weatherResponse.list.forEach{ weatherItem ->
+                    val date = weatherItem.dt?.toLong()?.times(1000)?.let { Date(it) }
+                    val time = dateFormatTimeStamp.format(date)
+                    val checkTime = dateFormatDay.format(date)
+
+                    val filterVariant: Boolean = if(detail){
+                        day.equals(checkTime)
+                    }else{
+                        !lastTime.equals(checkTime.toInt())
+                    }
+
+                    if(filterVariant) {
+                        weather.add(
+                            weatherResponseToWeather(weatherItem, weatherResponse, time, checkTime)
+                        )
+                    }
+
+                    lastTime = checkTime.toInt()
+                }
+
                 data.postValue(weather)
                 reload.postValue(false)
             }
@@ -89,38 +111,22 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
         })
     }
 
-    private fun weatherResponseToWeather(weatherResponse: WeatherResponse, detail: Boolean, day: String): MutableList<Weather>{
-        val weather =  mutableListOf<Weather>()
-        var lastTime = 0
-        weatherResponse.list.forEach{ weatherItem ->
-            val date = weatherItem.dt?.toLong()?.times(1000)?.let { Date(it) }
-            val time = dateFormatTimeStamp.format(date)
-            val checkTime = dateFormatDay.format(date)
-
-            val filterVariant: Boolean = if(detail){
-                day.equals(checkTime)
-            }else{
-                !lastTime.equals(checkTime.toInt())
-            }
-
-            if(filterVariant) {
-                weather.add(
-                    Weather(
-                        iconName = weatherItem.weather[0].icon,
-                        title = time,
-                        temp = (floor(weatherItem.main.temp - KELVIN)).toFloat(),
-                        state = weatherItem.weather[0].description,
-                        city = weatherResponse.city.name,
-                        lat = weatherResponse.city.coord?.lat.toString(),
-                        lon = weatherResponse.city.coord?.lon.toString(),
-                        dayNumber = checkTime
-                    )
-                )
-
-            }
-            lastTime = checkTime.toInt()
-        }
-        return weather
+    private fun weatherResponseToWeather(
+        weatherItem: WeatherList,
+        weatherResponse: WeatherResponse,
+        time: String,
+        checkTime: String
+    ): Weather {
+        return Weather(
+           iconName = weatherItem.weather[0].icon,
+           title = time,
+           temp = (floor(weatherItem.main.temp - KELVIN)).toFloat(),
+           state = weatherItem.weather[0].description,
+           city = weatherResponse.city.name,
+           lat = weatherResponse.city.coord?.lat.toString(),
+           lon = weatherResponse.city.coord?.lon.toString(),
+           dayNumber = checkTime
+       )
     }
 
     companion object {
