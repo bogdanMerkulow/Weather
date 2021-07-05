@@ -31,14 +31,14 @@ class WeatherDetailFragment : Fragment() {
 		val rootView = inflater.inflate(R.layout.fragment_weather_detail, container, false)
 		val rcWeatherList: RecyclerView = rootView.findViewById(R.id.rv_weather_list)
 		val progress: ProgressBar = rootView.findViewById(R.id.progress_circular)
-		activity?.title = arguments?.getString(WeatherListFragment.TITLE)
+		activity?.title = arguments?.getString(TITLE)
 
 		viewModel.loadData(
-			arguments?.getString(WeatherListFragment.CITY)!!,
-			arguments?.getString(WeatherListFragment.LAT)!!,
-			arguments?.getString(WeatherListFragment.LON)!!,
+			arguments?.getString(CITY)!!,
+			arguments?.getString(LAT)!!,
+			arguments?.getString(LON)!!,
 			true,
-			arguments?.getString(WeatherListFragment.SELECTED_DATE)!!
+			arguments?.getString(SELECTED_DATE)!!
 		)
 
 		viewModel.getData().observe(viewLifecycleOwner) { data ->
@@ -81,5 +81,13 @@ class WeatherDetailFragment : Fragment() {
 		super.onDetach()
 		actionBar.setDisplayHomeAsUpEnabled(false)
 		actionBar.setHomeButtonEnabled(false)
+	}
+
+	companion object{
+		const val CITY = "q"
+		const val LON = "lon"
+		const val LAT = "lat"
+		const val TITLE = "title"
+		const val SELECTED_DATE = "date"
 	}
 }
