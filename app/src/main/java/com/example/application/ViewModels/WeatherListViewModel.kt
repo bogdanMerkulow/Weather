@@ -45,7 +45,7 @@ class WeatherListViewModel(application: Application) : AndroidViewModel(applicat
     val city: LiveData<String>
         get() = _city
 
-    fun loadData(q: String, lat: String, lon: String, day: String = "0") {
+    fun loadData(q: String, lat: String, lon: String) {
         _reload.postValue(true)
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
@@ -109,7 +109,7 @@ class WeatherListViewModel(application: Application) : AndroidViewModel(applicat
             override fun onResponse(call: Call<LocationResponse>, response: Response<LocationResponse>) {
                 if (response.code() == RESPONSE_CODE_OK) {
                     val locationResponse = response.body()!!
-                    loadData("", locationResponse.lat.toString(), locationResponse.lon.toString(), "")
+                    loadData("", locationResponse.lat.toString(), locationResponse.lon.toString())
                 }
             }
 

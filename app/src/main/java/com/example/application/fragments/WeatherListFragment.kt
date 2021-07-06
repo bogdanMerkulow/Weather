@@ -91,7 +91,7 @@ class WeatherListFragment : Fragment() {
 		val editText  = dialogLayout.findViewById<EditText>(R.id.city_edit_text)
 		builder.setView(dialogLayout)
 		builder.setPositiveButton("enter") { _, _ ->
-			listViewModel.loadData(editText.text.toString(), "", "", "")
+			listViewModel.loadData(editText.text.toString(), "", "")
 		}
 		builder.show()
 	}
@@ -119,7 +119,7 @@ class WeatherListFragment : Fragment() {
 	}
 
 	private fun onRefreshData(fragmentContainer: SwipeRefreshLayout) {
-		listViewModel.loadData(this.city, "", "", "")
+		listViewModel.loadData(this.city, "", "")
 		fragmentContainer.isRefreshing = false
 	}
 
