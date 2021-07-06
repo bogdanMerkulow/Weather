@@ -15,22 +15,21 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.example.application.*
-import com.example.application.ViewModels.WeatherViewModel
+import com.example.application.ViewModels.WeatherListViewModel
 import com.example.application.adapters.WeatherListRecyclerViewAdapter
 import com.example.application.models.Weather
 
 class WeatherListFragment : Fragment() {
 	private lateinit var adapter: WeatherListRecyclerViewAdapter
-	private lateinit var viewModel: WeatherViewModel
+	private lateinit var listViewModel: WeatherListViewModel
 	private var city: String = ""
 	private var title: String? = null
 
-
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		viewModel = ViewModelProvider(this)[WeatherViewModel::class.java]
+		listViewModel = ViewModelProvider(this)[WeatherListViewModel::class.java]
 		adapter = WeatherListRecyclerViewAdapter(this::onItemClick)
-		viewModel.loadLocation()
+		listViewModel.loadLocation()
 
 		val city = arguments?.getString(WeatherDetailFragment.CITY).toString()
 		if(!city.equals("null"))
@@ -58,27 +57,27 @@ class WeatherListFragment : Fragment() {
 			onClickChangeCityButton(inflater)
 		}
 
-		viewModel.getCity().observe(viewLifecycleOwner){ city ->
+		listViewModel.getCity().observe(viewLifecycleOwner){ city ->
 			this.city = city
 		}
 
-		viewModel.getTitle().observe(viewLifecycleOwner){ title ->
+		listViewModel.getTitle().observe(viewLifecycleOwner){ title ->
 			activity?.title = title
 		}
 
-		viewModel.getHeader().observe(viewLifecycleOwner){ header ->
+		listViewModel.getHeader().observe(viewLifecycleOwner){ header ->
 			headerText.text = header
 		}
 
-		viewModel.getHeaderImageUrl().observe(viewLifecycleOwner){ imageUrl ->
+		listViewModel.getHeaderImageUrl().observe(viewLifecycleOwner){ imageUrl ->
 			setHeaderImageUrl(imageUrl, headerImage, imageAnimation)
 		}
 
-		viewModel.isReload().observe(viewLifecycleOwner){ reload ->
+		listViewModel.isReload().observe(viewLifecycleOwner){ reload ->
 			onLiveDataChangeReload(reload, progress)
 		}
 
-		viewModel.getData().observe(viewLifecycleOwner) { data ->
+		listViewModel.getData().observe(viewLifecycleOwner) { data ->
 			adapter.addWeather(data)
 		}
 
@@ -92,7 +91,7 @@ class WeatherListFragment : Fragment() {
 		val editText  = dialogLayout.findViewById<EditText>(R.id.city_edit_text)
 		builder.setView(dialogLayout)
 		builder.setPositiveButton("enter") { _, _ ->
-			viewModel.loadData(editText.text.toString(), "", "", false, "")
+			listViewModel.loadData(editText.text.toString(), "", "", "")
 		}
 		builder.show()
 	}
@@ -120,7 +119,7 @@ class WeatherListFragment : Fragment() {
 	}
 
 	private fun onRefreshData(fragmentContainer: SwipeRefreshLayout) {
-		viewModel.loadData(this.city, "", "", false, "")
+		listViewModel.loadData(this.city, "", "", "")
 		fragmentContainer.isRefreshing = false
 	}
 

@@ -20,7 +20,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.floor
 
-class WeatherViewModel(application: Application) : AndroidViewModel(application) {
+class WeatherListViewModel(application: Application) : AndroidViewModel(application) {
     private val data: MutableLiveData<MutableList<Weather>> = MutableLiveData<MutableList<Weather>>()
     private val location: MutableLiveData<Coord> = MutableLiveData<Coord>()
     private val reload: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
@@ -31,10 +31,6 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
 
     fun getData(): LiveData<List<Weather>>{
         return data as LiveData<List<Weather>>
-    }
-
-    fun getLocation(): LiveData<Coord>{
-        return location
     }
 
     fun isReload(): LiveData<Boolean>{
@@ -57,7 +53,7 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
         return city
     }
 
-    fun loadData(q: String, lat: String, lon: String, detail: Boolean, day: String = "0") {
+    fun loadData(q: String, lat: String, lon: String, day: String = "0") {
         reload.postValue(true)
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
@@ -89,13 +85,7 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
                     val time = dateFormatTimeStamp.format(date)
                     val checkTime = dateFormatDay.format(date)
 
-                    val filterVariant: Boolean = if(detail){
-                        day.equals(checkTime)
-                    }else{
-                        !lastTime.equals(checkTime.toInt())
-                    }
-
-                    if(filterVariant) {
+                    if(!lastTime.equals(checkTime.toInt())) {
                         weather.add(
                             weatherResponseToWeather(weatherItem, weatherResponse, time, checkTime)
                         )
@@ -127,7 +117,7 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
             override fun onResponse(call: Call<LocationResponse>, response: Response<LocationResponse>) {
                 if (response.code() == RESPONSE_CODE_OK) {
                     val locationResponse = response.body()!!
-                    loadData("", locationResponse.lat.toString(), locationResponse.lon.toString(), false, "")
+                    loadData("", locationResponse.lat.toString(), locationResponse.lon.toString(), "")
                 }
             }
 

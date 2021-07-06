@@ -13,18 +13,17 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.application.R
-import com.example.application.models.Weather
+import com.example.application.ViewModels.WeatherDetailViewModel
 import com.example.application.adapters.WeatherDetailRecyclerViewAdapter
-import com.example.application.ViewModels.WeatherViewModel
 
 class WeatherDetailFragment : Fragment() {
 	private lateinit var adapter: WeatherDetailRecyclerViewAdapter
-	private lateinit var viewModel: WeatherViewModel
+	private lateinit var viewModel: WeatherDetailViewModel
 	private lateinit var actionBar: ActionBar
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		viewModel = ViewModelProvider(this)[WeatherViewModel::class.java]
+		viewModel = ViewModelProvider(this)[WeatherDetailViewModel::class.java]
 		adapter = WeatherDetailRecyclerViewAdapter()
 	}
 
@@ -40,7 +39,6 @@ class WeatherDetailFragment : Fragment() {
 			arguments?.getString(CITY)!!,
 			arguments?.getString(LAT)!!,
 			arguments?.getString(LON)!!,
-			true,
 			arguments?.getString(SELECTED_DATE)!!
 		)
 
