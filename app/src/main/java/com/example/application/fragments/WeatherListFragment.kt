@@ -17,7 +17,6 @@ import com.bumptech.glide.Glide
 import com.example.application.*
 import com.example.application.ViewModels.WeatherViewModel
 import com.example.application.adapters.WeatherListRecyclerViewAdapter
-import com.example.application.models.Coord
 import com.example.application.models.Weather
 
 class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener {
@@ -31,6 +30,7 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 		super.onCreate(savedInstanceState)
 		viewModel = ViewModelProvider(this)[WeatherViewModel::class.java]
 		adapter = WeatherListRecyclerViewAdapter(this)
+		viewModel.loadLocation()
 
 		val city = arguments?.getString(WeatherDetailFragment.CITY).toString()
 		if(!city.equals("null"))
@@ -58,8 +58,20 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 			onClickChangeCityButton(inflater)
 		}
 
-		viewModel.getError().observe(viewLifecycleOwner){
-			activity?.title = "no internet connection  pull to refresh"
+		viewModel.getCity().observe(viewLifecycleOwner){ city ->
+			this.city = city
+		}
+
+		viewModel.getTitle().observe(viewLifecycleOwner){ title ->
+			activity?.title = title
+		}
+
+		viewModel.getHeader().observe(viewLifecycleOwner){ header ->
+			headerText.text = header
+		}
+
+		viewModel.getHeaderImageUrl().observe(viewLifecycleOwner){ imageUrl ->
+			setHeaderImageUrl(imageUrl, headerImage, imageAnimation)
 		}
 
 		viewModel.isReload().observe(viewLifecycleOwner){ reload ->
@@ -71,10 +83,8 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 		}
 
 		viewModel.getData().observe(viewLifecycleOwner) { data ->
-			onLiveDataChangeData(data, headerText, imageAnimation, headerImage)
+			adapter.addWeather(data)
 		}
-
-		viewModel.loadLocation()
 
 		return rootView
 	}
@@ -89,43 +99,6 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 			viewModel.loadData(editText.text.toString(), "", "", false, "")
 		}
 		builder.show()
-	}
-
-	private fun onLiveDataChangeData(
-		data: List<Weather>,
-		headerText: TextView,
-		imageAnimation: ImageView,
-		headerImage: ImageView
-	) {
-		if (data[0].wrongCity) {
-			headerText.text = ""
-			activity?.title = "city not found"
-			return
-		}
-
-		val headerIconUrl = data[0].getIconUrl()
-		imageAnimation.visibility = View.GONE
-		imageAnimation.clearAnimation()
-		if (headerIconUrl in animWeather) {
-			val animationRotateCenter: Animation = AnimationUtils.loadAnimation(
-				activity, R.anim.gray_spinner_png
-			)
-			imageAnimation.visibility = View.VISIBLE
-			imageAnimation.startAnimation(animationRotateCenter)
-		}
-
-		Glide
-			.with(this)
-			.load(headerIconUrl)
-			.into(headerImage)
-
-		headerText.text = data[0].getTemp()
-
-		adapter.addWeather(data)
-
-		activity?.title = data[0].city
-		title = data[0].city
-		this.city = data[0].city.toString()
 	}
 
 	private fun onLiveDataChangeReload(reload: Boolean, progress: ProgressBar) {
@@ -156,8 +129,25 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 		fragmentContainer.isRefreshing = false
 	}
 
+	private fun setHeaderImageUrl(url: String, headerImage: ImageView, imageAnimation: ImageView){
+		imageAnimation.visibility = View.GONE
+		imageAnimation.clearAnimation()
+		if (url in animWeatherUrls) {
+			val animationRotateCenter: Animation = AnimationUtils.loadAnimation(
+				activity, R.anim.gray_spinner_png
+			)
+			imageAnimation.visibility = View.VISIBLE
+			imageAnimation.startAnimation(animationRotateCenter)
+		}
+
+		Glide
+			.with(this)
+			.load(url)
+			.into(headerImage)
+	}
+
 	companion object{
-		val animWeather = listOf(
+		val animWeatherUrls = listOf(
 			"https://openweathermap.org/img/wn/02d@4x.png",
 			"https://openweathermap.org/img/wn/10d@4x.png",
 			"https://openweathermap.org/img/wn/02d@4x.png",

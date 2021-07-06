@@ -24,7 +24,10 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
     private val data: MutableLiveData<MutableList<Weather>> = MutableLiveData<MutableList<Weather>>()
     private val location: MutableLiveData<Coord> = MutableLiveData<Coord>()
     private val reload: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
-    private val error: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    private val title: MutableLiveData<String> = MutableLiveData<String>()
+    private val header: MutableLiveData<String> = MutableLiveData<String>()
+    private val headerImageUrl: MutableLiveData<String> = MutableLiveData<String>()
+    private val city: MutableLiveData<String> = MutableLiveData<String>()
 
     fun getData(): LiveData<List<Weather>>{
         return data as LiveData<List<Weather>>
@@ -38,8 +41,20 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
         return reload
     }
 
-    fun getError(): LiveData<Boolean>{
-        return error
+    fun getTitle(): LiveData<String>{
+        return title
+    }
+
+    fun getHeader(): LiveData<String>{
+        return header
+    }
+
+    fun getHeaderImageUrl(): LiveData<String>{
+        return headerImageUrl
+    }
+
+    fun getCity(): LiveData<String>{
+        return city
     }
 
     fun loadData(q: String, lat: String, lon: String, detail: Boolean, day: String = "0") {
@@ -53,9 +68,22 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
 
         call.enqueue(object : Callback<WeatherResponse> {
             override fun onResponse(call: Call<WeatherResponse>, response: Response<WeatherResponse>) {
+                if(response.body() == null){
+                    title.postValue("city not found")
+                    header.postValue("")
+                    reload.postValue(false)
+                    return
+                }
+
                 val weatherResponse = response.body()!!
                 val weather =  mutableListOf<Weather>()
                 var lastTime = 0
+
+                city.postValue(weatherResponse.city.name)
+                title.postValue(weatherResponse.city.name)
+                header.postValue(floor(weatherResponse.list[0].main.temp - KELVIN).toString() + "°C")
+                headerImageUrl.postValue("https://openweathermap.org/img/wn/${weatherResponse.list[0].weather[0].icon}@4x.png")
+
                 weatherResponse.list.forEach{ weatherItem ->
                     val date = weatherItem.dt?.toLong()?.times(1000)?.let { Date(it) }
                     val time = dateFormatTimeStamp.format(date)
@@ -81,7 +109,7 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
             }
 
             override fun onFailure(call: Call<WeatherResponse>, t: Throwable) {
-                error.postValue(true)
+                title.postValue("no internet connection  pull to refresh")
                 reload.postValue(false)
             }
         })
@@ -105,7 +133,7 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
             }
 
             override fun onFailure(call: Call<LocationResponse>, t: Throwable) {
-                error.postValue(true)
+                title.postValue("no internet connection  pull to refresh")
                 reload.postValue(false)
             }
         })
@@ -130,7 +158,6 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
     }
 
     companion object {
-
         @SuppressLint("SimpleDateFormat")
         val dateFormatTimeStamp = SimpleDateFormat("E dd.MM hh:mm")
         @SuppressLint("SimpleDateFormat")
