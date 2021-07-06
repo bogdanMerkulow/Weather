@@ -19,7 +19,7 @@ import com.example.application.ViewModels.WeatherViewModel
 import com.example.application.adapters.WeatherListRecyclerViewAdapter
 import com.example.application.models.Weather
 
-class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener {
+class WeatherListFragment : Fragment() {
 	private lateinit var adapter: WeatherListRecyclerViewAdapter
 	private lateinit var viewModel: WeatherViewModel
 	private var city: String = ""
@@ -29,7 +29,7 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		viewModel = ViewModelProvider(this)[WeatherViewModel::class.java]
-		adapter = WeatherListRecyclerViewAdapter(this)
+		adapter = WeatherListRecyclerViewAdapter(this::onItemClick)
 		viewModel.loadLocation()
 
 		val city = arguments?.getString(WeatherDetailFragment.CITY).toString()

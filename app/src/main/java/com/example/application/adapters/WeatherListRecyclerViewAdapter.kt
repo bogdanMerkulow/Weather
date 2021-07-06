@@ -6,12 +6,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.application.models.Weather
 import com.example.application.viewholders.WeatherListViewHolder
 
-class WeatherListRecyclerViewAdapter(private val listener: Listener) :
+class WeatherListRecyclerViewAdapter(private val listener: (Weather) -> Unit) :
 	RecyclerView.Adapter<WeatherListViewHolder>() {
 
 	private var weather: List<Weather> = listOf()
 
-	interface Listener{
+	fun interface Listener{
 		fun onItemClick(weather: Weather)
 	}
 
