@@ -37,8 +37,6 @@ class WeatherDetailFragment : Fragment() {
 
 		viewModel.loadData(
 			arguments?.getString(CITY)!!,
-			arguments?.getString(LAT)!!,
-			arguments?.getString(LON)!!,
 			arguments?.getString(SELECTED_DATE)!!
 		)
 
@@ -76,8 +74,6 @@ class WeatherDetailFragment : Fragment() {
 
 	companion object{
 		const val CITY = "q"
-		const val LON = "lon"
-		const val LAT = "lat"
 		const val SELECTED_DATE = "date"
 	}
 }

@@ -23,7 +23,6 @@ class WeatherListFragment : Fragment() {
 	private lateinit var adapter: WeatherListRecyclerViewAdapter
 	private lateinit var listViewModel: WeatherListViewModel
 	private var city: String = ""
-	private var title: String? = null
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -109,8 +108,6 @@ class WeatherListFragment : Fragment() {
 		val fragment = WeatherDetailFragment()
 		val bundle = Bundle()
 		bundle.putString(WeatherDetailFragment.CITY, this.city)
-		bundle.putString(WeatherDetailFragment.LAT, weather.getCoords().lat)
-		bundle.putString(WeatherDetailFragment.LON, weather.getCoords().lon)
 		bundle.putString(WeatherDetailFragment.SELECTED_DATE, weather.dayNumber)
 		fragment.arguments = bundle
 		transaction?.addToBackStack(null)

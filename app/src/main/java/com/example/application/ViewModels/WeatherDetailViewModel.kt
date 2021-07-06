@@ -27,14 +27,14 @@ class WeatherDetailViewModel(application: Application) : AndroidViewModel(applic
     val reload: LiveData<Boolean>
         get() = _reload
 
-    fun loadData(q: String, lat: String, lon: String, day: String = "0") {
+    fun loadData(q: String, day: String = "0") {
         _reload.postValue(true)
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val service = retrofit.create(WeatherService::class.java)
-        val call: Call<WeatherResponse> = service.getCurrentWeatherData(q = q, lat = lat, lon = lon, app_id = APP_ID)
+        val call: Call<WeatherResponse> = service.getCurrentWeatherData(q = q, app_id = APP_ID)
 
         call.enqueue(object : Callback<WeatherResponse> {
             override fun onResponse(call: Call<WeatherResponse>, response: Response<WeatherResponse>) {
