@@ -71,7 +71,7 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 		}
 
 		viewModel.getData().observe(viewLifecycleOwner) { data ->
-			onLiveDataChangeData(data as MutableList<Weather>, headerText, imageAnimation, headerImage)
+			onLiveDataChangeData(data, headerText, imageAnimation, headerImage)
 		}
 
 		viewModel.loadLocation()
@@ -92,7 +92,7 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 	}
 
 	private fun onLiveDataChangeData(
-		data: MutableList<Weather>,
+		data: List<Weather>,
 		headerText: TextView,
 		imageAnimation: ImageView,
 		headerImage: ImageView

@@ -11,7 +11,7 @@ class WeatherDetailRecyclerViewAdapter:
 
 	private var weather: List<Weather> = listOf()
 
-	fun addWeather(weather: MutableList<Weather>){
+	fun addWeather(weather: List<Weather>){
 		this.weather = weather
 		notifyDataSetChanged()
 	}

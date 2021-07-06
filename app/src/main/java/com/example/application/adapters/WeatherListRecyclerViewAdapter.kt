@@ -15,7 +15,7 @@ class WeatherListRecyclerViewAdapter(private val listener: Listener) :
 		fun onItemClick(weather: Weather)
 	}
 
-	fun addWeather(weather: MutableList<Weather>){
+	fun addWeather(weather: List<Weather>){
 		this.weather = weather
 		notifyDataSetChanged()
 	}

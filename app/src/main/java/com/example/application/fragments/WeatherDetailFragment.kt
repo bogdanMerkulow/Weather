@@ -47,7 +47,7 @@ class WeatherDetailFragment : Fragment() {
 		)
 
 		viewModel.getData().observe(viewLifecycleOwner) { data ->
-			adapter.addWeather(data as MutableList<Weather>)
+			adapter.addWeather(data)
 		}
 
 		viewModel.isReload().observe(viewLifecycleOwner) { reload ->
