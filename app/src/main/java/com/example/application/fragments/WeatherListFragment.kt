@@ -59,7 +59,7 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 		}
 
 		viewModel.getError().observe(viewLifecycleOwner){
-			onLiveDataChangeError()
+			activity?.title = "no internet connection  pull to refresh"
 		}
 
 		viewModel.isReload().observe(viewLifecycleOwner){ reload ->
@@ -67,7 +67,7 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 		}
 
 		viewModel.getLocation().observe(viewLifecycleOwner) { location ->
-			onLiveDataChangeLocation(location)
+			viewModel.loadData(this.city, location.lat, location.lon, false, "")
 		}
 
 		viewModel.getData().observe(viewLifecycleOwner) { data ->
@@ -89,10 +89,6 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 			viewModel.loadData(editText.text.toString(), "", "", false, "")
 		}
 		builder.show()
-	}
-
-	private fun onLiveDataChangeLocation(location: Coord) {
-		viewModel.loadData(this.city, location.lat, location.lon, false, "")
 	}
 
 	private fun onLiveDataChangeData(
@@ -138,10 +134,6 @@ class WeatherListFragment : Fragment(), WeatherListRecyclerViewAdapter.Listener 
 		}else{
 			progress.visibility = View.INVISIBLE
 		}
-	}
-
-	private fun onLiveDataChangeError() {
-		activity?.title = "no internet connection  pull to refresh"
 	}
 
 	override fun onItemClick(weather: Weather) {
