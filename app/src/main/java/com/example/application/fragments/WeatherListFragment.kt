@@ -78,10 +78,6 @@ class WeatherListFragment : Fragment() {
 			onLiveDataChangeReload(reload, progress)
 		}
 
-		viewModel.getLocation().observe(viewLifecycleOwner) { location ->
-			viewModel.loadData(this.city, location.lat, location.lon, false, "")
-		}
-
 		viewModel.getData().observe(viewLifecycleOwner) { data ->
 			adapter.addWeather(data)
 		}
@@ -109,7 +105,7 @@ class WeatherListFragment : Fragment() {
 		}
 	}
 
-	override fun onItemClick(weather: Weather) {
+	fun onItemClick(weather: Weather) {
 		val transaction = activity?.supportFragmentManager?.beginTransaction()
 		val fragment = WeatherDetailFragment()
 		val bundle = Bundle()

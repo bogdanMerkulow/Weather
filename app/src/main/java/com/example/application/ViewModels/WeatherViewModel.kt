@@ -127,8 +127,7 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
             override fun onResponse(call: Call<LocationResponse>, response: Response<LocationResponse>) {
                 if (response.code() == RESPONSE_CODE_OK) {
                     val locationResponse = response.body()!!
-                    location.postValue(Coord(locationResponse.lat.toString(), locationResponse.lon.toString()))
-                    reload.postValue(false)
+                    loadData("", locationResponse.lat.toString(), locationResponse.lon.toString(), false, "")
                 }
             }
 
