@@ -10,7 +10,7 @@ import com.example.application.R
 import com.example.application.adapters.WeatherListRecyclerViewAdapter
 import com.example.application.models.Weather
 
-class WeatherListViewHolder(inflater: LayoutInflater, parent: ViewGroup, private val listener: WeatherListRecyclerViewAdapter.Listener):
+class WeatherListViewHolder(inflater: LayoutInflater, parent: ViewGroup, private val listener: (Weather) -> Unit):
     RecyclerView.ViewHolder(inflater.inflate(R.layout.weather_list, parent, false)) {
 
     private val icon: ImageView = itemView.findViewById(R.id.weather_icon)
@@ -23,7 +23,7 @@ class WeatherListViewHolder(inflater: LayoutInflater, parent: ViewGroup, private
         desc.text = weather.getTemp()
         state.text = weather.state
         itemView.setOnClickListener {
-            this.listener.onItemClick(weather)
+            this.listener(weather)
         }
 
         Glide
