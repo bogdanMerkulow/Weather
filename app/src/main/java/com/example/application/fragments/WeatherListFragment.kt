@@ -105,7 +105,7 @@ class WeatherListFragment : Fragment() {
 		}
 	}
 
-	fun onItemClick(weather: Weather) {
+	private fun onItemClick(weather: Weather) {
 		val transaction = activity?.supportFragmentManager?.beginTransaction()
 		val fragment = WeatherDetailFragment()
 		val bundle = Bundle()
