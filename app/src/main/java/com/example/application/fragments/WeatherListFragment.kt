@@ -76,11 +76,11 @@ class WeatherListFragment : Fragment() {
 
 	private fun onClickChangeCityButton(inflater: LayoutInflater) {
 		val builder = AlertDialog.Builder(activity)
-		builder.setTitle("change city")
+		builder.setTitle(R.string.change_city)
 		val dialogLayout = inflater.inflate(R.layout.fragment_city_dialog, null)
 		val editText  = dialogLayout.findViewById<EditText>(R.id.city_edit_text)
 		builder.setView(dialogLayout)
-		builder.setPositiveButton("enter") { _, _ ->
+		builder.setPositiveButton(R.string.enter) { _, _ ->
 			listViewModel.changeLocation(editText.text.toString())
 		}
 		builder.show()
