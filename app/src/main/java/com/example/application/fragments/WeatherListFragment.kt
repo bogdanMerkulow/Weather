@@ -22,17 +22,12 @@ import com.example.application.models.Weather
 class WeatherListFragment : Fragment() {
 	private lateinit var adapter: WeatherListRecyclerViewAdapter
 	private lateinit var listViewModel: WeatherListViewModel
-	private var city: String = ""
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		listViewModel = ViewModelProvider(this)[WeatherListViewModel::class.java]
 		adapter = WeatherListRecyclerViewAdapter(this::onItemClick)
 		listViewModel.loadLocation()
-
-		val city = arguments?.getString(WeatherDetailFragment.CITY).toString()
-		if(!city.equals("null"))
-			this.city = city
 	}
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -54,10 +49,6 @@ class WeatherListFragment : Fragment() {
 
 		changeCityButton.setOnClickListener{
 			onClickChangeCityButton(inflater)
-		}
-
-		listViewModel.city.observe(viewLifecycleOwner){ city ->
-			this.city = city
 		}
 
 		listViewModel.title.observe(viewLifecycleOwner){ title ->
@@ -90,7 +81,7 @@ class WeatherListFragment : Fragment() {
 		val editText  = dialogLayout.findViewById<EditText>(R.id.city_edit_text)
 		builder.setView(dialogLayout)
 		builder.setPositiveButton("enter") { _, _ ->
-			listViewModel.loadData(editText.text.toString(), "", "")
+			listViewModel.changeLocation(editText.text.toString())
 		}
 		builder.show()
 	}
@@ -107,7 +98,7 @@ class WeatherListFragment : Fragment() {
 		val transaction = activity?.supportFragmentManager?.beginTransaction()
 		val fragment = WeatherDetailFragment()
 		val bundle = Bundle()
-		bundle.putString(WeatherDetailFragment.CITY, this.city)
+		bundle.putString(WeatherDetailFragment.CITY, weather.city)
 		bundle.putString(WeatherDetailFragment.SELECTED_DATE, weather.dayNumber)
 		fragment.arguments = bundle
 		transaction?.addToBackStack(null)
@@ -116,7 +107,7 @@ class WeatherListFragment : Fragment() {
 	}
 
 	private fun onRefreshData(fragmentContainer: SwipeRefreshLayout) {
-		listViewModel.loadData(this.city, "", "")
+		listViewModel.loadData()
 		fragmentContainer.isRefreshing = false
 	}
 

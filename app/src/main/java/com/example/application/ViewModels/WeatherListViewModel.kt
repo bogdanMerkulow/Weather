@@ -25,7 +25,9 @@ class WeatherListViewModel(application: Application) : AndroidViewModel(applicat
     private val _title: MutableLiveData<String> = MutableLiveData<String>()
     private val _header: MutableLiveData<String> = MutableLiveData<String>()
     private val _headerImageUrl: MutableLiveData<String> = MutableLiveData<String>()
-    private val _city: MutableLiveData<String> = MutableLiveData<String>()
+    private var currentCity: String = String()
+    private var lat: String = String()
+    private var lon: String = String()
 
     val data: LiveData<List<Weather>>
         get() = _data
@@ -42,17 +44,14 @@ class WeatherListViewModel(application: Application) : AndroidViewModel(applicat
     val headerImageUrl: LiveData<String>
         get() = _headerImageUrl
 
-    val city: LiveData<String>
-        get() = _city
-
-    fun loadData(q: String, lat: String, lon: String) {
+    fun loadData() {
         _reload.postValue(true)
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val service = retrofit.create(WeatherService::class.java)
-        val call: Call<WeatherResponse> = service.getCurrentWeatherData(q = q, lat = lat, lon = lon, app_id = APP_ID)
+        val call: Call<WeatherResponse> = service.getCurrentWeatherData(q = currentCity, lat = lat, lon = lon, app_id = APP_ID)
 
         call.enqueue(object : Callback<WeatherResponse> {
             override fun onResponse(call: Call<WeatherResponse>, response: Response<WeatherResponse>) {
@@ -67,7 +66,6 @@ class WeatherListViewModel(application: Application) : AndroidViewModel(applicat
                 val weather =  mutableListOf<Weather>()
                 var lastTime = 0
 
-                _city.postValue(weatherResponse.city.name)
                 _title.postValue(weatherResponse.city.name)
                 _header.postValue(floor(weatherResponse.list[0].main.temp - KELVIN).toString() + "°C")
                 _headerImageUrl.postValue("https://openweathermap.org/img/wn/${weatherResponse.list[0].weather[0].icon}@4x.png")
@@ -109,7 +107,9 @@ class WeatherListViewModel(application: Application) : AndroidViewModel(applicat
             override fun onResponse(call: Call<LocationResponse>, response: Response<LocationResponse>) {
                 if (response.code() == RESPONSE_CODE_OK) {
                     val locationResponse = response.body()!!
-                    loadData("", locationResponse.lat.toString(), locationResponse.lon.toString())
+                    lat = locationResponse.lat.toString()
+                    lon = locationResponse.lon.toString()
+                    loadData()
                 }
             }
 
@@ -118,6 +118,11 @@ class WeatherListViewModel(application: Application) : AndroidViewModel(applicat
                 _reload.postValue(false)
             }
         })
+    }
+
+    fun changeLocation(city: String){
+        currentCity = city
+        loadData()
     }
 
     private fun weatherResponseToWeather(
