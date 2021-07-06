@@ -36,8 +36,6 @@ class WeatherDetailFragment : Fragment() {
 		rcWeatherList.layoutManager = LinearLayoutManager(activity)
 		rcWeatherList.adapter = adapter
 
-		activity?.title = arguments?.getString(TITLE)
-
 		viewModel.loadData(
 			arguments?.getString(CITY)!!,
 			arguments?.getString(LAT)!!,
@@ -82,7 +80,6 @@ class WeatherDetailFragment : Fragment() {
 		const val CITY = "q"
 		const val LON = "lon"
 		const val LAT = "lat"
-		const val TITLE = "title"
 		const val SELECTED_DATE = "date"
 	}
 }

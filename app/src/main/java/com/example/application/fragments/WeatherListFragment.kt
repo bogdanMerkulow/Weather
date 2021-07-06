@@ -112,7 +112,6 @@ class WeatherListFragment : Fragment() {
 		bundle.putString(WeatherDetailFragment.CITY, this.city)
 		bundle.putString(WeatherDetailFragment.LAT, weather.getCoords().lat)
 		bundle.putString(WeatherDetailFragment.LON, weather.getCoords().lon)
-		bundle.putString(WeatherDetailFragment.TITLE, title)
 		bundle.putString(WeatherDetailFragment.SELECTED_DATE, weather.dayNumber)
 		fragment.arguments = bundle
 		transaction?.addToBackStack(null)
