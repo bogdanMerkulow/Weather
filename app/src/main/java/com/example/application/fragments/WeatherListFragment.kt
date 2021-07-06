@@ -57,27 +57,27 @@ class WeatherListFragment : Fragment() {
 			onClickChangeCityButton(inflater)
 		}
 
-		listViewModel.getCity().observe(viewLifecycleOwner){ city ->
+		listViewModel.city.observe(viewLifecycleOwner){ city ->
 			this.city = city
 		}
 
-		listViewModel.getTitle().observe(viewLifecycleOwner){ title ->
+		listViewModel.title.observe(viewLifecycleOwner){ title ->
 			activity?.title = title
 		}
 
-		listViewModel.getHeader().observe(viewLifecycleOwner){ header ->
+		listViewModel.header.observe(viewLifecycleOwner){ header ->
 			headerText.text = header
 		}
 
-		listViewModel.getHeaderImageUrl().observe(viewLifecycleOwner){ imageUrl ->
+		listViewModel.headerImageUrl.observe(viewLifecycleOwner){ imageUrl ->
 			setHeaderImageUrl(imageUrl, headerImage, imageAnimation)
 		}
 
-		listViewModel.isReload().observe(viewLifecycleOwner){ reload ->
+		listViewModel.reload.observe(viewLifecycleOwner){ reload ->
 			onLiveDataChangeReload(reload, progress)
 		}
 
-		listViewModel.getData().observe(viewLifecycleOwner) { data ->
+		listViewModel.data.observe(viewLifecycleOwner) { data ->
 			adapter.addWeather(data)
 		}
 

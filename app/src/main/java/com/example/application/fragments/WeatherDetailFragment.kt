@@ -42,11 +42,11 @@ class WeatherDetailFragment : Fragment() {
 			arguments?.getString(SELECTED_DATE)!!
 		)
 
-		viewModel.getData().observe(viewLifecycleOwner) { data ->
+		viewModel.data.observe(viewLifecycleOwner) { data ->
 			adapter.addWeather(data)
 		}
 
-		viewModel.isReload().observe(viewLifecycleOwner) { reload ->
+		viewModel.reload.observe(viewLifecycleOwner) { reload ->
 			onLiveDataChangeReload(reload, progress)
 		}
 

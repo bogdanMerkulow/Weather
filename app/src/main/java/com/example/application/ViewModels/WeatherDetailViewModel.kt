@@ -6,10 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.application.*
-import com.example.application.api.LocationResponse
-import com.example.application.api.LocationService
 import com.example.application.api.WeatherService
-import com.example.application.models.Coord
 import com.example.application.models.Weather
 import retrofit2.Call
 import retrofit2.Callback
@@ -21,19 +18,17 @@ import java.util.*
 import kotlin.math.floor
 
 class WeatherDetailViewModel(application: Application) : AndroidViewModel(application) {
-    private val data: MutableLiveData<List<Weather>> = MutableLiveData<List<Weather>>()
-    private val reload: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    private val _data: MutableLiveData<List<Weather>> = MutableLiveData<List<Weather>>()
+    private val _reload: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
 
-    fun getData(): LiveData<List<Weather>>{
-        return data
-    }
+    val data: LiveData<List<Weather>>
+        get() = _data
 
-    fun isReload(): LiveData<Boolean>{
-        return reload
-    }
+    val reload: LiveData<Boolean>
+        get() = _reload
 
     fun loadData(q: String, lat: String, lon: String, day: String = "0") {
-        reload.postValue(true)
+        _reload.postValue(true)
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
@@ -58,12 +53,12 @@ class WeatherDetailViewModel(application: Application) : AndroidViewModel(applic
                     }
                 }
 
-                data.postValue(weather)
-                reload.postValue(false)
+                _data.postValue(weather)
+                _reload.postValue(false)
             }
 
             override fun onFailure(call: Call<WeatherResponse>, t: Throwable) {
-                reload.postValue(false)
+                _reload.postValue(false)
             }
         })
     }
