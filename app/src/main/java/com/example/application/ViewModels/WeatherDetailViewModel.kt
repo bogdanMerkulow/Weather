@@ -18,7 +18,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.floor
 
-class WeatherDetailViewModel : ViewModel() {
+class WeatherDetailViewModel(private val weatherService: WeatherService) : ViewModel() {
     private val _data: MutableLiveData<List<Weather>> = MutableLiveData<List<Weather>>()
     private val _reload: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
 
@@ -30,12 +30,8 @@ class WeatherDetailViewModel : ViewModel() {
 
     fun loadData(q: String, day: String = "0") {
         _reload.postValue(true)
-        val retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        val service = retrofit.create(WeatherService::class.java)
-        val call: Call<WeatherResponse> = service.getCurrentWeatherData(q = q, app_id = APP_ID)
+
+        val call: Call<WeatherResponse> = weatherService.getCurrentWeatherData(q = q, app_id = APP_ID)
 
         call.enqueue(object : Callback<WeatherResponse> {
             override fun onResponse(call: Call<WeatherResponse>, response: Response<WeatherResponse>) {

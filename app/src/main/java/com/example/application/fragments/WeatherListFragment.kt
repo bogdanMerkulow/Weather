@@ -10,6 +10,7 @@ import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -17,15 +18,19 @@ import com.bumptech.glide.Glide
 import com.example.application.*
 import com.example.application.ViewModels.WeatherListViewModel
 import com.example.application.adapters.WeatherListRecyclerViewAdapter
+import com.example.application.dependencies.DaggerDaggerComponent
+import com.example.application.factories.WeatherListViewModelFactory
 import com.example.application.models.Weather
 
 class WeatherListFragment : Fragment() {
 	private lateinit var adapter: WeatherListRecyclerViewAdapter
 	private lateinit var listViewModel: WeatherListViewModel
+	private lateinit var viewModelFactory: WeatherListViewModelFactory
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		listViewModel = ViewModelProvider(this)[WeatherListViewModel::class.java]
+		viewModelFactory = WeatherListViewModelFactory()
+		listViewModel = ViewModelProvider(this, viewModelFactory).get(WeatherListViewModel::class.java)
 		adapter = WeatherListRecyclerViewAdapter(this::onItemClick)
 		listViewModel.loadLocation()
 	}

@@ -1,8 +1,6 @@
 package com.example.application.ViewModels
 
 import android.annotation.SuppressLint
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,17 +8,16 @@ import com.example.application.*
 import com.example.application.api.LocationResponse
 import com.example.application.api.LocationService
 import com.example.application.api.WeatherService
+import com.example.application.dependencies.DaggerDaggerComponent
 import com.example.application.models.Weather
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.floor
 
-class WeatherListViewModel: ViewModel() {
+class WeatherListViewModel(private val weatherService: WeatherService, private val locationService: LocationService): ViewModel() {
     private val _data: MutableLiveData<List<Weather>> = MutableLiveData<List<Weather>>()
     private val _reload: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     private val _title: MutableLiveData<String> = MutableLiveData<String>()
@@ -47,12 +44,7 @@ class WeatherListViewModel: ViewModel() {
 
     fun loadData() {
         _reload.postValue(true)
-        val retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        val service = retrofit.create(WeatherService::class.java)
-        val call: Call<WeatherResponse> = service.getCurrentWeatherData(q = currentCity, lat = lat, lon = lon, app_id = APP_ID)
+        val call: Call<WeatherResponse> = weatherService.getCurrentWeatherData(q = currentCity, lat = lat, lon = lon, app_id = APP_ID)
 
         call.enqueue(object : Callback<WeatherResponse> {
             override fun onResponse(call: Call<WeatherResponse>, response: Response<WeatherResponse>) {
@@ -97,12 +89,7 @@ class WeatherListViewModel: ViewModel() {
     }
 
     fun loadLocation(){
-        val retrofit = Retrofit.Builder()
-            .baseUrl(LOCATION_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        val service = retrofit.create(LocationService::class.java)
-        val call: Call<LocationResponse> = service.getLocation()
+        val call: Call<LocationResponse> = locationService.getLocation()
 
         call.enqueue(object : Callback<LocationResponse> {
             override fun onResponse(call: Call<LocationResponse>, response: Response<LocationResponse>) {
