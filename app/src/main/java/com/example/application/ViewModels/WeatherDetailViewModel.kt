@@ -5,6 +5,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.example.application.*
 import com.example.application.api.WeatherService
 import com.example.application.models.Weather
@@ -17,7 +18,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.floor
 
-class WeatherDetailViewModel(application: Application) : AndroidViewModel(application) {
+class WeatherDetailViewModel : ViewModel() {
     private val _data: MutableLiveData<List<Weather>> = MutableLiveData<List<Weather>>()
     private val _reload: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
 
