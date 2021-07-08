@@ -11,5 +11,5 @@ class LocationClient @Inject constructor() {
         .baseUrl(WeatherListViewModel.LOCATION_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
-    val service = retrofit.create(LocationService::class.java)
+    val service: LocationService = retrofit.create(LocationService::class.java)
 }
