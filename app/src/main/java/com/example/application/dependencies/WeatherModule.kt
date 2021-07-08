@@ -21,7 +21,7 @@ class WeatherModule {
     @Provides
     fun retrofit(gsonConverterFactory: GsonConverterFactory): Retrofit{
         return Retrofit.Builder()
-            .baseUrl(WeatherListViewModel.BASE_URL)
+            .baseUrl("https://api.openweathermap.org/")
             .addConverterFactory(gsonConverterFactory)
             .build()
     }

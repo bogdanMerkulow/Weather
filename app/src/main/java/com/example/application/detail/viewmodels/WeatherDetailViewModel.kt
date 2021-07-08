@@ -79,7 +79,6 @@ class WeatherDetailViewModel(private val weatherService: WeatherService) : ViewM
         val dateFormatTimeStamp = SimpleDateFormat("E dd.MM hh:mm")
         @SuppressLint("SimpleDateFormat")
         val dateFormatDay = SimpleDateFormat("dd")
-        const val BASE_URL = "https://api.openweathermap.org/"
         const val APP_ID = "c46b6b253436ddd455030408be9b19bf"
         const val KELVIN = 272.15
     }

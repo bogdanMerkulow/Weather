@@ -136,8 +136,6 @@ class WeatherListViewModel(private val weatherService: WeatherService, private v
         @SuppressLint("SimpleDateFormat")
         val dateFormatDay = SimpleDateFormat("dd")
         const val RESPONSE_CODE_OK = 200
-        const val LOCATION_URL = "http://ip-api.com/json/"
-        const val BASE_URL = "https://api.openweathermap.org/"
         const val APP_ID = "c46b6b253436ddd455030408be9b19bf"
         const val KELVIN = 272.15
     }

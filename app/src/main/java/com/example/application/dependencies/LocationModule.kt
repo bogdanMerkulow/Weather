@@ -20,7 +20,7 @@ class LocationModule {
     @Provides
     fun retrofit(gsonConverterFactory: GsonConverterFactory): Retrofit{
         return Retrofit.Builder()
-            .baseUrl(WeatherListViewModel.LOCATION_URL)
+            .baseUrl("http://ip-api.com/json/")
             .addConverterFactory(gsonConverterFactory)
             .build()
     }
