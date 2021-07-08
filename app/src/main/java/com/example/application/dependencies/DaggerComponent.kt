@@ -1,12 +1,11 @@
 package com.example.application.dependencies
 
-import com.example.application.api.LocationService
-import com.example.application.api.WeatherService
+import com.example.application.detail.viewmodels.WeatherDetailViewModel
+import com.example.application.list.viewmodels.WeatherListViewModel
 import dagger.Component
-import javax.inject.Named
 
-@Component(modules = [WeatherModule::class, LocationModule::class])
+@Component(modules = [DetailViewModelModel::class, ListViewModelModel::class])
 interface DaggerComponent {
-    fun getWeatherService(): WeatherService
-    fun getLocationService(): LocationService
+    fun getDetailViewModel(): WeatherDetailViewModel
+    fun getListViewModel(): WeatherListViewModel
 }
