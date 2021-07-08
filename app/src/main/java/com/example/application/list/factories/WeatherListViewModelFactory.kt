@@ -8,8 +8,9 @@ import com.example.application.dependencies.DaggerDaggerComponent
 
 class WeatherListViewModelFactory: ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        val locationService = DaggerDaggerComponent.create().getLocation().service
-        val weatherService = DaggerDaggerComponent.create().getWeather().service
+        val daggerComponent = DaggerDaggerComponent.create()
+        val locationService = daggerComponent.getLocationService()
+        val weatherService = daggerComponent.getWeatherService()
         return WeatherListViewModel(weatherService, locationService) as T
     }
 }
