@@ -11,10 +11,6 @@ class WeatherListRecyclerViewAdapter(private val listener: (Weather) -> Unit) :
 
 	private var weather: List<Weather> = listOf()
 
-	fun interface Listener{
-		fun onItemClick(weather: Weather)
-	}
-
 	fun addWeather(weather: List<Weather>){
 		this.weather = weather
 		notifyDataSetChanged()
