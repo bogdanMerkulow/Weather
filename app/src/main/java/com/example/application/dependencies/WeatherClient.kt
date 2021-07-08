@@ -1,6 +1,6 @@
 package com.example.application.dependencies
 
-import com.example.application.ViewModels.WeatherListViewModel
+import com.example.application.list.viewmodels.WeatherListViewModel
 import com.example.application.api.WeatherService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

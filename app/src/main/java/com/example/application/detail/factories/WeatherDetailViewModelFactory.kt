@@ -1,9 +1,8 @@
-package com.example.application.factories
+package com.example.application.detail.factories
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.application.ViewModels.WeatherDetailViewModel
-import com.example.application.api.WeatherService
+import com.example.application.detail.viewmodels.WeatherDetailViewModel
 import com.example.application.dependencies.DaggerDaggerComponent
 
 class WeatherDetailViewModelFactory: ViewModelProvider.Factory {

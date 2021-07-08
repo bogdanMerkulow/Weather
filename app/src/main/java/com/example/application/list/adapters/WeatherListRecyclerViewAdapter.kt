@@ -1,10 +1,10 @@
-package com.example.application.adapters
+package com.example.application.list.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.application.models.Weather
-import com.example.application.viewholders.WeatherListViewHolder
+import com.example.application.list.viewholders.WeatherListViewHolder
 
 class WeatherListRecyclerViewAdapter(private val listener: (Weather) -> Unit) :
 	RecyclerView.Adapter<WeatherListViewHolder>() {

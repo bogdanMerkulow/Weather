@@ -1,4 +1,4 @@
-package com.example.application.fragments
+package com.example.application.detail.fragments
 
 import android.content.Context
 import android.os.Bundle
@@ -13,12 +13,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.application.R
-import com.example.application.ViewModels.WeatherDetailViewModel
-import com.example.application.ViewModels.WeatherListViewModel
-import com.example.application.adapters.WeatherDetailRecyclerViewAdapter
-import com.example.application.dependencies.DaggerDaggerComponent
-import com.example.application.factories.WeatherDetailViewModelFactory
-import com.example.application.factories.WeatherListViewModelFactory
+import com.example.application.detail.viewmodels.WeatherDetailViewModel
+import com.example.application.detail.adapters.WeatherDetailRecyclerViewAdapter
+import com.example.application.detail.factories.WeatherDetailViewModelFactory
 
 class WeatherDetailFragment : Fragment() {
 	private lateinit var adapter: WeatherDetailRecyclerViewAdapter

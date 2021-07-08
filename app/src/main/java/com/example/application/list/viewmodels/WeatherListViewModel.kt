@@ -1,4 +1,4 @@
-package com.example.application.ViewModels
+package com.example.application.list.viewmodels
 
 import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
@@ -8,7 +8,6 @@ import com.example.application.*
 import com.example.application.api.LocationResponse
 import com.example.application.api.LocationService
 import com.example.application.api.WeatherService
-import com.example.application.dependencies.DaggerDaggerComponent
 import com.example.application.models.Weather
 import retrofit2.Call
 import retrofit2.Callback

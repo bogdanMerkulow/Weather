@@ -1,4 +1,4 @@
-package com.example.application.fragments
+package com.example.application.list.fragments
 
 import android.app.AlertDialog
 import android.os.Bundle
@@ -10,16 +10,15 @@ import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.example.application.*
-import com.example.application.ViewModels.WeatherListViewModel
-import com.example.application.adapters.WeatherListRecyclerViewAdapter
-import com.example.application.dependencies.DaggerDaggerComponent
-import com.example.application.factories.WeatherListViewModelFactory
+import com.example.application.list.viewmodels.WeatherListViewModel
+import com.example.application.detail.fragments.WeatherDetailFragment
+import com.example.application.list.adapters.WeatherListRecyclerViewAdapter
+import com.example.application.list.factories.WeatherListViewModelFactory
 import com.example.application.models.Weather
 
 class WeatherListFragment : Fragment() {

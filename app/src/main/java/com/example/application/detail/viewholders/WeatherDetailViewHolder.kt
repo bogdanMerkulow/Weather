@@ -1,4 +1,4 @@
-package com.example.application.viewholders
+package com.example.application.detail.viewholders
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

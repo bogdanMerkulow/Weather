@@ -1,8 +1,6 @@
-package com.example.application.ViewModels
+package com.example.application.detail.viewmodels
 
 import android.annotation.SuppressLint
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,8 +10,6 @@ import com.example.application.models.Weather
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.floor

@@ -1,10 +1,10 @@
-package com.example.application.adapters
+package com.example.application.detail.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.application.models.Weather
-import com.example.application.viewholders.WeatherDetailViewHolder
+import com.example.application.detail.viewholders.WeatherDetailViewHolder
 
 class WeatherDetailRecyclerViewAdapter:
 	RecyclerView.Adapter<WeatherDetailViewHolder>() {
