@@ -1,5 +1,6 @@
 package com.example.application.dependencies
 
+import com.example.application.BuildConfig
 import com.example.application.api.WeatherService
 import com.example.application.list.viewmodels.WeatherListViewModel
 import com.google.gson.Gson
@@ -21,7 +22,7 @@ class WeatherModule {
     @Provides
     fun retrofit(gsonConverterFactory: GsonConverterFactory): Retrofit{
         return Retrofit.Builder()
-            .baseUrl("https://api.openweathermap.org/")
+            .baseUrl(BuildConfig.OWM_API_URL)
             .addConverterFactory(gsonConverterFactory)
             .build()
     }

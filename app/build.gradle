@@ -20,7 +20,13 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField "String", "OWM_API_URL", "\"https://api.openweathermap.org/\""
+            buildConfigField "String", "LOCATION_API_URL", "\"http://ip-api.com/json/\""
+        }
         release {
+            buildConfigField "String", "OWM_API_URL", "\"https://api.openweathermap.org/\""
+            buildConfigField "String", "LOCATION_API_URL", "\"http://ip-api.com/json/\""
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
