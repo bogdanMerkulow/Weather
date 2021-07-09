@@ -27,7 +27,7 @@ class WeatherDetailViewModel(private val weatherService: WeatherService) : ViewM
     fun loadData(q: String, day: String = "0") {
         _reload.postValue(true)
 
-        val call: Call<WeatherResponse> = weatherService.getCurrentWeatherData(q = q, app_id = APP_ID)
+        val call: Call<WeatherResponse> = weatherService.getCurrentWeatherData(q = q, app_id = BuildConfig.OWM_API_KEY)
 
         call.enqueue(object : Callback<WeatherResponse> {
             override fun onResponse(call: Call<WeatherResponse>, response: Response<WeatherResponse>) {
@@ -79,7 +79,6 @@ class WeatherDetailViewModel(private val weatherService: WeatherService) : ViewM
         val dateFormatTimeStamp = SimpleDateFormat("E dd.MM hh:mm")
         @SuppressLint("SimpleDateFormat")
         val dateFormatDay = SimpleDateFormat("dd")
-        const val APP_ID = "c46b6b253436ddd455030408be9b19bf"
         const val KELVIN = 272.15
     }
 }

@@ -43,7 +43,7 @@ class WeatherListViewModel(private val weatherService: WeatherService, private v
 
     fun loadData() {
         _reload.postValue(true)
-        val call: Call<WeatherResponse> = weatherService.getCurrentWeatherData(q = currentCity, lat = lat, lon = lon, app_id = APP_ID)
+        val call: Call<WeatherResponse> = weatherService.getCurrentWeatherData(q = currentCity, lat = lat, lon = lon, app_id = BuildConfig.OWM_API_KEY)
 
         call.enqueue(object : Callback<WeatherResponse> {
             override fun onResponse(call: Call<WeatherResponse>, response: Response<WeatherResponse>) {
@@ -136,7 +136,6 @@ class WeatherListViewModel(private val weatherService: WeatherService, private v
         @SuppressLint("SimpleDateFormat")
         val dateFormatDay = SimpleDateFormat("dd")
         const val RESPONSE_CODE_OK = 200
-        const val APP_ID = "c46b6b253436ddd455030408be9b19bf"
         const val KELVIN = 272.15
     }
 }
