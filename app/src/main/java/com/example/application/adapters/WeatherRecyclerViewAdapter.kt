@@ -5,14 +5,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.application.factories.ViewHolderFactory
-import com.example.application.models.OnItemClickListener
 
 abstract class WeatherRecyclerViewAdapter<T>() :
 	RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-	private var listener: OnItemClickListener<T>? = null
+	private var listener: (T) -> Unit? = {}
 
-	constructor(listener: OnItemClickListener<T>) : this() {
+	constructor(listener: (T) -> Unit) : this() {
 		this.listener = listener
 	}
 
@@ -45,6 +44,6 @@ abstract class WeatherRecyclerViewAdapter<T>() :
 	}
 
 	internal interface Binder<T>{
-		fun bind(data: T, listener: OnItemClickListener<T>?)
+		fun bind(data: T, listener: (T) -> Unit?)
 	}
 }

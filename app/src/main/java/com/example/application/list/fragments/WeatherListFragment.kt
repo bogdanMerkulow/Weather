@@ -20,9 +20,8 @@ import com.example.application.detail.fragments.WeatherDetailFragment
 import com.example.application.adapters.WeatherRecyclerViewAdapter
 import com.example.application.list.factories.WeatherListViewModelFactory
 import com.example.application.models.Weather
-import com.example.application.models.OnItemClickListener
 
-class WeatherListFragment : Fragment(), OnItemClickListener<Weather> {
+class WeatherListFragment : Fragment() {
 	private lateinit var adapter: WeatherRecyclerViewAdapter<Weather>
 	private lateinit var listViewModel: WeatherListViewModel
 	private lateinit var viewModelFactory: WeatherListViewModelFactory
@@ -31,7 +30,7 @@ class WeatherListFragment : Fragment(), OnItemClickListener<Weather> {
 		super.onCreate(savedInstanceState)
 		viewModelFactory = WeatherListViewModelFactory()
 		listViewModel = ViewModelProvider(this, viewModelFactory).get(WeatherListViewModel::class.java)
-		adapter = object: WeatherRecyclerViewAdapter<Weather>(this as OnItemClickListener<Weather>){
+		adapter = object: WeatherRecyclerViewAdapter<Weather>(this::onItemClick){
 			override fun getLayoutId(position: Int, obj: Weather): Int = R.layout.weather_list
 		}
 		listViewModel.loadLocation()
@@ -101,7 +100,7 @@ class WeatherListFragment : Fragment(), OnItemClickListener<Weather> {
 		}
 	}
 
-	override fun onItemClick(data: Weather) {
+	fun onItemClick(data: Weather) {
 		val transaction = activity?.supportFragmentManager?.beginTransaction()
 		val fragment = WeatherDetailFragment()
 		val bundle = Bundle()
