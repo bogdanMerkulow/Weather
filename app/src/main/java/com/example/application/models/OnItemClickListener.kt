@@ -1,5 +1,5 @@
 package com.example.application.models
 
-interface onItemClickListener<T> {
+interface OnItemClickListener<T> {
     fun onItemClick(data: T)
 }

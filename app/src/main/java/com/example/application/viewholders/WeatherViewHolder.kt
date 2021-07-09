@@ -8,7 +8,7 @@ import com.bumptech.glide.Glide
 import com.example.application.R
 import com.example.application.adapters.WeatherRecyclerViewAdapter
 import com.example.application.models.Weather
-import com.example.application.models.onItemClickListener
+import com.example.application.models.OnItemClickListener
 
 class WeatherViewHolder(itemView: View): RecyclerView.ViewHolder(itemView), WeatherRecyclerViewAdapter.Binder<Weather>{
 
@@ -17,7 +17,7 @@ class WeatherViewHolder(itemView: View): RecyclerView.ViewHolder(itemView), Weat
     private val desc: TextView = itemView.findViewById(R.id.weather_desc)
     private val state: TextView = itemView.findViewById(R.id.weather_state)
 
-    override fun bind(data: Weather, listener: onItemClickListener<Weather>?) {
+    override fun bind(data: Weather, listener: OnItemClickListener<Weather>?) {
         itemView.apply {
             title.text = data.title
             desc.text = data.getTemp()
