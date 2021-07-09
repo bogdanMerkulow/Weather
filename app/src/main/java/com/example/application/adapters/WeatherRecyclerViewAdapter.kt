@@ -9,13 +9,13 @@ import com.example.application.factories.ViewHolderFactory
 abstract class WeatherRecyclerViewAdapter<T>() :
 	RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+	private var items: List<T> = listOf()
+
 	private var listener: (T) -> Unit? = {}
 
 	constructor(listener: (T) -> Unit) : this() {
 		this.listener = listener
 	}
-
-	private var items: List<T> = listOf()
 
 	fun addItems(items: List<T>){
 		this.items = items
@@ -33,15 +33,15 @@ abstract class WeatherRecyclerViewAdapter<T>() :
 
 	override fun getItemViewType(position: Int): Int = getLayoutId(position, items[position])
 
-	protected abstract fun getLayoutId(position: Int, obj: T): Int
+	override fun getItemCount(): Int {
+		return items.size
+	}
 
 	protected open fun getViewHolder(view: View, viewType: Int, parent: ViewGroup): RecyclerView.ViewHolder{
 		return ViewHolderFactory().create(view, viewType)
 	}
-	
-	override fun getItemCount(): Int {
-		return items.size
-	}
+
+	protected abstract fun getLayoutId(position: Int, obj: T): Int
 
 	internal interface Binder<T>{
 		fun bind(data: T, listener: (T) -> Unit?)
