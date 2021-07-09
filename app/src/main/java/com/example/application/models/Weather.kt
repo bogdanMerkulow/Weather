@@ -11,9 +11,6 @@ data class Weather(
 	val dayNumber: String = "",
 	val wrongCity: Boolean = false
 ) {
-	fun getCoords() : Coord {
-		return Coord(lat = lat, lon = lon)
-	}
 
 	fun getIconUrl(): String {
 		return "https://openweathermap.org/img/wn/${iconName}@4x.png"

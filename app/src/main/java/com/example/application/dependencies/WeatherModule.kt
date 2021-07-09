@@ -2,8 +2,6 @@ package com.example.application.dependencies
 
 import com.example.application.BuildConfig
 import com.example.application.api.WeatherService
-import com.example.application.list.viewmodels.WeatherListViewModel
-import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit

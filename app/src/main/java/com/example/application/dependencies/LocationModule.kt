@@ -2,7 +2,6 @@ package com.example.application.dependencies
 
 import com.example.application.BuildConfig
 import com.example.application.api.LocationService
-import com.example.application.list.viewmodels.WeatherListViewModel
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
