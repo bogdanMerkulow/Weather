@@ -13,12 +13,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.application.R
+import com.example.application.adapters.WeatherRecyclerViewAdapter
 import com.example.application.detail.viewmodels.WeatherDetailViewModel
-import com.example.application.detail.adapters.WeatherDetailRecyclerViewAdapter
 import com.example.application.detail.factories.WeatherDetailViewModelFactory
+import com.example.application.models.Weather
 
 class WeatherDetailFragment : Fragment() {
-	private lateinit var adapter: WeatherDetailRecyclerViewAdapter
+	private lateinit var adapter: WeatherRecyclerViewAdapter<Weather>
 	private lateinit var viewModel: WeatherDetailViewModel
 	private lateinit var viewModelFactory: WeatherDetailViewModelFactory
 	private lateinit var actionBar: ActionBar
@@ -27,7 +28,9 @@ class WeatherDetailFragment : Fragment() {
 		super.onCreate(savedInstanceState)
 		viewModelFactory = WeatherDetailViewModelFactory()
 		viewModel = ViewModelProvider(this, viewModelFactory).get(WeatherDetailViewModel::class.java)
-		adapter = WeatherDetailRecyclerViewAdapter()
+		adapter = object: WeatherRecyclerViewAdapter<Weather>(){
+			override fun getLayoutId(position: Int, obj: Weather): Int = R.layout.weather_list
+		}
 	}
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
@@ -44,7 +47,7 @@ class WeatherDetailFragment : Fragment() {
 		)
 
 		viewModel.data.observe(viewLifecycleOwner) { data ->
-			adapter.addWeather(data)
+			adapter.addItems(data)
 		}
 
 		viewModel.reload.observe(viewLifecycleOwner) { reload ->

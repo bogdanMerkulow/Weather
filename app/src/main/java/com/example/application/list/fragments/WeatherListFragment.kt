@@ -17,12 +17,13 @@ import com.bumptech.glide.Glide
 import com.example.application.*
 import com.example.application.list.viewmodels.WeatherListViewModel
 import com.example.application.detail.fragments.WeatherDetailFragment
-import com.example.application.list.adapters.WeatherListRecyclerViewAdapter
+import com.example.application.adapters.WeatherRecyclerViewAdapter
 import com.example.application.list.factories.WeatherListViewModelFactory
 import com.example.application.models.Weather
+import com.example.application.models.onItemClickListener
 
-class WeatherListFragment : Fragment() {
-	private lateinit var adapter: WeatherListRecyclerViewAdapter
+class WeatherListFragment : Fragment(), onItemClickListener<Weather> {
+	private lateinit var adapter: WeatherRecyclerViewAdapter<Weather>
 	private lateinit var listViewModel: WeatherListViewModel
 	private lateinit var viewModelFactory: WeatherListViewModelFactory
 
@@ -30,7 +31,9 @@ class WeatherListFragment : Fragment() {
 		super.onCreate(savedInstanceState)
 		viewModelFactory = WeatherListViewModelFactory()
 		listViewModel = ViewModelProvider(this, viewModelFactory).get(WeatherListViewModel::class.java)
-		adapter = WeatherListRecyclerViewAdapter(this::onItemClick)
+		adapter = object: WeatherRecyclerViewAdapter<Weather>(this as onItemClickListener<Weather>){
+			override fun getLayoutId(position: Int, obj: Weather): Int = R.layout.weather_list
+		}
 		listViewModel.loadLocation()
 	}
 
@@ -72,7 +75,7 @@ class WeatherListFragment : Fragment() {
 		}
 
 		listViewModel.data.observe(viewLifecycleOwner) { data ->
-			adapter.addWeather(data)
+			adapter.addItems(data)
 		}
 
 		return rootView
@@ -98,12 +101,12 @@ class WeatherListFragment : Fragment() {
 		}
 	}
 
-	private fun onItemClick(weather: Weather) {
+	override fun onItemClick(data: Weather) {
 		val transaction = activity?.supportFragmentManager?.beginTransaction()
 		val fragment = WeatherDetailFragment()
 		val bundle = Bundle()
-		bundle.putString(WeatherDetailFragment.CITY, weather.city)
-		bundle.putString(WeatherDetailFragment.SELECTED_DATE, weather.dayNumber)
+		bundle.putString(WeatherDetailFragment.CITY, data.city)
+		bundle.putString(WeatherDetailFragment.SELECTED_DATE, data.dayNumber)
 		fragment.arguments = bundle
 		transaction?.addToBackStack(null)
 		transaction?.replace(R.id.fragment_container, fragment)
