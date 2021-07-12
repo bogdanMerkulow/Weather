@@ -15,19 +15,19 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.application.R
 import com.example.application.adapters.RecyclerViewAdapter
 import com.example.application.detail.viewmodels.WeatherDetailViewModel
-import com.example.application.detail.factories.WeatherDetailViewModelFactory
 import com.example.application.factories.WeatherViewHolderFactory
+import com.example.application.factories.ViewModelFactory
 import com.example.application.models.Weather
 
 class WeatherDetailFragment : Fragment() {
 	private lateinit var adapter: RecyclerViewAdapter<Weather>
 	private lateinit var viewModel: WeatherDetailViewModel
-	private lateinit var viewModelFactory: WeatherDetailViewModelFactory
+	private lateinit var viewModelFactory: ViewModelFactory
 	private lateinit var actionBar: ActionBar
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		viewModelFactory = WeatherDetailViewModelFactory()
+		viewModelFactory = ViewModelFactory()
 		viewModel = ViewModelProvider(this, viewModelFactory).get(WeatherDetailViewModel::class.java)
 		adapter = object : RecyclerViewAdapter<Weather>(WeatherViewHolderFactory()) {
 			override fun getLayoutId(viewType: Int): Int = R.layout.weather_list

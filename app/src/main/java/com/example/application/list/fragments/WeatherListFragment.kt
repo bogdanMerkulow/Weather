@@ -19,17 +19,17 @@ import com.example.application.list.viewmodels.WeatherListViewModel
 import com.example.application.detail.fragments.WeatherDetailFragment
 import com.example.application.adapters.RecyclerViewAdapter
 import com.example.application.factories.WeatherViewHolderFactory
-import com.example.application.list.factories.WeatherListViewModelFactory
+import com.example.application.factories.ViewModelFactory
 import com.example.application.models.Weather
 
 class WeatherListFragment : Fragment() {
 	private lateinit var adapter: RecyclerViewAdapter<Weather>
 	private lateinit var listViewModel: WeatherListViewModel
-	private lateinit var viewModelFactory: WeatherListViewModelFactory
+	private lateinit var viewModelFactory: ViewModelFactory
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		viewModelFactory = WeatherListViewModelFactory()
+		viewModelFactory = ViewModelFactory()
 		listViewModel = ViewModelProvider(this, viewModelFactory).get(WeatherListViewModel::class.java)
 		adapter = object : RecyclerViewAdapter<Weather>(WeatherViewHolderFactory(), this::onItemClick) {
 			override fun getLayoutId(viewType: Int): Int = R.layout.weather_list
