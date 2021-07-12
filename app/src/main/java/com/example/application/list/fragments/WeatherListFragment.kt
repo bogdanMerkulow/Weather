@@ -17,12 +17,13 @@ import com.bumptech.glide.Glide
 import com.example.application.*
 import com.example.application.list.viewmodels.WeatherListViewModel
 import com.example.application.detail.fragments.WeatherDetailFragment
-import com.example.application.adapters.WeatherRecyclerViewAdapter
+import com.example.application.adapters.RecyclerViewAdapter
+import com.example.application.factories.WeatherViewHolderFactory
 import com.example.application.list.factories.WeatherListViewModelFactory
 import com.example.application.models.Weather
 
 class WeatherListFragment : Fragment() {
-	private lateinit var adapter: WeatherRecyclerViewAdapter<Weather>
+	private lateinit var adapter: RecyclerViewAdapter<Weather>
 	private lateinit var listViewModel: WeatherListViewModel
 	private lateinit var viewModelFactory: WeatherListViewModelFactory
 
@@ -30,8 +31,8 @@ class WeatherListFragment : Fragment() {
 		super.onCreate(savedInstanceState)
 		viewModelFactory = WeatherListViewModelFactory()
 		listViewModel = ViewModelProvider(this, viewModelFactory).get(WeatherListViewModel::class.java)
-		adapter = object: WeatherRecyclerViewAdapter<Weather>(this::onItemClick){
-			override fun getLayoutId(position: Int, obj: Weather): Int = R.layout.weather_list
+		adapter = object : RecyclerViewAdapter<Weather>(WeatherViewHolderFactory(), this::onItemClick) {
+			override fun getLayoutId(viewType: Int): Int = R.layout.weather_list
 		}
 		listViewModel.loadLocation()
 	}
