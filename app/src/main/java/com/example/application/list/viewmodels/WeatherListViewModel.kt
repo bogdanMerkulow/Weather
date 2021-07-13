@@ -69,7 +69,7 @@ class WeatherListViewModel(private val weatherService: WeatherService, private v
 
                     if(!lastTime.equals(checkTime.toInt())) {
                         weather.add(
-                            weatherResponseToWeather(weatherItem, weatherResponse, time, checkTime)
+                            Weather.responseConvert(weatherItem, weatherResponse, time, checkTime)
                         )
                     }
 
@@ -110,24 +110,6 @@ class WeatherListViewModel(private val weatherService: WeatherService, private v
     fun changeLocation(city: String){
         currentCity = city
         loadData()
-    }
-
-    private fun weatherResponseToWeather(
-        weatherItem: WeatherList,
-        weatherResponse: WeatherResponse,
-        time: String,
-        checkTime: String
-    ): Weather {
-        return Weather(
-           iconName = weatherItem.weather[0].icon,
-           title = time,
-           temp = (floor(weatherItem.main.temp - KELVIN)).toFloat(),
-           state = weatherItem.weather[0].description,
-           city = weatherResponse.city.name,
-           lat = weatherResponse.city.coord?.lat.toString(),
-           lon = weatherResponse.city.coord?.lon.toString(),
-           dayNumber = checkTime
-       )
     }
 
     companion object {

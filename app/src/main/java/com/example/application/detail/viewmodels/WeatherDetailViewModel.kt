@@ -41,7 +41,7 @@ class WeatherDetailViewModel(private val weatherService: WeatherService) : ViewM
 
                     if(day.equals(checkTime)) {
                         weather.add(
-                            weatherResponseToWeather(weatherItem, weatherResponse, time, checkTime)
+                            Weather.responseConvert(weatherItem, weatherResponse, time, checkTime)
                         )
                     }
                 }
@@ -56,29 +56,10 @@ class WeatherDetailViewModel(private val weatherService: WeatherService) : ViewM
         })
     }
 
-    private fun weatherResponseToWeather(
-        weatherItem: WeatherList,
-        weatherResponse: WeatherResponse,
-        time: String,
-        checkTime: String
-    ): Weather {
-        return Weather(
-            iconName = weatherItem.weather[0].icon,
-            title = time,
-            temp = (floor(weatherItem.main.temp - KELVIN)).toFloat(),
-            state = weatherItem.weather[0].description,
-            city = weatherResponse.city.name,
-            lat = weatherResponse.city.coord?.lat.toString(),
-            lon = weatherResponse.city.coord?.lon.toString(),
-            dayNumber = checkTime
-        )
-    }
-
     companion object {
         @SuppressLint("SimpleDateFormat")
         val dateFormatTimeStamp = SimpleDateFormat("E dd.MM hh:mm")
         @SuppressLint("SimpleDateFormat")
         val dateFormatDay = SimpleDateFormat("dd")
-        const val KELVIN = 272.15
     }
 }

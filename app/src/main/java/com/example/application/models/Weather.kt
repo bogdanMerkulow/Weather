@@ -1,5 +1,9 @@
 package com.example.application.models
 
+import com.example.application.WeatherList
+import com.example.application.WeatherResponse
+import kotlin.math.floor
+
 data class Weather(
 	val iconName: String? = "",
 	val title: String? = "",
@@ -18,5 +22,26 @@ data class Weather(
 
 	fun getTemp(): String {
 		return "${temp.toInt()}°C"
+	}
+
+	companion object {
+		fun responseConvert(
+			weatherItem: WeatherList,
+			weatherResponse: WeatherResponse,
+			time: String,
+			checkTime: String
+		): Weather {
+			return Weather(
+				iconName = weatherItem.weather[0].icon,
+				title = time,
+				temp = (floor(weatherItem.main.temp - KELVIN)).toFloat(),
+				state = weatherItem.weather[0].description,
+				city = weatherResponse.city.name,
+				lat = weatherResponse.city.coord?.lat.toString(),
+				lon = weatherResponse.city.coord?.lon.toString(),
+				dayNumber = checkTime
+			)
+		}
+		private const val KELVIN = 272.15
 	}
 }
