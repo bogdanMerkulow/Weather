@@ -2,7 +2,7 @@ package com.example.application.models
 
 import com.example.application.WeatherList
 import com.example.application.WeatherResponse
-import kotlin.math.floor
+import kotlin.math.ceil
 
 data class Weather(
 	val iconName: String? = "",
@@ -34,7 +34,7 @@ data class Weather(
 			return Weather(
 				iconName = weatherItem.weather[0].icon,
 				title = time,
-				temp = (floor(weatherItem.main.temp - KELVIN)).toFloat(),
+				temp = (ceil(weatherItem.main.temp - KELVIN)).toFloat(),
 				state = weatherItem.weather[0].description,
 				city = weatherResponse.city.name,
 				lat = weatherResponse.city.coord?.lat.toString(),
