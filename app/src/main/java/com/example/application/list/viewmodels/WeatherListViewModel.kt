@@ -4,15 +4,18 @@ import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.application.BuildConfig
-import com.example.application.api.WeatherResponse
 import com.example.application.api.LocationResponse
 import com.example.application.api.LocationService
+import com.example.application.api.WeatherResponse
 import com.example.application.api.WeatherService
 import com.example.application.models.Weather
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import retrofit2.Call
-import retrofit2.Callback
 import retrofit2.Response
+import java.net.SocketTimeoutException
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.floor
@@ -51,79 +54,80 @@ class WeatherListViewModel(
 
     fun loadData() {
         _reload.postValue(true)
-        val call: Call<WeatherResponse> = weatherService.getCurrentWeatherData(
-            q = currentCity,
-            lat = lat,
-            lon = lon,
-            app_id = BuildConfig.OWM_API_KEY
-        )
+        
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val call: Call<WeatherResponse> = weatherService.getCurrentWeatherData(
+                    q = currentCity,
+                    lat = lat,
+                    lon = lon,
+                    app_id = BuildConfig.OWM_API_KEY
+                )
 
-        call.enqueue(object : Callback<WeatherResponse> {
-            override fun onResponse(
-                call: Call<WeatherResponse>,
-                response: Response<WeatherResponse>
-            ) {
-                if (response.body() == null) {
-                    _title.postValue("city not found")
-                    _header.postValue("")
-                    _reload.postValue(false)
-                    return
-                }
+                val response = call.execute()
 
-                val weatherResponse = response.body()!!
-                val weather = mutableListOf<Weather>()
-                var lastTime = 0
-
-                _title.postValue(weatherResponse.city.name)
-                _header.postValue(floor(weatherResponse.list[0].main.temp - KELVIN).toString() + "°C")
-                _headerImageUrl.postValue("https://openweathermap.org/img/wn/${weatherResponse.list[0].weather[0].icon}@4x.png")
-
-                weatherResponse.list.forEach { weatherItem ->
-                    val date = weatherItem.dt?.toLong()?.times(1000)?.let { Date(it) }
-                    val time = dateFormatTimeStamp.format(date)
-                    val checkTime = dateFormatDay.format(date)
-
-                    if (lastTime != checkTime.toInt()) {
-                        weather.add(
-                            Weather.responseConvert(weatherItem, weatherResponse, time, checkTime)
-                        )
+                if (response.isSuccessful) {
+                    if (response.body() == null) {
+                        _title.postValue("city not found")
+                        _header.postValue("")
+                        _reload.postValue(false)
+                        return@launch
                     }
 
-                    lastTime = checkTime.toInt()
+                    val weatherResponse = response.body()!!
+                    val weather = mutableListOf<Weather>()
+                    var lastTime = 0
+
+                    _title.postValue(weatherResponse.city.name)
+                    _header.postValue(floor(weatherResponse.list[0].main.temp - KELVIN).toString() + "°C")
+                    _headerImageUrl.postValue("https://openweathermap.org/img/wn/${weatherResponse.list[0].weather[0].icon}@4x.png")
+
+                    weatherResponse.list.forEach { weatherItem ->
+                        val date = weatherItem.dt?.toLong()?.times(1000)?.let { Date(it) }
+                        val time = dateFormatTimeStamp.format(date)
+                        val checkTime = dateFormatDay.format(date)
+
+                        if (lastTime != checkTime.toInt()) {
+                            weather.add(
+                                Weather.responseConvert(
+                                    weatherItem,
+                                    weatherResponse,
+                                    time,
+                                    checkTime
+                                )
+                            )
+                        }
+
+                        lastTime = checkTime.toInt()
+                    }
+
+                    _data.postValue(weather)
+                    _reload.postValue(false)
+                } else {
+                    _title.postValue("no internet connection  pull to refresh")
+                    _reload.postValue(false)
                 }
-
-                _data.postValue(weather)
+            } catch (e: SocketTimeoutException) {
+                _title.postValue("bad internet connection")
                 _reload.postValue(false)
             }
-
-            override fun onFailure(call: Call<WeatherResponse>, t: Throwable) {
-                _title.postValue("no internet connection  pull to refresh")
-                _reload.postValue(false)
-            }
-        })
+        }
     }
 
     private fun loadLocation() {
-        val call: Call<LocationResponse> = locationService.getLocation()
-
-        call.enqueue(object : Callback<LocationResponse> {
-            override fun onResponse(
-                call: Call<LocationResponse>,
-                response: Response<LocationResponse>
-            ) {
-                if (response.code() == RESPONSE_CODE_OK) {
-                    val locationResponse = response.body()!!
-                    lat = locationResponse.lat.toString()
-                    lon = locationResponse.lon.toString()
-                    loadData()
-                }
-            }
-
-            override fun onFailure(call: Call<LocationResponse>, t: Throwable) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val call: Call<LocationResponse> = locationService.getLocation()
+            val response: Response<LocationResponse> = call.execute()
+            if (response.isSuccessful) {
+                val locationResponse = response.body()!!
+                lat = locationResponse.lat.toString()
+                lon = locationResponse.lon.toString()
+                loadData()
+            } else {
                 _title.postValue("no internet connection  pull to refresh")
                 _reload.postValue(false)
             }
-        })
+        }
     }
 
     fun changeLocation(city: String) {

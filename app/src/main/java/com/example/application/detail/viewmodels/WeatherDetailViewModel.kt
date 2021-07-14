@@ -4,19 +4,27 @@ import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.application.BuildConfig
 import com.example.application.api.WeatherResponse
 import com.example.application.api.WeatherService
 import com.example.application.models.Weather
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.net.SocketTimeoutException
 import java.text.SimpleDateFormat
 import java.util.*
 
 class WeatherDetailViewModel(private val weatherService: WeatherService) : ViewModel() {
     private val _data: MutableLiveData<List<Weather>> = MutableLiveData<List<Weather>>()
     private val _reload: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    private val _title: MutableLiveData<String> = MutableLiveData<String>()
+
+    val title: LiveData<String>
+        get() = _title
 
     val data: LiveData<List<Weather>>
         get() = _data
@@ -27,37 +35,39 @@ class WeatherDetailViewModel(private val weatherService: WeatherService) : ViewM
     fun loadData(q: String, day: String = "0") {
         _reload.postValue(true)
 
-        val call: Call<WeatherResponse> =
-            weatherService.getCurrentWeatherData(q = q, app_id = BuildConfig.OWM_API_KEY)
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val call: Call<WeatherResponse> =
+                    weatherService.getCurrentWeatherData(q = q, app_id = BuildConfig.OWM_API_KEY)
+                val response = call.execute()
 
-        call.enqueue(object : Callback<WeatherResponse> {
-            override fun onResponse(
-                call: Call<WeatherResponse>,
-                response: Response<WeatherResponse>
-            ) {
-                val weatherResponse = response.body()!!
-                val weather = mutableListOf<Weather>()
+                if(response.isSuccessful){
+                    val weatherResponse = response.body()!!
+                    val weather = mutableListOf<Weather>()
 
-                weatherResponse.list.forEach { weatherItem ->
-                    val date = weatherItem.dt?.toLong()?.times(1000)?.let { Date(it) }
-                    val time = dateFormatTimeStamp.format(date)
-                    val checkTime = dateFormatDay.format(date)
+                    weatherResponse.list.forEach { weatherItem ->
+                        val date = weatherItem.dt?.toLong()?.times(1000)?.let { Date(it) }
+                        val time = dateFormatTimeStamp.format(date)
+                        val checkTime = dateFormatDay.format(date)
 
-                    if (day == checkTime) {
-                        weather.add(
-                            Weather.responseConvert(weatherItem, weatherResponse, time, checkTime)
-                        )
+                        if (day == checkTime) {
+                            weather.add(
+                                Weather.responseConvert(weatherItem, weatherResponse, time, checkTime)
+                            )
+                        }
                     }
+
+                    _data.postValue(weather)
+                    _reload.postValue(false)
+                    _title.postValue(weatherResponse.city.name)
+                } else {
+                    _reload.postValue(false)
                 }
-
-                _data.postValue(weather)
+            } catch (e: SocketTimeoutException) {
+                _title.postValue("bad internet connection")
                 _reload.postValue(false)
             }
-
-            override fun onFailure(call: Call<WeatherResponse>, t: Throwable) {
-                _reload.postValue(false)
-            }
-        })
+        }
     }
 
     companion object {

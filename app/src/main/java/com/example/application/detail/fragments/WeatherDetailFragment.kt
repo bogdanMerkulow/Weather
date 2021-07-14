@@ -58,6 +58,10 @@ class WeatherDetailFragment : Fragment() {
             onLiveDataChangeReload(reload, progress)
         }
 
+        viewModel.title.observe(viewLifecycleOwner) { title ->
+            activity?.title = title
+        }
+
         return rootView
     }
 
