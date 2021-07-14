@@ -12,8 +12,6 @@ import com.example.application.models.Weather
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.net.SocketTimeoutException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -32,7 +30,7 @@ class WeatherDetailViewModel(private val weatherService: WeatherService) : ViewM
     val reload: LiveData<Boolean>
         get() = _reload
 
-    fun loadData(q: String, day: String = "0") {
+    fun loadData(q: String = "", day: String = "0") {
         _reload.postValue(true)
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -41,7 +39,7 @@ class WeatherDetailViewModel(private val weatherService: WeatherService) : ViewM
                     weatherService.getCurrentWeatherData(q = q, app_id = BuildConfig.OWM_API_KEY)
                 val response = call.execute()
 
-                if(response.isSuccessful){
+                if (response.isSuccessful) {
                     val weatherResponse = response.body()!!
                     val weather = mutableListOf<Weather>()
 
@@ -52,17 +50,22 @@ class WeatherDetailViewModel(private val weatherService: WeatherService) : ViewM
 
                         if (day == checkTime) {
                             weather.add(
-                                Weather.responseConvert(weatherItem, weatherResponse, time, checkTime)
+                                Weather.responseConvert(
+                                    weatherItem,
+                                    weatherResponse,
+                                    time,
+                                    checkTime
+                                )
                             )
                         }
                     }
 
                     _data.postValue(weather)
-                    _reload.postValue(false)
                     _title.postValue(weatherResponse.city.name)
-                } else {
-                    _reload.postValue(false)
                 }
+
+                _reload.postValue(false)
+
             } catch (e: SocketTimeoutException) {
                 _title.postValue("bad internet connection")
                 _reload.postValue(false)

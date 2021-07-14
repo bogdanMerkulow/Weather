@@ -102,11 +102,13 @@ class WeatherListViewModel(
                     }
 
                     _data.postValue(weather)
-                    _reload.postValue(false)
-                } else {
-                    _title.postValue("no internet connection  pull to refresh")
-                    _reload.postValue(false)
                 }
+
+                _reload.postValue(false)
+
+            } catch (e: Exception) {
+                _title.postValue("no internet connection  pull to refresh")
+                _reload.postValue(false)
             } catch (e: SocketTimeoutException) {
                 _title.postValue("bad internet connection")
                 _reload.postValue(false)
@@ -116,15 +118,20 @@ class WeatherListViewModel(
 
     private fun loadLocation() {
         viewModelScope.launch(Dispatchers.IO) {
-            val call: Call<LocationResponse> = locationService.getLocation()
-            val response: Response<LocationResponse> = call.execute()
-            if (response.isSuccessful) {
-                val locationResponse = response.body()!!
-                lat = locationResponse.lat.toString()
-                lon = locationResponse.lon.toString()
-                loadData()
-            } else {
+            try {
+                val call: Call<LocationResponse> = locationService.getLocation()
+                val response: Response<LocationResponse> = call.execute()
+                if (response.isSuccessful) {
+                    val locationResponse = response.body()!!
+                    lat = locationResponse.lat.toString()
+                    lon = locationResponse.lon.toString()
+                    loadData()
+                }
+            } catch (e: Exception) {
                 _title.postValue("no internet connection  pull to refresh")
+                _reload.postValue(false)
+            } catch (e: SocketTimeoutException) {
+                _title.postValue("bad internet connection")
                 _reload.postValue(false)
             }
         }
