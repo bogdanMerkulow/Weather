@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.application.BuildConfig
-import com.example.application.WeatherResponse
+import com.example.application.api.WeatherResponse
 import com.example.application.api.LocationResponse
 import com.example.application.api.LocationService
 import com.example.application.api.WeatherService
@@ -83,7 +83,7 @@ class WeatherListViewModel(
                     val time = dateFormatTimeStamp.format(date)
                     val checkTime = dateFormatDay.format(date)
 
-                    if (!lastTime.equals(checkTime.toInt())) {
+                    if (lastTime != checkTime.toInt()) {
                         weather.add(
                             Weather.responseConvert(weatherItem, weatherResponse, time, checkTime)
                         )
@@ -103,7 +103,7 @@ class WeatherListViewModel(
         })
     }
 
-    fun loadLocation() {
+    private fun loadLocation() {
         val call: Call<LocationResponse> = locationService.getLocation()
 
         call.enqueue(object : Callback<LocationResponse> {

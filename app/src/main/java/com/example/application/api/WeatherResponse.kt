@@ -1,11 +1,11 @@
-package com.example.application
+package com.example.application.api
 
 import com.google.gson.annotations.SerializedName
 
 
 data class WeatherResponse(
     @SerializedName("list")
-    val list: ArrayList<WeatherList> = ArrayList<WeatherList>(),
+    val list: ArrayList<WeatherList> = ArrayList(),
     @SerializedName("id")
     val id: Int = 0,
     @SerializedName("city")
@@ -29,7 +29,7 @@ data class WeatherList(
     @SerializedName("main")
     val main: WeatherMain = WeatherMain(),
     @SerializedName("weather")
-    val weather: ArrayList<WeatherToday> = ArrayList<WeatherToday>()
+    val weather: ArrayList<WeatherToday> = ArrayList()
 )
 
 data class WeatherMain(

@@ -1,7 +1,7 @@
 package com.example.application.models
 
-import com.example.application.WeatherList
-import com.example.application.WeatherResponse
+import com.example.application.api.WeatherList
+import com.example.application.api.WeatherResponse
 import kotlin.math.ceil
 
 data class Weather(

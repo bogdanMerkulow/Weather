@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.application.BuildConfig
-import com.example.application.WeatherResponse
+import com.example.application.api.WeatherResponse
 import com.example.application.api.WeatherService
 import com.example.application.models.Weather
 import retrofit2.Call
@@ -43,7 +43,7 @@ class WeatherDetailViewModel(private val weatherService: WeatherService) : ViewM
                     val time = dateFormatTimeStamp.format(date)
                     val checkTime = dateFormatDay.format(date)
 
-                    if (day.equals(checkTime)) {
+                    if (day == checkTime) {
                         weather.add(
                             Weather.responseConvert(weatherItem, weatherResponse, time, checkTime)
                         )

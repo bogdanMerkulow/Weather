@@ -1,6 +1,6 @@
 package com.example.application.models
 
-import com.example.application.*
+import com.example.application.api.*
 import org.junit.Test
 import org.junit.Assert.*
 
