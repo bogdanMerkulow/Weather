@@ -10,12 +10,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 class GsonModule {
 
     @Provides
-    fun gson(): Gson{
+    fun gson(): Gson {
         return GsonBuilder().create()
     }
 
     @Provides
-    fun gsonConverterFactory(gson: Gson): GsonConverterFactory{
+    fun gsonConverterFactory(gson: Gson): GsonConverterFactory {
         return GsonConverterFactory.create(gson)
     }
 }

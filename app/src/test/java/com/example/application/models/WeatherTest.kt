@@ -33,8 +33,7 @@ class WeatherTest {
                         temp = 32.0f + 272.15f
                     )
                 )
-            )
-            ,
+            ),
             city = City(
                 name = "Тамбов",
                 coord = WeatherCoord(

@@ -7,9 +7,6 @@ import dagger.Module
 import dagger.Provides
 import dagger.multibindings.ClassKey
 import dagger.multibindings.IntoMap
-import dagger.multibindings.IntoSet
-import dagger.multibindings.StringKey
-import javax.inject.Named
 
 @Module(includes = [WeatherModule::class])
 class DetailViewModelModel {
@@ -17,7 +14,7 @@ class DetailViewModelModel {
     @IntoMap
     @ClassKey(WeatherDetailViewModel::class)
     @Provides
-    fun getViewModel(weatherService: WeatherService): ViewModel{
+    fun getViewModel(weatherService: WeatherService): ViewModel {
         return WeatherDetailViewModel(weatherService)
     }
 }

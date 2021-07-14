@@ -18,7 +18,7 @@ class WeatherModule {
 
     @Named("weather")
     @Provides
-    fun retrofit(gsonConverterFactory: GsonConverterFactory): Retrofit{
+    fun retrofit(gsonConverterFactory: GsonConverterFactory): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BuildConfig.OWM_API_URL)
             .addConverterFactory(gsonConverterFactory)

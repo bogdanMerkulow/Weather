@@ -18,7 +18,7 @@ class LocationModule {
 
     @Named("location")
     @Provides
-    fun retrofit(gsonConverterFactory: GsonConverterFactory): Retrofit{
+    fun retrofit(gsonConverterFactory: GsonConverterFactory): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BuildConfig.LOCATION_API_URL)
             .addConverterFactory(gsonConverterFactory)
