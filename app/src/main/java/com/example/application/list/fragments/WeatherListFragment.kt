@@ -111,9 +111,11 @@ class WeatherListFragment : Fragment() {
         bundle.putString(WeatherDetailFragment.CITY, data.city)
         bundle.putString(WeatherDetailFragment.SELECTED_DATE, data.dayNumber)
         fragment.arguments = bundle
-        transaction?.addToBackStack(null)
-        transaction?.replace(R.id.fragment_container, fragment)
-        transaction?.commit()
+        transaction?.apply {
+            addToBackStack(null)
+            replace(R.id.fragment_container, fragment)
+            commit()
+        }
     }
 
     private fun onRefreshData(fragmentContainer: SwipeRefreshLayout) {

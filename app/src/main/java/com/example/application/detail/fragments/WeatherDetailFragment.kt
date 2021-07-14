@@ -72,14 +72,18 @@ class WeatherDetailFragment : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         actionBar = (activity as AppCompatActivity).supportActionBar!!
-        actionBar.setDisplayHomeAsUpEnabled(true)
-        actionBar.setHomeButtonEnabled(true)
+        actionBar.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setHomeButtonEnabled(true)
+        }
     }
 
     override fun onDetach() {
         super.onDetach()
-        actionBar.setDisplayHomeAsUpEnabled(false)
-        actionBar.setHomeButtonEnabled(false)
+        actionBar.apply {
+            setDisplayHomeAsUpEnabled(false)
+            setHomeButtonEnabled(false)
+        }
     }
 
     companion object {
