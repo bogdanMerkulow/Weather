@@ -39,7 +39,6 @@ class WeatherDetailFragment : Fragment() {
 		val rcWeatherList: RecyclerView = rootView.findViewById(R.id.rv_weather_list)
 		val progress: ProgressBar = rootView.findViewById(R.id.progress_circular)
 
-		rcWeatherList.layoutManager = LinearLayoutManager(activity)
 		rcWeatherList.adapter = adapter
 
 		viewModel.loadData(

@@ -47,7 +47,6 @@ class WeatherListFragment : Fragment() {
 		val changeCityButton = rootView.findViewById<Button>(R.id.change_city)
 		val fragmentContainer = rootView.findViewById<SwipeRefreshLayout>(R.id.swipe_refresh)
 
-		rcWeatherList.layoutManager = LinearLayoutManager(activity)
 		rcWeatherList.adapter = adapter
 
 		fragmentContainer.setOnRefreshListener{
