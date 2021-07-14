@@ -41,6 +41,10 @@ class WeatherListViewModel(private val weatherService: WeatherService, private v
     val headerImageUrl: LiveData<String>
         get() = _headerImageUrl
 
+    init {
+        loadLocation()
+    }
+
     fun loadData() {
         _reload.postValue(true)
         val call: Call<WeatherResponse> = weatherService.getCurrentWeatherData(q = currentCity, lat = lat, lon = lon, app_id = BuildConfig.OWM_API_KEY)
