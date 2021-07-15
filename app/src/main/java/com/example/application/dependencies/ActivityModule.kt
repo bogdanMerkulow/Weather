@@ -8,7 +8,7 @@ import dagger.Provides
 class ActivityModule(private val activity: Activity) {
 
     @Provides
-    fun getActivity(): Activity{
+    fun getActivity(): Activity {
         return activity
     }
 }

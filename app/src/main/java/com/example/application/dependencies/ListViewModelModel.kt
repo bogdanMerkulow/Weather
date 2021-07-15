@@ -17,7 +17,11 @@ class ListViewModelModel {
     @IntoMap
     @ClassKey(WeatherListViewModel::class)
     @Provides
-    fun getViewModel(weatherService: WeatherService, ipLocationService: LocationService, GPSLocationTask: Task<Location>): ViewModel {
+    fun getViewModel(
+        weatherService: WeatherService,
+        ipLocationService: LocationService,
+        GPSLocationTask: Task<Location>
+    ): ViewModel {
         return WeatherListViewModel(weatherService, ipLocationService, GPSLocationTask)
     }
 }
