@@ -28,7 +28,7 @@ class WeatherListFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModelFactory = ViewModelFactory()
+        viewModelFactory = ViewModelFactory(activity)
         listViewModel =
             ViewModelProvider(this, viewModelFactory).get(WeatherListViewModel::class.java)
         adapter =

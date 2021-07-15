@@ -1,6 +1,8 @@
 package com.example.application.list.viewmodels
 
 import android.annotation.SuppressLint
+import android.location.Location
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,7 +12,9 @@ import com.example.application.api.LocationResponse
 import com.example.application.api.LocationService
 import com.example.application.api.WeatherResponse
 import com.example.application.api.WeatherService
+import com.example.application.dependencies.GPSLocationModule
 import com.example.application.models.Weather
+import com.google.android.gms.tasks.Task
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Call
@@ -22,7 +26,8 @@ import kotlin.math.floor
 
 class WeatherListViewModel(
     private val weatherService: WeatherService,
-    private val locationService: LocationService
+    private val locationService: LocationService,
+    private val gpsLocationTask: Task<Location>
 ) : ViewModel() {
     private val _data: MutableLiveData<List<Weather>> = MutableLiveData<List<Weather>>()
     private val _reload: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
@@ -118,6 +123,15 @@ class WeatherListViewModel(
 
     private fun loadLocation() {
         viewModelScope.launch(Dispatchers.IO) {
+            gpsLocationTask.addOnSuccessListener {
+                if(it != null) {
+                    lat = it.latitude.toString()
+                    lon = it.longitude.toString()
+                    loadData()
+                    return@addOnSuccessListener
+                }
+            }
+
             try {
                 val call: Call<LocationResponse> = locationService.getLocation()
                 val response: Response<LocationResponse> = call.execute()

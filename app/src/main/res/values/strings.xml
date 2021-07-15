@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Application</string>
+    <string name="app_name">Weather</string>
     <string name="city">city</string>
     <string name="change_city">change city</string>
     <!-- TODO: Remove or change this placeholder text -->

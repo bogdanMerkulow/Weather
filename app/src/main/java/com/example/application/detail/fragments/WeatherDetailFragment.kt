@@ -26,7 +26,7 @@ class WeatherDetailFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModelFactory = ViewModelFactory()
+        viewModelFactory = ViewModelFactory(activity)
         viewModel =
             ViewModelProvider(this, viewModelFactory).get(WeatherDetailViewModel::class.java)
         adapter = object : RecyclerViewAdapter<Weather>(WeatherViewHolderFactory()) {
