@@ -21,6 +21,7 @@
             <Button
                 android:id="@+id/change_city"
                 android:backgroundTint="@color/black"
+                android:textColor="@color/white"
                 android:text="@string/change_city"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
