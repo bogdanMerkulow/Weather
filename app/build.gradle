@@ -79,4 +79,7 @@ dependencies {
 
     //gps
     implementation 'com.google.android.gms:play-services-location:18.0.0'
+
+    //timber
+    implementation 'com.jakewharton.timber:timber:4.7.1'
 }
