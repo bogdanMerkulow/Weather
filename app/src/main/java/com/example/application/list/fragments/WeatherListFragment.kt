@@ -44,11 +44,10 @@ class WeatherListFragment : Fragment() {
     ): View? {
         val rootView = inflater.inflate(R.layout.fragment_weather_list, container, false)
         val rcWeatherList: RecyclerView = rootView.findViewById(R.id.rv_weather_list)
-        val progress: ProgressBar = rootView.findViewById(R.id.progress_circular)
+        val progress: RelativeLayout = rootView.findViewById(R.id.progress_circular)
         val headerText: TextView = rootView.findViewById(R.id.header_text)
-        val imageAnimation = rootView.findViewById<ImageView>(R.id.header_image_animation)
         val headerImage: ImageView = rootView.findViewById(R.id.header_image)
-        val changeCityButton = rootView.findViewById<Button>(R.id.change_city)
+        val changeCityButton = rootView.findViewById<TextView>(R.id.change_city)
         val fragmentContainer = rootView.findViewById<SwipeRefreshLayout>(R.id.swipe_refresh)
 
         rcWeatherList.adapter = adapter
@@ -70,7 +69,7 @@ class WeatherListFragment : Fragment() {
         }
 
         listViewModel.headerImageUrl.observe(viewLifecycleOwner) { imageUrl ->
-            setHeaderImageUrl(imageUrl, headerImage, imageAnimation)
+            setHeaderImageUrl(imageUrl, headerImage)
         }
 
         listViewModel.reload.observe(viewLifecycleOwner) { reload ->
@@ -96,7 +95,7 @@ class WeatherListFragment : Fragment() {
         builder.show()
     }
 
-    private fun onLiveDataChangeReload(reload: Boolean, progress: ProgressBar) {
+    private fun onLiveDataChangeReload(reload: Boolean, progress: RelativeLayout) {
         if (reload) {
             progress.visibility = View.VISIBLE
         } else {
@@ -123,29 +122,10 @@ class WeatherListFragment : Fragment() {
         fragmentContainer.isRefreshing = false
     }
 
-    private fun setHeaderImageUrl(url: String, headerImage: ImageView, imageAnimation: ImageView) {
-        imageAnimation.visibility = View.GONE
-        imageAnimation.clearAnimation()
-        if (url in animWeatherUrls) {
-            val animationRotateCenter: Animation = AnimationUtils.loadAnimation(
-                activity, R.anim.gray_spinner_png
-            )
-            imageAnimation.visibility = View.VISIBLE
-            imageAnimation.startAnimation(animationRotateCenter)
-        }
-
+    private fun setHeaderImageUrl(url: String, headerImage: ImageView) {
         Glide
             .with(this)
             .load(url)
             .into(headerImage)
-    }
-
-    companion object {
-        val animWeatherUrls = listOf(
-            "https://openweathermap.org/img/wn/02d@4x.png",
-            "https://openweathermap.org/img/wn/10d@4x.png",
-            "https://openweathermap.org/img/wn/02d@4x.png",
-            "https://openweathermap.org/img/wn/02n@4x.png",
-        )
     }
 }

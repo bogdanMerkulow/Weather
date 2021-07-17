@@ -4,18 +4,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#CED3D7"
     tools:context=".detail.fragments.WeatherDetailFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_weather_list"
+        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:layout_height="match_parent"/>
-    <ProgressBar
+    <RelativeLayout
         android:id="@+id/progress_circular"
-        android:indeterminateDrawable="@drawable/spinner_png"
         android:layout_gravity="center"
-        android:layout_width="100dp"
-        android:layout_height="100dp"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:translationZ="1dp"
+            android:src="@drawable/cloud"/>
+        <ProgressBar
+            android:indeterminateDrawable="@drawable/spinner_png"
+            android:layout_marginStart="30dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"/>
+    </RelativeLayout>
 
 </FrameLayout>

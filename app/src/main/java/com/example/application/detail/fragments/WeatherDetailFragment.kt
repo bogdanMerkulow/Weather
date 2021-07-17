@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
+import android.widget.RelativeLayout
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -41,7 +42,7 @@ class WeatherDetailFragment : Fragment() {
     ): View? {
         val rootView = inflater.inflate(R.layout.fragment_weather_detail, container, false)
         val rcWeatherList: RecyclerView = rootView.findViewById(R.id.rv_weather_list)
-        val progress: ProgressBar = rootView.findViewById(R.id.progress_circular)
+        val progress: RelativeLayout = rootView.findViewById(R.id.progress_circular)
 
         rcWeatherList.adapter = adapter
 
@@ -65,7 +66,7 @@ class WeatherDetailFragment : Fragment() {
         return rootView
     }
 
-    private fun onLiveDataChangeReload(reload: Boolean, progress: ProgressBar) {
+    private fun onLiveDataChangeReload(reload: Boolean, progress: RelativeLayout) {
         if (reload) {
             progress.visibility = View.VISIBLE
         } else {
