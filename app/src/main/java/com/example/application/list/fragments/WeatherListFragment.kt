@@ -5,9 +5,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
-import android.widget.*
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.RelativeLayout
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
@@ -31,10 +32,11 @@ class WeatherListFragment : Fragment() {
         viewModelFactory = ViewModelFactory(activity)
         listViewModel =
             ViewModelProvider(this, viewModelFactory).get(WeatherListViewModel::class.java)
-        adapter =
-            object : RecyclerViewAdapter<Weather>(WeatherViewHolderFactory(), this::onItemClick) {
-                override fun getLayoutId(viewType: Int): Int = R.layout.weather_list
-            }
+        adapter = RecyclerViewAdapter(
+            WeatherViewHolderFactory(),
+            R.layout.weather_list,
+            this::onItemClick
+        )
     }
 
     override fun onCreateView(
