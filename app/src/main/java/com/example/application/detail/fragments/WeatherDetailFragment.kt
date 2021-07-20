@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
@@ -29,7 +30,9 @@ class WeatherDetailFragment : Fragment() {
         viewModelFactory = ViewModelFactory(activity)
         viewModel =
             ViewModelProvider(this, viewModelFactory).get(WeatherDetailViewModel::class.java)
-        adapter = RecyclerViewAdapter(WeatherViewHolderFactory(), R.layout.weather_list)
+        adapter = object : RecyclerViewAdapter<Weather>(WeatherViewHolderFactory()) {
+            override fun getLayoutId(viewType: Int): Int = R.layout.weather_list
+        }
     }
 
     override fun onCreateView(

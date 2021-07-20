@@ -6,9 +6,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.application.models.ViewHolder
 import com.example.application.models.ViewHolderFactory
 
-class RecyclerViewAdapter<T>(
+abstract class RecyclerViewAdapter<T>(
     private val viewHolderFactory: ViewHolderFactory<T>,
-    private val layoutId: Int,
     private val listener: (T) -> Unit = {}
 ) : RecyclerView.Adapter<ViewHolder<T>>() {
 
@@ -19,7 +18,9 @@ class RecyclerViewAdapter<T>(
         notifyDataSetChanged()
     }
 
-    override fun getItemViewType(viewType: Int): Int = layoutId
+    protected abstract fun getLayoutId(viewType: Int): Int
+
+    override fun getItemViewType(viewType: Int): Int = getLayoutId(viewType)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder<T> {
         val inflater = LayoutInflater.from(parent.context)
