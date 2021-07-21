@@ -1,32 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/swipe_refresh"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#CED3D7"
-    tools:context=".list.fragments.WeatherListFragment">
+    tools:context=".detail.fragments.WeatherDetailFragment">
 
-    <ScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <RelativeLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".list.fragments.WeatherListFragment"
+        android:background="#CED3D7"
+        android:orientation="vertical">
+
+        <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:context=".list.fragments.WeatherListFragment"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
 
             <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:id="@+id/header"
                 android:layout_width="match_parent"
                 android:background="@color/black"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
                 android:layout_height="200dp">
+
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
+                    app:layout_collapseMode="parallax"
                     android:src="@drawable/clouds_blur"/>
+
                 <TextView
                     android:id="@+id/change_city"
                     style="@style/Widget.AppCompat.Button.Borderless"
@@ -34,7 +39,9 @@
                     android:textColor="@color/white"
                     android:text="@string/change_city"
                     android:layout_width="wrap_content"
+                    app:layout_collapseMode="pin"
                     android:layout_height="wrap_content"/>
+
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -62,34 +69,47 @@
 
             </com.google.android.material.appbar.CollapsingToolbarLayout>
 
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <RelativeLayout
+            android:id="@+id/progress_circular"
+            android:layout_gravity="center"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:translationZ="5dp">
+
+            <ImageView
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:translationZ="1dp"
+                android:src="@drawable/cloud"/>
+
+            <ProgressBar
+                android:indeterminateDrawable="@drawable/spinner_png"
+                android:layout_marginStart="30dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"/>
+
+        </RelativeLayout>
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/header"
+            tools:context=".list.fragments.WeatherListFragment">
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_weather_list"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 android:layout_width="match_parent"
-                android:layout_below="@+id/header"
                 android:layout_height="wrap_content"/>
-            <RelativeLayout
-                android:id="@+id/progress_circular"
-                android:layout_gravity="center"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <ImageView
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
-                    android:translationZ="1dp"
-                    android:src="@drawable/cloud"/>
-                <ProgressBar
-                    android:indeterminateDrawable="@drawable/spinner_png"
-                    android:layout_marginStart="30dp"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"/>
-            </RelativeLayout>
 
-        </RelativeLayout>
-    </ScrollView>
-
-</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</RelativeLayout>
