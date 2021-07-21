@@ -16,6 +16,7 @@ android {
         versionName "1.0"
         multiDexEnabled true
 
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -40,6 +41,13 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+    testOptions {
+        unitTests.all {
+            jvmArgs '-XX:MaxPermSize=256m'
+        }
+        unitTests.returnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -53,6 +61,11 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito:mockito-inline:3.11.2'
+    //espresso
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'

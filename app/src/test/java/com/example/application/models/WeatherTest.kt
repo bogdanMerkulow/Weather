@@ -3,18 +3,24 @@ package com.example.application.models
 import com.example.application.api.*
 import org.junit.Test
 import org.junit.Assert.*
+import org.junit.Before
 
 class WeatherTest {
 
+    private lateinit var weather: Weather
+
+    @Before
+    fun setup() {
+        weather = Weather(iconName = "10n", temp = 32.0f)
+    }
+
     @Test
     fun getIconUrl() {
-        val weather = Weather(iconName = "10n")
         assertEquals(weather.getIconUrl(), "https://openweathermap.org/img/wn/10n@4x.png")
     }
 
     @Test
     fun getTemp() {
-        val weather = Weather(temp = 32.0f)
         assertEquals(weather.getTemp(), "32°C")
     }
 
