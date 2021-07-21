@@ -22,7 +22,8 @@ class DetailFragmentTest {
 
     @Test
     fun loader() {
-        Espresso.onView(withId(R.id.progress_circular)).check(matches(withEffectiveVisibility(Visibility.INVISIBLE)))
+        Espresso.onView(withId(R.id.progress_circular))
+            .check(matches(withEffectiveVisibility(Visibility.INVISIBLE)))
     }
 
     @Test

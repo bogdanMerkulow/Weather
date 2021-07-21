@@ -160,7 +160,6 @@ class WeatherListViewModel(
 
         @SuppressLint("SimpleDateFormat")
         val dateFormatDay = SimpleDateFormat("dd")
-        const val RESPONSE_CODE_OK = 200
         const val KELVIN = 272.15
     }
 }

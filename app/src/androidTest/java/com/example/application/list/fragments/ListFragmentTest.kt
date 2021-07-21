@@ -24,15 +24,18 @@ class ListFragmentTest {
         Espresso.onView(withId(R.id.city_edit_text)).check(matches(isDisplayed()))
         Espresso.onView(withId(R.id.city_edit_text)).perform(typeText("tambov"))
         Espresso.onView(withText("enter")).perform(click())
-        Espresso.onView(withText("Тамбов")).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-        Espresso.onView(withId(R.id.progress_circular)).check(matches(withEffectiveVisibility(Visibility.INVISIBLE)))
+        Espresso.onView(withText("Тамбов"))
+            .check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+        Espresso.onView(withId(R.id.progress_circular))
+            .check(matches(withEffectiveVisibility(Visibility.INVISIBLE)))
     }
 
     @Test
     fun scrollAndClickOnItem() {
         Espresso.onView(withId(R.id.rv_weather_list)).perform(scrollTo(), click())
         Thread.sleep(2000)
-        Espresso.onView(withId(R.id.progress_circular)).check(matches(withEffectiveVisibility(Visibility.INVISIBLE)))
+        Espresso.onView(withId(R.id.progress_circular))
+            .check(matches(withEffectiveVisibility(Visibility.INVISIBLE)))
     }
 
     @Test
@@ -40,6 +43,7 @@ class ListFragmentTest {
         Espresso.onView(withId(R.id.rv_weather_list)).perform(scrollTo(), click())
         pressBack()
         Thread.sleep(1000)
-        Espresso.onView(withId(R.id.progress_circular)).check(matches(withEffectiveVisibility(Visibility.INVISIBLE)))
+        Espresso.onView(withId(R.id.progress_circular))
+            .check(matches(withEffectiveVisibility(Visibility.INVISIBLE)))
     }
 }
