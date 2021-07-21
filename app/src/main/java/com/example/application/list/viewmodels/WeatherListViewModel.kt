@@ -20,6 +20,7 @@ import retrofit2.Response
 import java.net.SocketTimeoutException
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.ceil
 import kotlin.math.floor
 
 class WeatherListViewModel(
@@ -82,7 +83,7 @@ class WeatherListViewModel(
                     var lastTime = 0
 
                     _title.postValue(weatherResponse.city.name)
-                    _header.postValue(floor(weatherResponse.list[0].main.temp - KELVIN).toString() + "°C")
+                    _header.postValue((ceil(weatherResponse.list[0].main.temp - KELVIN)).toInt().toString() + "°C")
                     _headerImageUrl.postValue("https://openweathermap.org/img/wn/${weatherResponse.list[0].weather[0].icon}@4x.png")
 
                     weatherResponse.list.forEach { weatherItem ->
