@@ -63,22 +63,20 @@ class WeatherDetailViewModel(private val weatherService: WeatherService) : ViewM
                     _data.postValue(weather)
                     _title.postValue(weatherResponse.city.name)
                 }
-
-                _reload.postValue(false)
-
+                
             } catch (e: Exception) {
                 _title.postValue(NO_INTERNET)
-                _reload.postValue(false)
             } catch (e: SocketTimeoutException) {
                 _title.postValue(BAD_INTERNET)
-                _reload.postValue(false)
             }
+
+            _reload.postValue(false)
         }
     }
 
     companion object {
         @SuppressLint("SimpleDateFormat")
-        val dateFormatTimeStamp = SimpleDateFormat("E dd.MM hh:mm")
+        val dateFormatTimeStamp = SimpleDateFormat("hh:mm")
 
         @SuppressLint("SimpleDateFormat")
         val dateFormatDay = SimpleDateFormat("dd")

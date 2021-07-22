@@ -106,15 +106,13 @@ class WeatherListViewModel(
                     _data.postValue(weather)
                 }
 
-                _reload.postValue(false)
-
             } catch (e: Exception) {
                 _title.postValue(NO_INTERNET)
-                _reload.postValue(false)
             } catch (e: SocketTimeoutException) {
                 _title.postValue(BAD_INTERNET)
-                _reload.postValue(false)
             }
+
+            _reload.postValue(false)
         }
     }
 
@@ -141,11 +139,11 @@ class WeatherListViewModel(
                 }
             } catch (e: Exception) {
                 _title.postValue(NO_INTERNET)
-                _reload.postValue(false)
             } catch (e: SocketTimeoutException) {
                 _title.postValue(BAD_INTERNET)
-                _reload.postValue(false)
             }
+
+            _reload.postValue(false)
         }
     }
 
