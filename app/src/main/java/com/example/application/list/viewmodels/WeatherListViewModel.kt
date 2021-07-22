@@ -2,6 +2,7 @@ package com.example.application.list.viewmodels
 
 import android.annotation.SuppressLint
 import android.location.Location
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -69,13 +70,6 @@ class WeatherListViewModel(
                 val response = call.execute()
 
                 if (response.isSuccessful) {
-                    if (response.body() == null) {
-                        _title.postValue(NO_CITY)
-                        _header.postValue(DEFAULT_CITY)
-                        _reload.postValue(false)
-                        return@launch
-                    }
-
                     val weatherResponse = response.body()!!
                     val weather = mutableListOf<Weather>()
                     var lastTime = 0
@@ -104,6 +98,11 @@ class WeatherListViewModel(
                     }
 
                     _data.postValue(weather)
+                } else {
+                    _title.postValue(NO_CITY)
+                    _header.postValue(DEFAULT_CITY)
+                    _reload.postValue(false)
+                    return@launch
                 }
 
             } catch (e: Exception) {
