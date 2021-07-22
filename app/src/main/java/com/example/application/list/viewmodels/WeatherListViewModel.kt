@@ -20,8 +20,6 @@ import retrofit2.Response
 import java.net.SocketTimeoutException
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.ceil
-import kotlin.math.floor
 
 class WeatherListViewModel(
     private val weatherService: WeatherService,
@@ -57,9 +55,9 @@ class WeatherListViewModel(
     }
 
     fun loadData() {
-        _reload.postValue(true)
-
         viewModelScope.launch(Dispatchers.IO) {
+            _reload.postValue(true)
+
             try {
                 val call: Call<WeatherResponse> = weatherService.getCurrentWeatherData(
                     q = currentCity,
@@ -72,8 +70,8 @@ class WeatherListViewModel(
 
                 if (response.isSuccessful) {
                     if (response.body() == null) {
-                        _title.postValue("city not found")
-                        _header.postValue("")
+                        _title.postValue(NO_CITY)
+                        _header.postValue(DEFAULT_CITY)
                         _reload.postValue(false)
                         return@launch
                     }
@@ -83,8 +81,8 @@ class WeatherListViewModel(
                     var lastTime = 0
 
                     _title.postValue(weatherResponse.city.name)
-                    _header.postValue((ceil(weatherResponse.list[0].main.temp - KELVIN)).toInt().toString() + "°C")
-                    _headerImageUrl.postValue("https://openweathermap.org/img/wn/${weatherResponse.list[0].weather[0].icon}@4x.png")
+                    _header.postValue(Weather(temp = weatherResponse.list[0].main.temp - KELVIN.toInt()).getTemp())
+                    _headerImageUrl.postValue(Weather(iconName = weatherResponse.list[0].weather[0].icon).getIconUrl())
 
                     weatherResponse.list.forEach { weatherItem ->
                         val date = weatherItem.dt?.toLong()?.times(1000)?.let { Date(it) }
@@ -111,10 +109,10 @@ class WeatherListViewModel(
                 _reload.postValue(false)
 
             } catch (e: Exception) {
-                _title.postValue("no internet connection  pull to refresh")
+                _title.postValue(NO_INTERNET)
                 _reload.postValue(false)
             } catch (e: SocketTimeoutException) {
-                _title.postValue("bad internet connection")
+                _title.postValue(BAD_INTERNET)
                 _reload.postValue(false)
             }
         }
@@ -123,6 +121,7 @@ class WeatherListViewModel(
     private fun loadLocation() {
         viewModelScope.launch(Dispatchers.IO) {
             gpsLocationTask.addOnSuccessListener {
+                Thread.sleep(0)
                 if (it != null) {
                     lat = it.latitude.toString()
                     lon = it.longitude.toString()
@@ -141,10 +140,10 @@ class WeatherListViewModel(
                     loadData()
                 }
             } catch (e: Exception) {
-                _title.postValue("no internet connection  pull to refresh")
+                _title.postValue(NO_INTERNET)
                 _reload.postValue(false)
             } catch (e: SocketTimeoutException) {
-                _title.postValue("bad internet connection")
+                _title.postValue(BAD_INTERNET)
                 _reload.postValue(false)
             }
         }
@@ -161,6 +160,11 @@ class WeatherListViewModel(
 
         @SuppressLint("SimpleDateFormat")
         val dateFormatDay = SimpleDateFormat("dd")
+
         const val KELVIN = 272.15
+        const val NO_CITY = "city not found"
+        const val DEFAULT_CITY = ""
+        const val NO_INTERNET = "no internet connection  pull to refresh"
+        const val BAD_INTERNET = "bad internet connection"
     }
 }

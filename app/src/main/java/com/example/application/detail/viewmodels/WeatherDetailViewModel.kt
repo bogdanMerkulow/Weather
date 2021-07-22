@@ -30,10 +30,10 @@ class WeatherDetailViewModel(private val weatherService: WeatherService) : ViewM
     val reload: LiveData<Boolean>
         get() = _reload
 
-    fun loadData(q: String = "", day: String = "0") {
-        _reload.postValue(true)
-
+    fun loadData(q: String = DEFAULT_CITY, day: String = DEFAULT_DAY) {
         viewModelScope.launch(Dispatchers.IO) {
+            _reload.postValue(true)
+
             try {
                 val call: Call<WeatherResponse> =
                     weatherService.getCurrentWeatherData(q = q, app_id = BuildConfig.OWM_API_KEY)
@@ -66,8 +66,11 @@ class WeatherDetailViewModel(private val weatherService: WeatherService) : ViewM
 
                 _reload.postValue(false)
 
+            } catch (e: Exception) {
+                _title.postValue(NO_INTERNET)
+                _reload.postValue(false)
             } catch (e: SocketTimeoutException) {
-                _title.postValue("bad internet connection")
+                _title.postValue(BAD_INTERNET)
                 _reload.postValue(false)
             }
         }
@@ -79,5 +82,10 @@ class WeatherDetailViewModel(private val weatherService: WeatherService) : ViewM
 
         @SuppressLint("SimpleDateFormat")
         val dateFormatDay = SimpleDateFormat("dd")
+
+        const val DEFAULT_DAY = "0"
+        const val DEFAULT_CITY = ""
+        const val NO_INTERNET = "no internet connection  pull to refresh"
+        const val BAD_INTERNET = "bad internet connection"
     }
 }
