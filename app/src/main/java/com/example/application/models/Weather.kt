@@ -21,6 +21,9 @@ data class Weather(
     }
 
     fun getTemp(): String {
+        if (temp.toInt() > 30) {
+            return "${temp.toInt()}\uD83D\uDD25"
+        }
         return "${temp.toInt()}°C"
     }
 

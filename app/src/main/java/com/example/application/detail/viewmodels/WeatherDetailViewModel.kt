@@ -33,50 +33,48 @@ class WeatherDetailViewModel(private val weatherService: WeatherService) : ViewM
     fun loadData(
         q: String = DEFAULT_CITY,
         day: String = DEFAULT_DAY
-    ) {
-        viewModelScope.launch(Dispatchers.IO) {
-            _reload.postValue(true)
+    ) = viewModelScope.launch(Dispatchers.IO) {
+        _reload.postValue(true)
 
-            try {
-                val call: Call<WeatherResponse> = weatherService.getCurrentWeatherData(
-                    city = q,
-                    api_key = BuildConfig.OWM_API_KEY
-                )
-                val response = call.execute()
+        try {
+            val call: Call<WeatherResponse> = weatherService.getCurrentWeatherData(
+                city = q,
+                api_key = BuildConfig.OWM_API_KEY
+            )
+            val response = call.execute()
 
-                if (response.isSuccessful) {
-                    val weatherResponse = response.body()!!
-                    val weather = mutableListOf<Weather>()
+            if (response.isSuccessful) {
+                val weatherResponse = response.body()!!
+                val weather = mutableListOf<Weather>()
 
-                    weatherResponse.list.forEach { weatherItem ->
-                        val date = weatherItem.dt?.toLong()?.times(1000)?.let { Date(it) }
-                        val time = dateFormatTimeStamp.format(date)
-                        val checkTime = dateFormatDay.format(date)
+                weatherResponse.list.forEach { weatherItem ->
+                    val date = weatherItem.dt?.toLong()?.times(1000)?.let { Date(it) }
+                    val time = dateFormatTimeStamp.format(date)
+                    val checkTime = dateFormatDay.format(date)
 
-                        if (day == checkTime) {
-                            weather.add(
-                                Weather.responseConvert(
-                                    weatherItem,
-                                    weatherResponse,
-                                    time,
-                                    checkTime
-                                )
+                    if (day == checkTime) {
+                        weather.add(
+                            Weather.responseConvert(
+                                weatherItem,
+                                weatherResponse,
+                                time,
+                                checkTime
                             )
-                        }
+                        )
                     }
-
-                    _data.postValue(weather)
-                    _title.postValue(weatherResponse.city.name)
                 }
 
-            } catch (e: Exception) {
-                _title.postValue(NO_INTERNET)
-            } catch (e: SocketTimeoutException) {
-                _title.postValue(BAD_INTERNET)
+                _data.postValue(weather)
+                _title.postValue(weatherResponse.city.name)
             }
 
-            _reload.postValue(false)
+        } catch (e: Exception) {
+            _title.postValue(NO_INTERNET)
+        } catch (e: SocketTimeoutException) {
+            _title.postValue(BAD_INTERNET)
         }
+
+        _reload.postValue(false)
     }
 
     companion object {

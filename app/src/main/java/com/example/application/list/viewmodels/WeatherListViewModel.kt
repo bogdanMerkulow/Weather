@@ -54,95 +54,91 @@ class WeatherListViewModel(
         loadLocation()
     }
 
-    fun loadData() {
-        viewModelScope.launch(Dispatchers.IO) {
-            _reload.postValue(true)
+    fun loadData() = viewModelScope.launch(Dispatchers.IO) {
+        _reload.postValue(true)
 
-            try {
-                val call: Call<WeatherResponse> = weatherService.getCurrentWeatherData(
-                    city = currentCity,
-                    latitude = latitude,
-                    longitude = longitude,
-                    api_key = BuildConfig.OWM_API_KEY
-                )
+        try {
+            val call: Call<WeatherResponse> = weatherService.getCurrentWeatherData(
+                city = currentCity,
+                latitude = latitude,
+                longitude = longitude,
+                api_key = BuildConfig.OWM_API_KEY
+            )
 
-                val response = call.execute()
+            val response = call.execute()
 
-                if (response.isSuccessful) {
-                    val weatherResponse = response.body()!!
-                    val weather = mutableListOf<Weather>()
-                    var lastTime = 0
+            if (response.isSuccessful) {
+                val weatherResponse = response.body()!!
+                val weather = mutableListOf<Weather>()
+                var lastTime = 0
 
-                    _title.postValue(weatherResponse.city.name)
-                    _header.postValue(Weather(temp = weatherResponse.list[0].main.temp - KELVIN.toInt()).getTemp())
-                    _headerImageUrl.postValue(Weather(iconName = weatherResponse.list[0].weather[0].icon).getIconUrl())
+                _title.postValue(weatherResponse.city.name)
+                _header.postValue(Weather(temp = weatherResponse.list[0].main.temp - KELVIN.toInt()).getTemp())
+                _headerImageUrl.postValue(Weather(iconName = weatherResponse.list[0].weather[0].icon).getIconUrl())
 
-                    weatherResponse.list.forEach { weatherItem ->
-                        val date = weatherItem.dt?.toLong()?.times(1000)?.let { Date(it) }
-                        val time = dateFormatTimeStamp.format(date)
-                        val checkTime = dateFormatDay.format(date)
+                weatherResponse.list.forEach { weatherItem ->
+                    val date = weatherItem.dt?.toLong()?.times(1000)?.let { Date(it) }
+                    val time = dateFormatTimeStamp.format(date)
+                    val checkTime = dateFormatDay.format(date)
 
-                        if (lastTime != checkTime.toInt()) {
-                            weather.add(
-                                Weather.responseConvert(
-                                    weatherItem,
-                                    weatherResponse,
-                                    time,
-                                    checkTime
-                                )
+                    if (lastTime != checkTime.toInt()) {
+                        weather.add(
+                            Weather.responseConvert(
+                                weatherItem,
+                                weatherResponse,
+                                time,
+                                checkTime
                             )
-                        }
-
-                        lastTime = checkTime.toInt()
+                        )
                     }
 
-                    _data.postValue(weather)
-                } else {
-                    _title.postValue(NO_CITY)
-                    _header.postValue(DEFAULT_CITY)
-                    _reload.postValue(false)
-                    return@launch
+                    lastTime = checkTime.toInt()
                 }
 
-            } catch (e: Exception) {
-                _title.postValue(NO_INTERNET)
-            } catch (e: SocketTimeoutException) {
-                _title.postValue(BAD_INTERNET)
+                _data.postValue(weather)
+            } else {
+                _title.postValue(NO_CITY)
+                _header.postValue(DEFAULT_CITY)
+                _reload.postValue(false)
+                return@launch
             }
 
-            _reload.postValue(false)
+        } catch (e: Exception) {
+            _title.postValue(NO_INTERNET)
+        } catch (e: SocketTimeoutException) {
+            _title.postValue(BAD_INTERNET)
         }
+
+        _reload.postValue(false)
     }
 
-    private fun loadLocation() {
-        viewModelScope.launch(Dispatchers.IO) {
-            gpsLocationTask.addOnSuccessListener {
-                Thread.sleep(0)
-                if (it != null) {
-                    latitude = it.latitude.toString()
-                    longitude = it.longitude.toString()
-                    loadData()
-                    return@addOnSuccessListener
-                }
+    private fun loadLocation() = viewModelScope.launch(Dispatchers.IO) {
+        gpsLocationTask.addOnSuccessListener {
+            Thread.sleep(0)
+            if (it != null) {
+                latitude = it.latitude.toString()
+                longitude = it.longitude.toString()
+                loadData()
+                return@addOnSuccessListener
             }
-
-            try {
-                val call: Call<LocationResponse> = locationService.getLocation()
-                val response: Response<LocationResponse> = call.execute()
-                if (response.isSuccessful) {
-                    val locationResponse = response.body()!!
-                    latitude = locationResponse.lat.toString()
-                    longitude = locationResponse.lon.toString()
-                    loadData()
-                }
-            } catch (e: Exception) {
-                _title.postValue(NO_INTERNET)
-            } catch (e: SocketTimeoutException) {
-                _title.postValue(BAD_INTERNET)
-            }
-
-            _reload.postValue(false)
         }
+
+        try {
+            val call: Call<LocationResponse> = locationService.getLocation()
+            val response: Response<LocationResponse> = call.execute()
+            if (response.isSuccessful) {
+                val locationResponse = response.body()!!
+                latitude = locationResponse.lat.toString()
+                longitude = locationResponse.lon.toString()
+                loadData()
+            }
+        } catch (e: Exception) {
+            _title.postValue(NO_INTERNET)
+        } catch (e: SocketTimeoutException) {
+            _title.postValue(BAD_INTERNET)
+        }
+
+        _reload.postValue(false)
     }
 
     fun changeLocation(city: String) {
