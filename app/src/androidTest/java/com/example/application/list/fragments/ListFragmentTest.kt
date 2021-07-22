@@ -1,9 +1,11 @@
 package com.example.application.list.fragments
 
+import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
 import com.example.application.MainActivity
 import com.example.application.R
@@ -32,7 +34,8 @@ class ListFragmentTest {
 
     @Test
     fun scrollAndClickOnItem() {
-        Espresso.onView(withId(R.id.rv_weather_list)).perform(scrollTo(), click())
+        Espresso.onView(withId(R.id.rv_weather_list))
+            .perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()))
         Thread.sleep(2000)
         Espresso.onView(withId(R.id.progress_circular))
             .check(matches(withEffectiveVisibility(Visibility.INVISIBLE)))
@@ -40,8 +43,18 @@ class ListFragmentTest {
 
     @Test
     fun backButton() {
-        Espresso.onView(withId(R.id.rv_weather_list)).perform(scrollTo(), click())
+        Espresso.onView(withId(R.id.rv_weather_list))
+            .perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()))
         pressBack()
+        Thread.sleep(1000)
+        Espresso.onView(withId(R.id.progress_circular))
+            .check(matches(withEffectiveVisibility(Visibility.INVISIBLE)))
+    }
+
+    @Test
+    fun pullToRefresh() {
+        Espresso.onView(withId(R.id.rv_weather_list))
+            .perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, swipeDown()))
         Thread.sleep(1000)
         Espresso.onView(withId(R.id.progress_circular))
             .check(matches(withEffectiveVisibility(Visibility.INVISIBLE)))
