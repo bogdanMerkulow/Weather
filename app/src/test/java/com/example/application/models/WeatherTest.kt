@@ -11,7 +11,7 @@ class WeatherTest {
 
     @Before
     fun setup() {
-        weather = Weather(iconName = "10n", temp = 32.0f)
+        weather = Weather(iconName = "10n", temp = 29.0f)
     }
 
     @Test
@@ -21,7 +21,8 @@ class WeatherTest {
 
     @Test
     fun getTemp() {
-        assertEquals(weather.getTemp(), "32°C")
+        assertEquals(weather.getTemp(), "29°C")
+        assertEquals(Weather(temp = 31.0f).getTemp(), "31\uD83D\uDD25")
     }
 
     @Test
