@@ -41,7 +41,7 @@ class WeatherDetailFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val rootView = binding.root
         val rcWeatherList: RecyclerView = binding.rvWeatherList
         val progress: RelativeLayout = binding.progressCircular

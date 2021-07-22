@@ -28,7 +28,7 @@ class WeatherListFragment : Fragment() {
     private lateinit var listViewModel: WeatherListViewModel
     private lateinit var viewModelFactory: ViewModelFactory
     private lateinit var binding: FragmentWeatherListBinding
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentWeatherListBinding.inflate(layoutInflater)
@@ -45,7 +45,7 @@ class WeatherListFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val rootView = binding.root
         val rcWeatherList: RecyclerView = binding.rvWeatherList
         val progress: RelativeLayout = binding.progressCircular
