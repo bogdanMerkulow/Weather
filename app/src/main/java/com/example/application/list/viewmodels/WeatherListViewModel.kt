@@ -2,7 +2,6 @@ package com.example.application.list.viewmodels
 
 import android.annotation.SuppressLint
 import android.location.Location
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -33,8 +32,8 @@ class WeatherListViewModel(
     private val _header: MutableLiveData<String> = MutableLiveData<String>()
     private val _headerImageUrl: MutableLiveData<String> = MutableLiveData<String>()
     private var currentCity: String = String()
-    private var lat: String = String()
-    private var lon: String = String()
+    private var latitude: String = String()
+    private var longitude: String = String()
 
     val data: LiveData<List<Weather>>
         get() = _data
@@ -61,10 +60,10 @@ class WeatherListViewModel(
 
             try {
                 val call: Call<WeatherResponse> = weatherService.getCurrentWeatherData(
-                    q = currentCity,
-                    lat = lat,
-                    lon = lon,
-                    app_id = BuildConfig.OWM_API_KEY
+                    city = currentCity,
+                    latitude = latitude,
+                    longitude = longitude,
+                    api_key = BuildConfig.OWM_API_KEY
                 )
 
                 val response = call.execute()
@@ -120,8 +119,8 @@ class WeatherListViewModel(
             gpsLocationTask.addOnSuccessListener {
                 Thread.sleep(0)
                 if (it != null) {
-                    lat = it.latitude.toString()
-                    lon = it.longitude.toString()
+                    latitude = it.latitude.toString()
+                    longitude = it.longitude.toString()
                     loadData()
                     return@addOnSuccessListener
                 }
@@ -132,8 +131,8 @@ class WeatherListViewModel(
                 val response: Response<LocationResponse> = call.execute()
                 if (response.isSuccessful) {
                     val locationResponse = response.body()!!
-                    lat = locationResponse.lat.toString()
-                    lon = locationResponse.lon.toString()
+                    latitude = locationResponse.lat.toString()
+                    longitude = locationResponse.lon.toString()
                     loadData()
                 }
             } catch (e: Exception) {
