@@ -16,6 +16,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.example.application.R
 import com.example.application.adapters.RecyclerViewAdapter
+import com.example.application.databinding.FragmentWeatherListBinding
 import com.example.application.detail.fragments.WeatherDetailFragment
 import com.example.application.factories.ViewModelFactory
 import com.example.application.factories.WeatherViewHolderFactory
@@ -26,9 +27,11 @@ class WeatherListFragment : Fragment() {
     private lateinit var adapter: RecyclerViewAdapter<Weather>
     private lateinit var listViewModel: WeatherListViewModel
     private lateinit var viewModelFactory: ViewModelFactory
-
+    private lateinit var binding: FragmentWeatherListBinding
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = FragmentWeatherListBinding.inflate(layoutInflater)
         viewModelFactory = ViewModelFactory(activity)
         listViewModel =
             ViewModelProvider(this, viewModelFactory).get(WeatherListViewModel::class.java)
@@ -43,13 +46,13 @@ class WeatherListFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val rootView = inflater.inflate(R.layout.fragment_weather_list, container, false)
-        val rcWeatherList: RecyclerView = rootView.findViewById(R.id.rv_weather_list)
-        val progress: RelativeLayout = rootView.findViewById(R.id.progress_circular)
-        val headerText: TextView = rootView.findViewById(R.id.header_text)
-        val headerImage: ImageView = rootView.findViewById(R.id.header_image)
-        val changeCityButton = rootView.findViewById<TextView>(R.id.change_city)
-        val fragmentContainer = rootView.findViewById<SwipeRefreshLayout>(R.id.swipe_refresh)
+        val rootView = binding.root
+        val rcWeatherList: RecyclerView = binding.rvWeatherList
+        val progress: RelativeLayout = binding.progressCircular
+        val headerText: TextView = binding.headerText
+        val headerImage: ImageView = binding.headerImage
+        val changeCityButton = binding.changeCity
+        val fragmentContainer = binding.swipeRefresh
 
         rcWeatherList.adapter = adapter
 

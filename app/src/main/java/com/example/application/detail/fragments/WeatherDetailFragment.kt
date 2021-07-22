@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.example.application.R
 import com.example.application.adapters.RecyclerViewAdapter
+import com.example.application.databinding.FragmentWeatherDetailBinding
 import com.example.application.detail.viewmodels.WeatherDetailViewModel
 import com.example.application.factories.ViewModelFactory
 import com.example.application.factories.WeatherViewHolderFactory
@@ -23,9 +24,11 @@ class WeatherDetailFragment : Fragment() {
     private lateinit var viewModel: WeatherDetailViewModel
     private lateinit var viewModelFactory: ViewModelFactory
     private lateinit var actionBar: ActionBar
+    private lateinit var binding: FragmentWeatherDetailBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = FragmentWeatherDetailBinding.inflate(layoutInflater)
         viewModelFactory = ViewModelFactory(activity)
         viewModel =
             ViewModelProvider(this, viewModelFactory).get(WeatherDetailViewModel::class.java)
@@ -39,9 +42,9 @@ class WeatherDetailFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val rootView = inflater.inflate(R.layout.fragment_weather_detail, container, false)
-        val rcWeatherList: RecyclerView = rootView.findViewById(R.id.rv_weather_list)
-        val progress: RelativeLayout = rootView.findViewById(R.id.progress_circular)
+        val rootView = binding.root
+        val rcWeatherList: RecyclerView = binding.rvWeatherList
+        val progress: RelativeLayout = binding.progressCircular
 
         rcWeatherList.adapter = adapter
 
