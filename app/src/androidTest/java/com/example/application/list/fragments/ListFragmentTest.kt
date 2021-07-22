@@ -3,6 +3,7 @@ package com.example.application.list.fragments
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
@@ -22,41 +23,41 @@ class ListFragmentTest {
 
     @Test
     fun changeLocation() {
-        Espresso.onView(withId(R.id.change_city)).perform(click())
-        Espresso.onView(withId(R.id.city_edit_text)).check(matches(isDisplayed()))
-        Espresso.onView(withId(R.id.city_edit_text)).perform(typeText("tambov"))
-        Espresso.onView(withText("enter")).perform(click())
-        Espresso.onView(withText("Тамбов"))
+        onView(withId(R.id.change_city)).perform(click())
+        onView(withId(R.id.city_edit_text)).check(matches(isDisplayed()))
+        onView(withId(R.id.city_edit_text)).perform(typeText("tambov"))
+        onView(withText("enter")).perform(click())
+        onView(withText("Тамбов"))
             .check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-        Espresso.onView(withId(R.id.progress_circular))
+        onView(withId(R.id.progress_circular))
             .check(matches(withEffectiveVisibility(Visibility.INVISIBLE)))
     }
 
     @Test
     fun scrollAndClickOnItem() {
-        Espresso.onView(withId(R.id.rv_weather_list))
+        onView(withId(R.id.rv_weather_list))
             .perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()))
         Thread.sleep(2000)
-        Espresso.onView(withId(R.id.progress_circular))
+        onView(withId(R.id.progress_circular))
             .check(matches(withEffectiveVisibility(Visibility.INVISIBLE)))
     }
 
     @Test
     fun backButton() {
-        Espresso.onView(withId(R.id.rv_weather_list))
+        onView(withId(R.id.rv_weather_list))
             .perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()))
         pressBack()
         Thread.sleep(1000)
-        Espresso.onView(withId(R.id.progress_circular))
+        onView(withId(R.id.progress_circular))
             .check(matches(withEffectiveVisibility(Visibility.INVISIBLE)))
     }
 
     @Test
     fun pullToRefresh() {
-        Espresso.onView(withId(R.id.rv_weather_list))
+        onView(withId(R.id.rv_weather_list))
             .perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, swipeDown()))
         Thread.sleep(1000)
-        Espresso.onView(withId(R.id.progress_circular))
+        onView(withId(R.id.progress_circular))
             .check(matches(withEffectiveVisibility(Visibility.INVISIBLE)))
     }
 }
