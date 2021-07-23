@@ -22,6 +22,7 @@ import com.example.application.factories.ViewModelFactory
 import com.example.application.factories.WeatherViewHolderFactory
 import com.example.application.list.viewmodels.WeatherListViewModel
 import com.example.application.models.Weather
+import timber.log.Timber
 
 class WeatherListFragment : Fragment() {
     private lateinit var adapter: RecyclerViewAdapter<Weather>
@@ -113,6 +114,7 @@ class WeatherListFragment : Fragment() {
         val bundle = Bundle()
         bundle.putString(WeatherDetailFragment.CITY, data.city)
         bundle.putString(WeatherDetailFragment.SELECTED_DATE, data.dayNumber)
+        Timber.i("Click on item where day: ${data.dayNumber}")
         fragment.arguments = bundle
         transaction?.apply {
             addToBackStack(null)

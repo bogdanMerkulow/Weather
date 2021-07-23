@@ -12,6 +12,7 @@ import com.example.application.models.Weather
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Call
+import timber.log.Timber
 import java.net.SocketTimeoutException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -46,6 +47,8 @@ class WeatherDetailViewModel(private val weatherService: WeatherService) : ViewM
             if (response.isSuccessful) {
                 val weatherResponse = response.body()!!
                 val weather = mutableListOf<Weather>()
+
+                Timber.i("response successful weather items count for ${weatherResponse.city.name}: ${weatherResponse.list.size}")
 
                 weatherResponse.list.forEach { weatherItem ->
                     val date = weatherItem.dt?.toLong()?.times(1000)?.let { Date(it) }

@@ -17,6 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Response
+import timber.log.Timber
 import java.net.SocketTimeoutException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -76,6 +77,8 @@ class WeatherListViewModel(
                 _header.postValue(Weather(temp = weatherResponse.list[0].main.temp - KELVIN.toInt()).getTemp())
                 _headerImageUrl.postValue(Weather(iconName = weatherResponse.list[0].weather[0].icon).getIconUrl())
 
+                Timber.i("response successful weather items count for ${weatherResponse.city.name}: ${weatherResponse.list.size}")
+
                 weatherResponse.list.forEach { weatherItem ->
                     val date = weatherItem.dt?.toLong()?.times(1000)?.let { Date(it) }
                     val time = dateFormatTimeStamp.format(date)
@@ -100,12 +103,15 @@ class WeatherListViewModel(
                 _title.postValue(NO_CITY)
                 _header.postValue(DEFAULT_CITY)
                 _reload.postValue(false)
+                Timber.i("City $currentCity not found")
                 return@launch
             }
 
         } catch (e: Exception) {
+            Timber.i("No internet connection")
             _title.postValue(NO_INTERNET)
         } catch (e: SocketTimeoutException) {
+            Timber.i("Connection timeout error")
             _title.postValue(BAD_INTERNET)
         }
 
@@ -118,6 +124,7 @@ class WeatherListViewModel(
             if (it != null) {
                 latitude = it.latitude.toString()
                 longitude = it.longitude.toString()
+                Timber.i("GPS location: lat: $latitude / lon: $longitude")
                 loadData()
                 return@addOnSuccessListener
             }
@@ -130,11 +137,14 @@ class WeatherListViewModel(
                 val locationResponse = response.body()!!
                 latitude = locationResponse.lat.toString()
                 longitude = locationResponse.lon.toString()
+                Timber.i("IP location: lat: $latitude / lon: $longitude")
                 loadData()
             }
         } catch (e: Exception) {
+            Timber.i("No internet connection")
             _title.postValue(NO_INTERNET)
         } catch (e: SocketTimeoutException) {
+            Timber.i("Connection timeout error")
             _title.postValue(BAD_INTERNET)
         }
 
@@ -142,6 +152,7 @@ class WeatherListViewModel(
     }
 
     fun changeLocation(city: String) {
+        Timber.i("Location changed, new city name: $city")
         currentCity = city
         loadData()
     }
