@@ -11,11 +11,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        Timber.plant(object : Timber.DebugTree() {
-            override fun createStackElementTag(element: StackTraceElement): String? {
-                return super.createStackElementTag(element) + ":" + element.lineNumber
-            }
-        })
+        if (BuildConfig.DEBUG) {
+            Timber.plant(object : Timber.DebugTree() {
+                override fun createStackElementTag(element: StackTraceElement): String? {
+                    return super.createStackElementTag(element) + ":" + element.lineNumber
+                }
+            })
+        }
 
         val transaction = supportFragmentManager.beginTransaction()
         val fragment = WeatherListFragment()
