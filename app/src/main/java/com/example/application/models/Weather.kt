@@ -12,8 +12,7 @@ data class Weather(
     val city: String? = "",
     private val lat: String = "",
     private val lon: String = "",
-    val dayNumber: String = "",
-    val wrongCity: Boolean = false
+    val dayNumber: String = ""
 ) {
 
     fun getIconUrl(): String {
