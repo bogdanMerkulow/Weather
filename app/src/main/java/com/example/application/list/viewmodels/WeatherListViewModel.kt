@@ -51,10 +51,6 @@ class WeatherListViewModel(
     val headerImageUrl: LiveData<String>
         get() = _headerImageUrl
 
-    init {
-        loadLocation()
-    }
-
     fun loadData() = viewModelScope.launch(Dispatchers.IO) {
         _reload.postValue(VISIBLE)
 
@@ -118,7 +114,7 @@ class WeatherListViewModel(
         _reload.postValue(INVISIBLE)
     }
 
-    private fun loadLocation() {
+    fun loadLocation() {
         gpsLocationTask.addOnSuccessListener {
             viewModelScope.launch(Dispatchers.IO) {
                 if (it != null) {

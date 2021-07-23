@@ -40,6 +40,8 @@ class WeatherListFragment : Fragment() {
             object : RecyclerViewAdapter<Weather>(WeatherViewHolderFactory(), this::onItemClick) {
                 override fun getLayoutId(viewType: Int): Int = R.layout.weather_list
             }
+
+        listViewModel.loadLocation()
     }
 
     override fun onCreateView(
