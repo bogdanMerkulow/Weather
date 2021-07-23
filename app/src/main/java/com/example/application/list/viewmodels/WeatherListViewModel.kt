@@ -118,37 +118,38 @@ class WeatherListViewModel(
         _reload.postValue(INVISIBLE)
     }
 
-    private fun loadLocation() = viewModelScope.launch(Dispatchers.IO) {
-        try {
-            val call: Call<LocationResponse> = locationService.getLocation()
-            val response: Response<LocationResponse> = call.execute()
-            if (response.isSuccessful) {
-                Thread.sleep(100)
-                val locationResponse = response.body()!!
-                latitude = locationResponse.lat.toString()
-                longitude = locationResponse.lon.toString()
-                Timber.i("IP location: lat: $latitude / lon: $longitude")
-            }
-        } catch (e: Exception) {
-            Timber.i("No internet connection")
-            _title.postValue(NO_INTERNET)
-        } catch (e: SocketTimeoutException) {
-            Timber.i("Connection timeout error")
-            _title.postValue(BAD_INTERNET)
-        }
-
+    private fun loadLocation() {
         gpsLocationTask.addOnSuccessListener {
-            if (it != null) {
-                latitude = it.latitude.toString()
-                longitude = it.longitude.toString()
-                Timber.i("GPS location: lat: $latitude / lon: $longitude")
-                return@addOnSuccessListener
+            viewModelScope.launch(Dispatchers.IO) {
+                if (it != null) {
+                    latitude = it.latitude.toString()
+                    longitude = it.longitude.toString()
+                    Timber.i("GPS location: lat: $latitude / lon: $longitude")
+                    loadData()
+                } else {
+                    try {
+                        val call: Call<LocationResponse> = locationService.getLocation()
+                        val response: Response<LocationResponse> = call.execute()
+                        if (response.isSuccessful) {
+                            val locationResponse = response.body()!!
+                            latitude = locationResponse.lat.toString()
+                            longitude = locationResponse.lon.toString()
+                            Timber.i("IP location: lat: $latitude / lon: $longitude")
+                            loadData()
+                        }
+                    } catch (e: Exception) {
+                        Timber.i("No internet connection")
+                        _title.postValue(NO_INTERNET)
+                    } catch (e: SocketTimeoutException) {
+                        Timber.i("Connection timeout error")
+                        _title.postValue(BAD_INTERNET)
+                    }
+                }
+                _reload.postValue(INVISIBLE)
             }
         }
-
-        loadData()
-        _reload.postValue(INVISIBLE)
     }
+
 
     fun changeLocation(city: String) {
         Timber.i("Location changed, new city name: $city")
