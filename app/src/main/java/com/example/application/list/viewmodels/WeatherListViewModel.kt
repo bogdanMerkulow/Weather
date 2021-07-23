@@ -119,26 +119,15 @@ class WeatherListViewModel(
     }
 
     private fun loadLocation() = viewModelScope.launch(Dispatchers.IO) {
-        gpsLocationTask.addOnSuccessListener {
-            Thread.sleep(0)
-            if (it != null) {
-                latitude = it.latitude.toString()
-                longitude = it.longitude.toString()
-                Timber.i("GPS location: lat: $latitude / lon: $longitude")
-                loadData()
-                return@addOnSuccessListener
-            }
-        }
-
         try {
             val call: Call<LocationResponse> = locationService.getLocation()
             val response: Response<LocationResponse> = call.execute()
             if (response.isSuccessful) {
+                Thread.sleep(100)
                 val locationResponse = response.body()!!
                 latitude = locationResponse.lat.toString()
                 longitude = locationResponse.lon.toString()
                 Timber.i("IP location: lat: $latitude / lon: $longitude")
-                loadData()
             }
         } catch (e: Exception) {
             Timber.i("No internet connection")
@@ -148,6 +137,16 @@ class WeatherListViewModel(
             _title.postValue(BAD_INTERNET)
         }
 
+        gpsLocationTask.addOnSuccessListener {
+            if (it != null) {
+                latitude = it.latitude.toString()
+                longitude = it.longitude.toString()
+                Timber.i("GPS location: lat: $latitude / lon: $longitude")
+                return@addOnSuccessListener
+            }
+        }
+
+        loadData()
         _reload.postValue(false)
     }
 
