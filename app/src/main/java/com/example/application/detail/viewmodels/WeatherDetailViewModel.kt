@@ -19,7 +19,7 @@ import java.util.*
 
 class WeatherDetailViewModel(private val weatherService: WeatherService) : ViewModel() {
     private val _data: MutableLiveData<List<Weather>> = MutableLiveData<List<Weather>>()
-    private val _reload: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    private val _reload: MutableLiveData<Int> = MutableLiveData<Int>()
     private val _title: MutableLiveData<String> = MutableLiveData<String>()
 
     val title: LiveData<String>
@@ -28,14 +28,14 @@ class WeatherDetailViewModel(private val weatherService: WeatherService) : ViewM
     val data: LiveData<List<Weather>>
         get() = _data
 
-    val reload: LiveData<Boolean>
+    val reload: LiveData<Int>
         get() = _reload
 
     fun loadData(
         q: String = DEFAULT_CITY,
         day: String = DEFAULT_DAY
     ) = viewModelScope.launch(Dispatchers.IO) {
-        _reload.postValue(true)
+        _reload.postValue(VISIBLE)
 
         try {
             val call: Call<WeatherResponse> = weatherService.getCurrentWeatherData(
@@ -77,7 +77,7 @@ class WeatherDetailViewModel(private val weatherService: WeatherService) : ViewM
             _title.postValue(BAD_INTERNET)
         }
 
-        _reload.postValue(false)
+        _reload.postValue(INVISIBLE)
     }
 
     companion object {
@@ -91,5 +91,7 @@ class WeatherDetailViewModel(private val weatherService: WeatherService) : ViewM
         const val DEFAULT_CITY = ""
         const val NO_INTERNET = "no internet connection  pull to refresh"
         const val BAD_INTERNET = "bad internet connection"
+        const val VISIBLE = 0
+        const val INVISIBLE = 4
     }
 }

@@ -28,7 +28,7 @@ class WeatherListViewModel(
     private val gpsLocationTask: Task<Location>
 ) : ViewModel() {
     private val _data: MutableLiveData<List<Weather>> = MutableLiveData<List<Weather>>()
-    private val _reload: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    private val _reload: MutableLiveData<Int> = MutableLiveData<Int>()
     private val _title: MutableLiveData<String> = MutableLiveData<String>()
     private val _header: MutableLiveData<String> = MutableLiveData<String>()
     private val _headerImageUrl: MutableLiveData<String> = MutableLiveData<String>()
@@ -39,7 +39,7 @@ class WeatherListViewModel(
     val data: LiveData<List<Weather>>
         get() = _data
 
-    val reload: LiveData<Boolean>
+    val reload: LiveData<Int>
         get() = _reload
 
     val title: LiveData<String>
@@ -56,7 +56,7 @@ class WeatherListViewModel(
     }
 
     fun loadData() = viewModelScope.launch(Dispatchers.IO) {
-        _reload.postValue(true)
+        _reload.postValue(VISIBLE)
 
         try {
             val call: Call<WeatherResponse> = weatherService.getCurrentWeatherData(
@@ -102,7 +102,7 @@ class WeatherListViewModel(
             } else {
                 _title.postValue(NO_CITY)
                 _header.postValue(DEFAULT_CITY)
-                _reload.postValue(false)
+                _reload.postValue(INVISIBLE)
                 Timber.i("City $currentCity not found")
                 return@launch
             }
@@ -115,7 +115,7 @@ class WeatherListViewModel(
             _title.postValue(BAD_INTERNET)
         }
 
-        _reload.postValue(false)
+        _reload.postValue(INVISIBLE)
     }
 
     private fun loadLocation() = viewModelScope.launch(Dispatchers.IO) {
@@ -147,7 +147,7 @@ class WeatherListViewModel(
         }
 
         loadData()
-        _reload.postValue(false)
+        _reload.postValue(INVISIBLE)
     }
 
     fun changeLocation(city: String) {
@@ -168,5 +168,7 @@ class WeatherListViewModel(
         const val DEFAULT_CITY = ""
         const val NO_INTERNET = "no internet connection  pull to refresh"
         const val BAD_INTERNET = "bad internet connection"
+        const val VISIBLE = 0
+        const val INVISIBLE = 4
     }
 }

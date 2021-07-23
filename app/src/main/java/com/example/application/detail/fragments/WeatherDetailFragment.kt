@@ -58,7 +58,7 @@ class WeatherDetailFragment : Fragment() {
         }
 
         viewModel.reload.observe(viewLifecycleOwner) { reload ->
-            onLiveDataChangeReload(reload, progress)
+            progress.visibility = reload
         }
 
         viewModel.title.observe(viewLifecycleOwner) { title ->
@@ -66,14 +66,6 @@ class WeatherDetailFragment : Fragment() {
         }
 
         return rootView
-    }
-
-    private fun onLiveDataChangeReload(reload: Boolean, progress: RelativeLayout) {
-        if (reload) {
-            progress.visibility = View.VISIBLE
-        } else {
-            progress.visibility = View.INVISIBLE
-        }
     }
 
     override fun onAttach(context: Context) {

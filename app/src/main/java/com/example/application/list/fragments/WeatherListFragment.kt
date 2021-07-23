@@ -78,7 +78,7 @@ class WeatherListFragment : Fragment() {
         }
 
         listViewModel.reload.observe(viewLifecycleOwner) { reload ->
-            onLiveDataChangeReload(reload, progress)
+            progress.visibility = reload
         }
 
         listViewModel.data.observe(viewLifecycleOwner) { data ->
@@ -98,14 +98,6 @@ class WeatherListFragment : Fragment() {
             listViewModel.changeLocation(editText.text.toString())
         }
         builder.show()
-    }
-
-    private fun onLiveDataChangeReload(reload: Boolean, progress: RelativeLayout) {
-        if (reload) {
-            progress.visibility = View.VISIBLE
-        } else {
-            progress.visibility = View.INVISIBLE
-        }
     }
 
     fun onItemClick(data: Weather) {
