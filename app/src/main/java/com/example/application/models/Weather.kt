@@ -30,7 +30,10 @@ data class Weather(
 
     companion object {
         fun WeatherList.toWeather(timeFormat: String = "E dd.MM hh:mm"): Weather {
+            @SuppressLint("SimpleDateFormat")
             val dateFormatTimeStamp = SimpleDateFormat(timeFormat)
+            @SuppressLint("SimpleDateFormat")
+            val dateFormatDay = SimpleDateFormat("dd")
             val unixTimestamp = this.dt?.toLong()?.times(1000)?.let { Date(it) }
             val timestamp = dateFormatTimeStamp.format(unixTimestamp)
             val dayNumber = dateFormatDay.format(unixTimestamp)
@@ -45,9 +48,5 @@ data class Weather(
         }
 
         private const val KELVIN = 272.15
-
-        @SuppressLint("SimpleDateFormat")
-        val dateFormatDay = SimpleDateFormat("dd")
-
     }
 }
