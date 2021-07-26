@@ -11,6 +11,7 @@ import com.example.application.api.LocationResponse
 import com.example.application.api.LocationService
 import com.example.application.api.WeatherResponse
 import com.example.application.api.WeatherService
+import com.example.application.models.Coords
 import com.example.application.models.Weather
 import com.google.android.gms.tasks.Task
 import kotlinx.coroutines.Dispatchers
@@ -32,9 +33,10 @@ class WeatherListViewModel(
     private val _title: MutableLiveData<String> = MutableLiveData<String>()
     private val _header: MutableLiveData<String> = MutableLiveData<String>()
     private val _headerImageUrl: MutableLiveData<String> = MutableLiveData<String>()
+    private val _clickData: MutableLiveData<Map<String, String>> =
+        MutableLiveData<Map<String, String>>()
     private var currentCity: String = String()
-    private var latitude: String = String()
-    private var longitude: String = String()
+    private var coords: Coords = Coords()
 
     val data: LiveData<List<Weather>>
         get() = _data
@@ -51,14 +53,17 @@ class WeatherListViewModel(
     val headerImageUrl: LiveData<String>
         get() = _headerImageUrl
 
+    val clickData: LiveData<Map<String, String>>
+        get() = _clickData
+
     fun loadData() = viewModelScope.launch(Dispatchers.IO) {
         _reload.postValue(VISIBLE)
 
         try {
             val call: Call<WeatherResponse> = weatherService.getCurrentWeatherData(
                 city = currentCity,
-                latitude = latitude,
-                longitude = longitude,
+                latitude = coords.latitude,
+                longitude = coords.longitude,
                 api_key = BuildConfig.OWM_API_KEY
             )
 
@@ -67,8 +72,9 @@ class WeatherListViewModel(
             if (response.isSuccessful) {
                 val weatherResponse = response.body()!!
                 val weather = mutableListOf<Weather>()
-                var lastTime = 0
+                var lastDay = 0
 
+                currentCity = weatherResponse.city.name
                 _title.postValue(weatherResponse.city.name)
                 _header.postValue(Weather(temp = weatherResponse.list[0].main.temp - KELVIN.toInt()).getTemp())
                 _headerImageUrl.postValue(Weather(iconName = weatherResponse.list[0].weather[0].icon).getIconUrl())
@@ -77,21 +83,13 @@ class WeatherListViewModel(
 
                 weatherResponse.list.forEach { weatherItem ->
                     val date = weatherItem.dt?.toLong()?.times(1000)?.let { Date(it) }
-                    val time = dateFormatTimeStamp.format(date)
-                    val checkTime = dateFormatDay.format(date)
+                    val currentDay = dateFormatDay.format(date)
 
-                    if (lastTime != checkTime.toInt()) {
-                        weather.add(
-                            Weather.responseConvert(
-                                weatherItem,
-                                weatherResponse,
-                                time,
-                                checkTime
-                            )
-                        )
+                    if (lastDay != currentDay.toInt()) {
+                        weather.add(Weather.responseConvert(weatherItem))
                     }
 
-                    lastTime = checkTime.toInt()
+                    lastDay = currentDay.toInt()
                 }
 
                 _data.postValue(weather)
@@ -118,9 +116,9 @@ class WeatherListViewModel(
         gpsLocationTask.addOnSuccessListener {
             viewModelScope.launch(Dispatchers.IO) {
                 if (it != null) {
-                    latitude = it.latitude.toString()
-                    longitude = it.longitude.toString()
-                    Timber.i("GPS location: lat: $latitude / lon: $longitude")
+                    coords.latitude = it.latitude.toString()
+                    coords.longitude = it.longitude.toString()
+                    Timber.i("GPS location: lat: ${coords.latitude} / lon: ${coords.longitude}")
                     loadData()
                 } else {
                     try {
@@ -128,9 +126,9 @@ class WeatherListViewModel(
                         val response: Response<LocationResponse> = call.execute()
                         if (response.isSuccessful) {
                             val locationResponse = response.body()!!
-                            latitude = locationResponse.lat.toString()
-                            longitude = locationResponse.lon.toString()
-                            Timber.i("IP location: lat: $latitude / lon: $longitude")
+                            coords.latitude = locationResponse.lat.toString()
+                            coords.longitude = locationResponse.lon.toString()
+                            Timber.i("IP location: lat: ${coords.latitude} / lon: ${coords.longitude}")
                             loadData()
                         }
                     } catch (e: Exception) {
@@ -146,17 +144,22 @@ class WeatherListViewModel(
         }
     }
 
-
     fun changeLocation(city: String) {
         Timber.i("Location changed, new city name: $city")
         currentCity = city
         loadData()
     }
 
-    companion object {
-        @SuppressLint("SimpleDateFormat")
-        val dateFormatTimeStamp = SimpleDateFormat("E dd.MM hh:mm")
+    fun itemClick(weather: Weather) {
+        _clickData.postValue(
+            mapOf(
+                CITY to currentCity,
+                DAY to weather.dayNumber
+            )
+        )
+    }
 
+    companion object {
         @SuppressLint("SimpleDateFormat")
         val dateFormatDay = SimpleDateFormat("dd")
 
@@ -167,5 +170,7 @@ class WeatherListViewModel(
         const val BAD_INTERNET = "bad internet connection"
         const val VISIBLE = 0
         const val INVISIBLE = 4
+        const val CITY = "city"
+        const val DAY = "day"
     }
 }

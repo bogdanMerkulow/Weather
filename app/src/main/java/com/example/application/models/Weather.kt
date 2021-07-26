@@ -1,7 +1,9 @@
 package com.example.application.models
 
+import android.annotation.SuppressLint
 import com.example.application.api.WeatherList
-import com.example.application.api.WeatherResponse
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.math.ceil
 
 data class Weather(
@@ -27,24 +29,27 @@ data class Weather(
     }
 
     companion object {
-        fun responseConvert(
-            weatherItem: WeatherList,
-            weatherResponse: WeatherResponse,
-            time: String,
-            checkTime: String
-        ): Weather {
+        fun responseConvert(weatherItem: WeatherList): Weather {
+            val date = weatherItem.dt?.toLong()?.times(1000)?.let { Date(it) }
+            val time = dateFormatTimeStamp.format(date)
+            val checkTime = dateFormatDay.format(date)
+
             return Weather(
                 iconName = weatherItem.weather[0].icon,
                 title = time,
                 temp = (ceil(weatherItem.main.temp - KELVIN)).toFloat(),
                 state = weatherItem.weather[0].description,
-                city = weatherResponse.city.name,
-                lat = weatherResponse.city.coord?.lat.toString(),
-                lon = weatherResponse.city.coord?.lon.toString(),
                 dayNumber = checkTime
             )
         }
 
         private const val KELVIN = 272.15
+
+        @SuppressLint("SimpleDateFormat")
+        val dateFormatTimeStamp = SimpleDateFormat("E dd.MM hh:mm")
+
+        @SuppressLint("SimpleDateFormat")
+        val dateFormatDay = SimpleDateFormat("dd")
+
     }
 }

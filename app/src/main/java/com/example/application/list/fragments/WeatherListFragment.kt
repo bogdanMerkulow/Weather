@@ -36,10 +36,6 @@ class WeatherListFragment : Fragment() {
         viewModelFactory = ViewModelFactory(activity)
         listViewModel =
             ViewModelProvider(this, viewModelFactory).get(WeatherListViewModel::class.java)
-        adapter =
-            object : RecyclerViewAdapter<Weather>(WeatherViewHolderFactory(), this::onItemClick) {
-                override fun getLayoutId(viewType: Int): Int = R.layout.weather_list
-            }
 
         listViewModel.loadLocation()
     }
@@ -56,6 +52,12 @@ class WeatherListFragment : Fragment() {
         val headerImage: ImageView = binding.headerImage
         val changeCityButton = binding.changeCity
         val fragmentContainer = binding.swipeRefresh
+
+        adapter =
+            object :
+                RecyclerViewAdapter<Weather>(WeatherViewHolderFactory(), listViewModel::itemClick) {
+                override fun getLayoutId(viewType: Int): Int = R.layout.weather_list
+            }
 
         rcWeatherList.adapter = adapter
 
@@ -87,6 +89,10 @@ class WeatherListFragment : Fragment() {
             adapter.addItems(data)
         }
 
+        listViewModel.clickData.observe(viewLifecycleOwner) { data ->
+            onItemClickCallBack(data)
+        }
+
         return rootView
     }
 
@@ -102,17 +108,17 @@ class WeatherListFragment : Fragment() {
         builder.show()
     }
 
-    fun onItemClick(data: Weather) {
+    private fun onItemClickCallBack(data: Map<String, String>) {
         val transaction = activity?.supportFragmentManager?.beginTransaction()
         val fragment = WeatherDetailFragment()
         val bundle = Bundle()
-        bundle.putString(WeatherDetailFragment.CITY, data.city)
-        bundle.putString(WeatherDetailFragment.SELECTED_DATE, data.dayNumber)
-        Timber.i("Click on item where day: ${data.dayNumber}")
+        bundle.putString(WeatherDetailFragment.CITY, data[WeatherListViewModel.CITY])
+        bundle.putString(WeatherDetailFragment.SELECTED_DATE, data[WeatherListViewModel.DAY])
+        Timber.i("Click on item where day: ${data[WeatherListViewModel.DAY]}")
         fragment.arguments = bundle
         transaction?.apply {
             addToBackStack(null)
-            replace(R.id.fragment_container, fragment)
+            add(R.id.fragment_container, fragment)
             commit()
         }
     }

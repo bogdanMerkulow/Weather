@@ -33,7 +33,7 @@ class WeatherDetailViewModel(private val weatherService: WeatherService) : ViewM
 
     fun loadData(
         q: String = DEFAULT_CITY,
-        day: String = DEFAULT_DAY
+        selectedDay: String = DEFAULT_DAY
     ) = viewModelScope.launch(Dispatchers.IO) {
         _reload.postValue(VISIBLE)
 
@@ -52,18 +52,10 @@ class WeatherDetailViewModel(private val weatherService: WeatherService) : ViewM
 
                 weatherResponse.list.forEach { weatherItem ->
                     val date = weatherItem.dt?.toLong()?.times(1000)?.let { Date(it) }
-                    val time = dateFormatTimeStamp.format(date)
-                    val checkTime = dateFormatDay.format(date)
+                    val currentDay = dateFormatDay.format(date)
 
-                    if (day == checkTime) {
-                        weather.add(
-                            Weather.responseConvert(
-                                weatherItem,
-                                weatherResponse,
-                                time,
-                                checkTime
-                            )
-                        )
+                    if (selectedDay == currentDay) {
+                        weather.add(Weather.responseConvert(weatherItem))
                     }
                 }
 
@@ -81,9 +73,6 @@ class WeatherDetailViewModel(private val weatherService: WeatherService) : ViewM
     }
 
     companion object {
-        @SuppressLint("SimpleDateFormat")
-        val dateFormatTimeStamp = SimpleDateFormat("hh:mm")
-
         @SuppressLint("SimpleDateFormat")
         val dateFormatDay = SimpleDateFormat("dd")
 
