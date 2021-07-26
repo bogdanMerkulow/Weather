@@ -9,6 +9,7 @@ import com.example.application.BuildConfig
 import com.example.application.api.WeatherResponse
 import com.example.application.api.WeatherService
 import com.example.application.models.Weather
+import com.example.application.models.Weather.Companion.toWeather
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Call
@@ -51,11 +52,11 @@ class WeatherDetailViewModel(private val weatherService: WeatherService) : ViewM
                 Timber.i("response successful weather items count for ${weatherResponse.city.name}: ${weatherResponse.list.size}")
 
                 weatherResponse.list.forEach { weatherItem ->
-                    val date = weatherItem.dt?.toLong()?.times(1000)?.let { Date(it) }
-                    val currentDay = dateFormatDay.format(date)
+                    val unixTimestamp = weatherItem.dt?.toLong()?.times(1000)?.let { Date(it) }
+                    val currentDay = dateFormatDay.format(unixTimestamp)
 
                     if (selectedDay == currentDay) {
-                        weather.add(Weather.responseConvert(weatherItem))
+                        weather.add(weatherItem.toWeather("hh:mm"))
                     }
                 }
 

@@ -29,24 +29,22 @@ data class Weather(
     }
 
     companion object {
-        fun responseConvert(weatherItem: WeatherList): Weather {
-            val date = weatherItem.dt?.toLong()?.times(1000)?.let { Date(it) }
-            val time = dateFormatTimeStamp.format(date)
-            val checkTime = dateFormatDay.format(date)
+        fun WeatherList.toWeather(timeFormat: String = "E dd.MM hh:mm"): Weather {
+            val dateFormatTimeStamp = SimpleDateFormat(timeFormat)
+            val unixTimestamp = this.dt?.toLong()?.times(1000)?.let { Date(it) }
+            val timestamp = dateFormatTimeStamp.format(unixTimestamp)
+            val dayNumber = dateFormatDay.format(unixTimestamp)
 
             return Weather(
-                iconName = weatherItem.weather[0].icon,
-                title = time,
-                temp = (ceil(weatherItem.main.temp - KELVIN)).toFloat(),
-                state = weatherItem.weather[0].description,
-                dayNumber = checkTime
+                iconName = this.weather[0].icon,
+                title = timestamp,
+                temp = (ceil(this.main.temp - KELVIN)).toFloat(),
+                state = this.weather[0].description,
+                dayNumber = dayNumber
             )
         }
 
         private const val KELVIN = 272.15
-
-        @SuppressLint("SimpleDateFormat")
-        val dateFormatTimeStamp = SimpleDateFormat("E dd.MM hh:mm")
 
         @SuppressLint("SimpleDateFormat")
         val dateFormatDay = SimpleDateFormat("dd")

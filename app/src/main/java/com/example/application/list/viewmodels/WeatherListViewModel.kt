@@ -13,6 +13,7 @@ import com.example.application.api.WeatherResponse
 import com.example.application.api.WeatherService
 import com.example.application.models.Coords
 import com.example.application.models.Weather
+import com.example.application.models.Weather.Companion.toWeather
 import com.google.android.gms.tasks.Task
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -82,11 +83,11 @@ class WeatherListViewModel(
                 Timber.i("response successful weather items count for ${weatherResponse.city.name}: ${weatherResponse.list.size}")
 
                 weatherResponse.list.forEach { weatherItem ->
-                    val date = weatherItem.dt?.toLong()?.times(1000)?.let { Date(it) }
-                    val currentDay = dateFormatDay.format(date)
+                    val unixTimestamp = weatherItem.dt?.toLong()?.times(1000)?.let { Date(it) }
+                    val currentDay = dateFormatDay.format(unixTimestamp)
 
                     if (lastDay != currentDay.toInt()) {
-                        weather.add(Weather.responseConvert(weatherItem))
+                        weather.add(weatherItem.toWeather())
                     }
 
                     lastDay = currentDay.toInt()
