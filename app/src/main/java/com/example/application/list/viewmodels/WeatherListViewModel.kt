@@ -160,15 +160,15 @@ class WeatherListViewModel(
 
     companion object {
         @SuppressLint("SimpleDateFormat")
-        val dateFormatDay = SimpleDateFormat("dd")
+        private val dateFormatDay = SimpleDateFormat("dd")
 
-        const val KELVIN = 272.15
-        const val NO_CITY = "city not found"
-        const val DEFAULT_CITY = ""
-        const val NO_INTERNET = "no internet connection  pull to refresh"
-        const val BAD_INTERNET = "bad internet connection"
-        const val VISIBLE = 0
-        const val INVISIBLE = 4
+        private const val KELVIN = 272.15
+        private const val NO_CITY = "city not found"
+        private const val DEFAULT_CITY = ""
+        private const val NO_INTERNET = "no internet connection  pull to refresh"
+        private const val BAD_INTERNET = "bad internet connection"
+        private const val VISIBLE = 0
+        private const val INVISIBLE = 4
         const val CITY = "city"
         const val DAY = "day"
     }

@@ -71,14 +71,14 @@ class WeatherDetailViewModel(private val weatherService: WeatherService) : ViewM
 
     companion object {
         @SuppressLint("SimpleDateFormat")
-        val dateFormatDay = SimpleDateFormat("dd")
+        private val dateFormatDay = SimpleDateFormat("dd")
 
-        const val TIME_FORMAT = "hh:mm"
-        const val DEFAULT_DAY = "0"
-        const val DEFAULT_CITY = ""
-        const val NO_INTERNET = "no internet connection  pull to refresh"
-        const val BAD_INTERNET = "bad internet connection"
-        const val VISIBLE = 0
-        const val INVISIBLE = 4
+        private const val TIME_FORMAT = "hh:mm"
+        private const val DEFAULT_DAY = "0"
+        private const val DEFAULT_CITY = ""
+        private const val NO_INTERNET = "no internet connection  pull to refresh"
+        private const val BAD_INTERNET = "bad internet connection"
+        private const val VISIBLE = 0
+        private const val INVISIBLE = 4
     }
 }

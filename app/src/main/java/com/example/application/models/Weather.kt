@@ -7,9 +7,9 @@ import java.util.*
 import kotlin.math.ceil
 
 data class Weather(
-    val iconName: String = "",
+    private val iconName: String = "",
     val title: String = "",
-    val temp: Float = 0.0f,
+    private val temp: Float = 0.0f,
     val state: String = "",
     val dayNumber: String = ""
 ) {
