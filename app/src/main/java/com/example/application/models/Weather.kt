@@ -11,9 +11,6 @@ data class Weather(
     val title: String? = "",
     val temp: Float = 0.0f,
     val state: String? = "",
-    val city: String? = "",
-    private val lat: String = "",
-    private val lon: String = "",
     val dayNumber: String = ""
 ) {
 
