@@ -1,6 +1,7 @@
 package com.example.application.models
 
 import com.example.application.api.*
+import com.example.application.models.Weather.Companion.toWeather
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -30,6 +31,7 @@ class WeatherTest {
         val weatherResponse = WeatherResponse(
             list = arrayListOf(
                 WeatherList(
+                    dt = 1627375958,
                     weather = arrayListOf(
                         WeatherToday(
                             description = "ясно",
@@ -50,21 +52,13 @@ class WeatherTest {
             )
         )
         assertEquals(
-            Weather.responseConvert(
-                weatherResponse.list[0],
-                weatherResponse,
-                "Wed 13.07 03:00",
-                "10"
-            ),
+            weatherResponse.list[0].toWeather(),
             Weather(
                 iconName = "10n",
-                title = "Wed 13.07 03:00",
+                title = "Tue 27.07 11:52",
                 temp = 32.0f,
                 state = "ясно",
-                city = "Тамбов",
-                lat = "10.0",
-                lon = "10.0",
-                dayNumber = "10"
+                dayNumber = "27"
             )
         )
     }
