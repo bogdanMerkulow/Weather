@@ -32,7 +32,7 @@ data class Weather(
 
             @SuppressLint("SimpleDateFormat")
             val dateFormatDay = SimpleDateFormat("dd")
-            val unixTimestamp = this.dt.toLong().times(1000)
+            val unixTimestamp = this.dt.times(1000)
             val timestamp = dateFormatTimeStamp.format(unixTimestamp)
             val dayNumber = dateFormatDay.format(unixTimestamp)
 

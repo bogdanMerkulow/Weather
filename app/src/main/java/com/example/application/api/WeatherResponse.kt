@@ -25,7 +25,7 @@ data class City(
 
 data class WeatherList(
     @SerializedName("dt")
-    val dt: Int,
+    val dt: Long,
     @SerializedName("main")
     val main: WeatherMain = WeatherMain(),
     @SerializedName("weather")

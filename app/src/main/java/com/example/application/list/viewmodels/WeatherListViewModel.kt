@@ -81,7 +81,7 @@ class WeatherListViewModel(
                 Timber.i("response successful weather items count for ${weatherResponse.city.name}: ${weatherResponse.list.size}")
 
                 weatherResponse.list.forEach { weatherItem ->
-                    val unixTimestamp = weatherItem.dt.toLong().times(1000)
+                    val unixTimestamp = weatherItem.dt.times(1000)
                     val currentDay = dateFormatDay.format(unixTimestamp)
 
                     if (lastDay != currentDay.toInt()) {
