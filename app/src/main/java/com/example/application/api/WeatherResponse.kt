@@ -20,12 +20,12 @@ data class City(
     @SerializedName("name")
     val name: String = "",
     @SerializedName("coord")
-    val coord: WeatherCoord? = null
+    val coord: WeatherCoord = WeatherCoord()
 )
 
 data class WeatherList(
     @SerializedName("dt")
-    val dt: Int? = null,
+    val dt: Int,
     @SerializedName("main")
     val main: WeatherMain = WeatherMain(),
     @SerializedName("weather")
@@ -41,9 +41,9 @@ data class WeatherToday(
     @SerializedName("id")
     val id: Int = 0,
     @SerializedName("description")
-    val description: String? = null,
+    val description: String,
     @SerializedName("icon")
-    val icon: String? = "10d"
+    val icon: String = "10d"
 )
 
 data class WeatherCoord(

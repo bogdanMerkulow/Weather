@@ -7,10 +7,10 @@ import java.util.*
 import kotlin.math.ceil
 
 data class Weather(
-    val iconName: String? = "",
-    val title: String? = "",
+    val iconName: String = "",
+    val title: String = "",
     val temp: Float = 0.0f,
-    val state: String? = "",
+    val state: String = "",
     val dayNumber: String = ""
 ) {
 
@@ -32,7 +32,7 @@ data class Weather(
 
             @SuppressLint("SimpleDateFormat")
             val dateFormatDay = SimpleDateFormat("dd")
-            val unixTimestamp = this.dt?.toLong()?.times(1000)?.let { Date(it) }
+            val unixTimestamp = this.dt.toLong().times(1000)
             val timestamp = dateFormatTimeStamp.format(unixTimestamp)
             val dayNumber = dateFormatDay.format(unixTimestamp)
 
