@@ -32,6 +32,7 @@ data class Weather(
         fun WeatherList.toWeather(timeFormat: String = "E dd.MM hh:mm"): Weather {
             @SuppressLint("SimpleDateFormat")
             val dateFormatTimeStamp = SimpleDateFormat(timeFormat)
+
             @SuppressLint("SimpleDateFormat")
             val dateFormatDay = SimpleDateFormat("dd")
             val unixTimestamp = this.dt?.toLong()?.times(1000)?.let { Date(it) }

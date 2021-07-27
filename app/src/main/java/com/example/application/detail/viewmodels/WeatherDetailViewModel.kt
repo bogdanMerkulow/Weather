@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.application.BuildConfig
 import com.example.application.api.WeatherResponse
 import com.example.application.api.WeatherService
 import com.example.application.models.Weather
@@ -39,10 +38,7 @@ class WeatherDetailViewModel(private val weatherService: WeatherService) : ViewM
         _reload.postValue(VISIBLE)
 
         try {
-            val call: Call<WeatherResponse> = weatherService.getCurrentWeatherData(
-                city = q,
-                api_key = BuildConfig.OWM_API_KEY
-            )
+            val call: Call<WeatherResponse> = weatherService.getCurrentWeatherData(city = q)
             val response = call.execute()
 
             if (response.isSuccessful) {

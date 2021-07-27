@@ -6,7 +6,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.application.BuildConfig
 import com.example.application.api.LocationResponse
 import com.example.application.api.LocationService
 import com.example.application.api.WeatherResponse
@@ -64,8 +63,7 @@ class WeatherListViewModel(
             val call: Call<WeatherResponse> = weatherService.getCurrentWeatherData(
                 city = currentCity,
                 latitude = coords.latitude,
-                longitude = coords.longitude,
-                api_key = BuildConfig.OWM_API_KEY
+                longitude = coords.longitude
             )
 
             val response = call.execute()

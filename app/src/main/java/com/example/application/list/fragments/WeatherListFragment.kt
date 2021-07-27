@@ -90,7 +90,7 @@ class WeatherListFragment : Fragment() {
         }
 
         listViewModel.clickData.observe(viewLifecycleOwner) { data ->
-            onItemClickCallBack(data)
+            onItemClick(data)
         }
 
         return rootView
@@ -108,7 +108,7 @@ class WeatherListFragment : Fragment() {
         builder.show()
     }
 
-    private fun onItemClickCallBack(data: Map<String, String>) {
+    private fun onItemClick(data: Map<String, String>) {
         val transaction = activity?.supportFragmentManager?.beginTransaction()
         val fragment = WeatherDetailFragment()
         val bundle = Bundle()

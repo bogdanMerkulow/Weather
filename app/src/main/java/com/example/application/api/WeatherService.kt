@@ -1,5 +1,6 @@
 package com.example.application.api
 
+import com.example.application.BuildConfig
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -10,7 +11,7 @@ interface WeatherService {
         @Query("q") city: String = "",
         @Query("lat") latitude: String = "",
         @Query("lon") longitude: String = "",
-        @Query("APPID") api_key: String,
+        @Query("APPID") api_key: String = BuildConfig.OWM_API_KEY,
         @Query("cnt") count: String = "35",
         @Query("lang") lang: String = "ru"
     ): Call<WeatherResponse>
