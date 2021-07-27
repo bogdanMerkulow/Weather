@@ -18,10 +18,10 @@ class DetailFragmentTest {
     @Before
     fun setup() {
         ActivityScenario.launch(MainActivity::class.java)
-        Thread.sleep(2000)
+        Thread.sleep(DELAY)
         onView(withId(R.id.rv_weather_list))
             .perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()))
-        Thread.sleep(2000)
+        Thread.sleep(DELAY)
     }
 
     @Test
@@ -37,5 +37,9 @@ class DetailFragmentTest {
             .check(matches(withEffectiveVisibility(Visibility.INVISIBLE)))
         onView(withId(R.id.header))
             .check(matches(isDisplayed()))
+    }
+
+    companion object {
+        private const val DELAY: Long = 2000
     }
 }

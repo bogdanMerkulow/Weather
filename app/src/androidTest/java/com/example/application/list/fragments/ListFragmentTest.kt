@@ -18,16 +18,16 @@ class ListFragmentTest {
     @Before
     fun setup() {
         ActivityScenario.launch(MainActivity::class.java)
-        Thread.sleep(2000)
+        Thread.sleep(DELAY)
     }
 
     @Test
     fun changeLocation() {
         onView(withId(R.id.change_city)).perform(click())
         onView(withId(R.id.city_edit_text)).check(matches(isDisplayed()))
-        onView(withId(R.id.city_edit_text)).perform(typeText("tambov"))
-        onView(withText("enter")).perform(click())
-        onView(withText("Тамбов"))
+        onView(withId(R.id.city_edit_text)).perform(typeText(CITY))
+        onView(withText(BUTTON)).perform(click())
+        onView(withText(FOUNDED_CITY))
             .check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
         onView(withId(R.id.progress_circular))
             .check(matches(withEffectiveVisibility(Visibility.INVISIBLE)))
@@ -37,7 +37,7 @@ class ListFragmentTest {
     fun scrollAndClickOnItem() {
         onView(withId(R.id.rv_weather_list))
             .perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()))
-        Thread.sleep(2000)
+        Thread.sleep(DELAY)
         onView(withId(R.id.progress_circular))
             .check(matches(withEffectiveVisibility(Visibility.INVISIBLE)))
     }
@@ -47,7 +47,7 @@ class ListFragmentTest {
         onView(withId(R.id.rv_weather_list))
             .perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()))
         pressBack()
-        Thread.sleep(1000)
+        Thread.sleep(DELAY)
         onView(withId(R.id.progress_circular))
             .check(matches(withEffectiveVisibility(Visibility.INVISIBLE)))
     }
@@ -56,8 +56,15 @@ class ListFragmentTest {
     fun pullToRefresh() {
         onView(withId(R.id.rv_weather_list))
             .perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, swipeDown()))
-        Thread.sleep(1000)
+        Thread.sleep(DELAY)
         onView(withId(R.id.progress_circular))
             .check(matches(withEffectiveVisibility(Visibility.INVISIBLE)))
+    }
+
+    companion object {
+        private const val BUTTON = "enter"
+        private const val FOUNDED_CITY = "Тамбов"
+        private const val CITY = "tambov"
+        private const val DELAY: Long = 2000
     }
 }
