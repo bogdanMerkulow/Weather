@@ -52,7 +52,7 @@ class WeatherDetailViewModel(private val weatherService: WeatherService) : ViewM
                     val currentDay = dateFormatDay.format(unixTimestamp)
 
                     if (selectedDay == currentDay) {
-                        weather.add(weatherItem.toWeather("hh:mm"))
+                        weather.add(weatherItem.toWeather(TIME_FORMAT))
                     }
                 }
 
@@ -73,6 +73,7 @@ class WeatherDetailViewModel(private val weatherService: WeatherService) : ViewM
         @SuppressLint("SimpleDateFormat")
         val dateFormatDay = SimpleDateFormat("dd")
 
+        const val TIME_FORMAT = "hh:mm"
         const val DEFAULT_DAY = "0"
         const val DEFAULT_CITY = ""
         const val NO_INTERNET = "no internet connection  pull to refresh"
