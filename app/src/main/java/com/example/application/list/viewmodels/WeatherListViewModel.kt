@@ -10,9 +10,9 @@ import com.example.application.api.LocationResponse
 import com.example.application.api.LocationService
 import com.example.application.api.WeatherResponse
 import com.example.application.api.WeatherService
+import com.example.application.extensions.toWeather
 import com.example.application.models.Coords
 import com.example.application.models.Weather
-import com.example.application.models.Weather.Companion.toWeather
 import com.google.android.gms.tasks.Task
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

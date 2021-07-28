@@ -7,8 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.application.api.WeatherResponse
 import com.example.application.api.WeatherService
+import com.example.application.extensions.toWeather
 import com.example.application.models.Weather
-import com.example.application.models.Weather.Companion.toWeather
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Call
