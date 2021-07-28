@@ -5,6 +5,7 @@ import android.app.Application
 import android.content.pm.PackageManager
 import android.location.Location
 import androidx.core.app.ActivityCompat
+import com.example.application.services.GpsLocationService
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.tasks.Task
 import dagger.Module
@@ -15,8 +16,7 @@ class GPSLocationModule {
 
     @Provides
     fun getLocation(application: Application): Task<Location> {
-        val fusedLocationProviderClient =
-            LocationServices.getFusedLocationProviderClient(application.applicationContext)
+        val fusedLocationProviderClient = GpsLocationService(application)
 
         if (ActivityCompat.checkSelfPermission(
                 application.applicationContext,
@@ -30,6 +30,7 @@ class GPSLocationModule {
                 101
             )
         }
-        return fusedLocationProviderClient.lastLocation
+
+        return fusedLocationProviderClient.getService().lastLocation
     }
 }
