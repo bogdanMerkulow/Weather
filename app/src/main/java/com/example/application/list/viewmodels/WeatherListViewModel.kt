@@ -12,6 +12,7 @@ import com.example.application.api.WeatherResponse
 import com.example.application.api.WeatherService
 import com.example.application.extensions.toWeather
 import com.example.application.models.Coords
+import com.example.application.models.SelectedWeather
 import com.example.application.models.Weather
 import com.google.android.gms.tasks.Task
 import kotlinx.coroutines.Dispatchers
@@ -33,8 +34,7 @@ class WeatherListViewModel(
     private val _title: MutableLiveData<String> = MutableLiveData<String>()
     private val _header: MutableLiveData<String> = MutableLiveData<String>()
     private val _headerImageUrl: MutableLiveData<String> = MutableLiveData<String>()
-    private val _clickData: MutableLiveData<Map<String, String>> =
-        MutableLiveData<Map<String, String>>()
+    private val _clickData: MutableLiveData<SelectedWeather> = MutableLiveData<SelectedWeather>()
     private var currentCity: String = String()
     private var coords: Coords = Coords()
 
@@ -53,7 +53,7 @@ class WeatherListViewModel(
     val headerImageUrl: LiveData<String>
         get() = _headerImageUrl
 
-    val clickData: LiveData<Map<String, String>>
+    val clickData: LiveData<SelectedWeather>
         get() = _clickData
 
     fun loadData() = viewModelScope.launch(Dispatchers.IO) {
@@ -151,9 +151,9 @@ class WeatherListViewModel(
 
     fun itemClick(weather: Weather) {
         _clickData.postValue(
-            mapOf(
-                CITY to currentCity,
-                DAY to weather.dayNumber
+            SelectedWeather(
+                city = currentCity,
+                day = weather.dayNumber
             )
         )
     }

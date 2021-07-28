@@ -21,6 +21,7 @@ import com.example.application.detail.fragments.WeatherDetailFragment
 import com.example.application.factories.ViewModelFactory
 import com.example.application.factories.WeatherViewHolderFactory
 import com.example.application.list.viewmodels.WeatherListViewModel
+import com.example.application.models.SelectedWeather
 import com.example.application.models.Weather
 import timber.log.Timber
 
@@ -108,13 +109,13 @@ class WeatherListFragment : Fragment() {
         builder.show()
     }
 
-    private fun onItemClick(data: Map<String, String>) {
+    private fun onItemClick(data: SelectedWeather) {
         val transaction = activity?.supportFragmentManager?.beginTransaction()
         val fragment = WeatherDetailFragment()
         val bundle = Bundle()
-        bundle.putString(WeatherDetailFragment.CITY, data[WeatherListViewModel.CITY])
-        bundle.putString(WeatherDetailFragment.SELECTED_DATE, data[WeatherListViewModel.DAY])
-        Timber.i("Click on item where day: ${data[WeatherListViewModel.DAY]}")
+        bundle.putString(WeatherDetailFragment.CITY, data.city)
+        bundle.putString(WeatherDetailFragment.SELECTED_DATE, data.day)
+        Timber.i("Click on item where day: ${data.day}")
         fragment.arguments = bundle
         transaction?.apply {
             addToBackStack(null)
