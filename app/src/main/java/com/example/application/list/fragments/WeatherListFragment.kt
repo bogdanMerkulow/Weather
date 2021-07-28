@@ -14,8 +14,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
-import com.example.application.App
-import com.example.application.MainActivity
 import com.example.application.R
 import com.example.application.adapters.RecyclerViewAdapter
 import com.example.application.databinding.FragmentWeatherListBinding

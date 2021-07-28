@@ -3,7 +3,6 @@ package com.example.application.models
 import android.annotation.SuppressLint
 import com.example.application.api.WeatherList
 import java.text.SimpleDateFormat
-import java.util.*
 import kotlin.math.ceil
 
 data class Weather(

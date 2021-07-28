@@ -15,7 +15,6 @@ import retrofit2.Call
 import timber.log.Timber
 import java.net.SocketTimeoutException
 import java.text.SimpleDateFormat
-import java.util.*
 
 class WeatherDetailViewModel(private val weatherService: WeatherService) : ViewModel() {
     private val _data: MutableLiveData<List<Weather>> = MutableLiveData<List<Weather>>()
