@@ -5,7 +5,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.example.application.R
-import com.example.application.models.ViewHolder
+import com.example.application.adapters.ViewHolder
 import com.example.application.models.Weather
 
 class WeatherViewHolder(itemView: View) : ViewHolder<Weather>(itemView) {

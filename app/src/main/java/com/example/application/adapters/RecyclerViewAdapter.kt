@@ -3,8 +3,6 @@ package com.example.application.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.application.models.ViewHolder
-import com.example.application.models.ViewHolderFactory
 
 class RecyclerViewAdapter<T>(
     private val viewHolderFactory: ViewHolderFactory<T>,

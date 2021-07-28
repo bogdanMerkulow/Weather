@@ -1,4 +1,4 @@
-package com.example.application.models
+package com.example.application.adapters
 
 import android.view.View
 

@@ -1,8 +1,8 @@
 package com.example.application.factories
 
 import android.view.View
-import com.example.application.models.ViewHolder
-import com.example.application.models.ViewHolderFactory
+import com.example.application.adapters.ViewHolder
+import com.example.application.adapters.ViewHolderFactory
 import com.example.application.viewholders.WeatherViewHolder
 
 class WeatherViewHolderFactory<T> : ViewHolderFactory<T> {
