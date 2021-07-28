@@ -55,11 +55,11 @@ class WeatherListFragment : Fragment() {
         val changeCityButton = binding.changeCity
         val fragmentContainer = binding.swipeRefresh
 
-        adapter =
-            object :
-                RecyclerViewAdapter<Weather>(WeatherViewHolderFactory(), listViewModel::itemClick) {
-                override fun getLayoutId(viewType: Int): Int = R.layout.weather_list
-            }
+        adapter = RecyclerViewAdapter(
+            WeatherViewHolderFactory(),
+            R.layout.weather_list,
+            listViewModel::itemClick
+        )
 
         rcWeatherList.adapter = adapter
 

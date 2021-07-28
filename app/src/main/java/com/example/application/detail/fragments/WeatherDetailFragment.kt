@@ -35,9 +35,7 @@ class WeatherDetailFragment : Fragment() {
         viewModel =
             ViewModelProvider(this, viewModelFactory).get(WeatherDetailViewModel::class.java)
         
-        adapter = object : RecyclerViewAdapter<Weather>(WeatherViewHolderFactory()) {
-            override fun getLayoutId(viewType: Int): Int = R.layout.weather_list
-        }
+        adapter = RecyclerViewAdapter(WeatherViewHolderFactory(), R.layout.weather_list)
     }
 
     override fun onCreateView(
