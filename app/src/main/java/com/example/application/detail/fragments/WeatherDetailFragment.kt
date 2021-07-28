@@ -1,5 +1,6 @@
 package com.example.application.detail.fragments
 
+import android.app.Application
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
+import com.example.application.MainActivity
 import com.example.application.R
 import com.example.application.adapters.RecyclerViewAdapter
 import com.example.application.databinding.FragmentWeatherDetailBinding
@@ -29,7 +31,7 @@ class WeatherDetailFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentWeatherDetailBinding.inflate(layoutInflater)
-        viewModelFactory = ViewModelFactory(activity)
+        viewModelFactory = ViewModelFactory()
         viewModel =
             ViewModelProvider(this, viewModelFactory).get(WeatherDetailViewModel::class.java)
         

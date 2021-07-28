@@ -1,18 +1,13 @@
 package com.example.application.factories
 
-import android.app.Activity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.application.dependencies.ActivityModule
-import com.example.application.dependencies.DaggerDaggerComponent
+import com.example.application.App
+import com.example.application.MainActivity
 
-class ViewModelFactory(private val activity: Activity?) : ViewModelProvider.Factory {
+class ViewModelFactory : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        val daggerComponent = DaggerDaggerComponent.builder()
-            .activityModule(ActivityModule(activity!!))
-            .build()
-
-        val viewModel = daggerComponent.getViewModelsMap()
+        val viewModel = App.daggerComponent.getViewModelsMap()
         return viewModel[modelClass] as T
     }
 }

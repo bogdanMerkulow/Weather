@@ -14,6 +14,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
+import com.example.application.App
+import com.example.application.MainActivity
 import com.example.application.R
 import com.example.application.adapters.RecyclerViewAdapter
 import com.example.application.databinding.FragmentWeatherListBinding
@@ -33,7 +35,7 @@ class WeatherListFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentWeatherListBinding.inflate(layoutInflater)
-        viewModelFactory = ViewModelFactory(activity)
+        viewModelFactory = ViewModelFactory()
         listViewModel =
             ViewModelProvider(this, viewModelFactory).get(WeatherListViewModel::class.java)
 
