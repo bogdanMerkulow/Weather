@@ -63,7 +63,7 @@ class WeatherListFragment : Fragment() {
         rcWeatherList.adapter = adapter
 
         fragmentContainer.setOnRefreshListener {
-            onRefreshData(fragmentContainer)
+            fragmentContainer.isRefreshing = listViewModel.loadData().isCompleted
         }
 
         changeCityButton.setOnClickListener {
@@ -121,11 +121,6 @@ class WeatherListFragment : Fragment() {
             add(R.id.fragment_container, fragment)
             commit()
         }
-    }
-
-    private fun onRefreshData(fragmentContainer: SwipeRefreshLayout) {
-        listViewModel.loadData()
-        fragmentContainer.isRefreshing = false
     }
 
     private fun setHeaderImageUrl(url: String, headerImage: ImageView) {
