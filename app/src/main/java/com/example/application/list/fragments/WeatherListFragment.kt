@@ -1,11 +1,9 @@
 package com.example.application.list.fragments
 
-import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -29,14 +27,16 @@ class WeatherListFragment : Fragment() {
     private lateinit var adapter: RecyclerViewAdapter<Weather>
     private lateinit var listViewModel: WeatherListViewModel
     private lateinit var viewModelFactory: ViewModelFactory
-    private lateinit var binding: FragmentWeatherListBinding
+    private var _binding: FragmentWeatherListBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = FragmentWeatherListBinding.inflate(layoutInflater)
+        _binding = FragmentWeatherListBinding.inflate(layoutInflater)
         viewModelFactory = ViewModelFactory()
         listViewModel =
             ViewModelProvider(this, viewModelFactory).get(WeatherListViewModel::class.java)
+
 
         listViewModel.loadLocation()
     }
@@ -67,7 +67,7 @@ class WeatherListFragment : Fragment() {
         }
 
         changeCityButton.setOnClickListener {
-            onClickChangeCityButton(inflater)
+            onClickChangeCityButton()
         }
 
         listViewModel.title.observe(viewLifecycleOwner) { title ->
@@ -97,16 +97,15 @@ class WeatherListFragment : Fragment() {
         return rootView
     }
 
-    private fun onClickChangeCityButton(inflater: LayoutInflater) {
-        val builder = AlertDialog.Builder(activity)
-        builder.setTitle(R.string.change_city)
-        val dialogLayout = inflater.inflate(R.layout.fragment_city_dialog, null)
-        val editText = dialogLayout.findViewById<EditText>(R.id.city_edit_text)
-        builder.setView(dialogLayout)
-        builder.setPositiveButton(R.string.enter) { _, _ ->
-            listViewModel.changeLocation(editText.text.toString())
-        }
-        builder.show()
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    private fun onClickChangeCityButton() {
+        val dialogFragment = CityDialogFragment(listViewModel)
+        val manager = parentFragmentManager
+        dialogFragment.show(manager, "changeCity")
     }
 
     private fun onItemClick(data: SelectedWeather) {
