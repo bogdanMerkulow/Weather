@@ -4,13 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.example.application.R
 import com.example.application.adapters.RecyclerViewAdapter
@@ -36,7 +34,6 @@ class WeatherListFragment : Fragment() {
         viewModelFactory = ViewModelFactory()
         listViewModel =
             ViewModelProvider(this, viewModelFactory).get(WeatherListViewModel::class.java)
-
 
         listViewModel.loadLocation()
     }

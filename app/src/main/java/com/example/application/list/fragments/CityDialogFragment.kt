@@ -9,7 +9,7 @@ import androidx.fragment.app.DialogFragment
 import com.example.application.R
 import com.example.application.list.viewmodels.WeatherListViewModel
 
-class CityDialogFragment(private val viewModel: WeatherListViewModel): DialogFragment() {
+class CityDialogFragment(private val viewModel: WeatherListViewModel) : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(activity)
         builder.setTitle(R.string.change_city)

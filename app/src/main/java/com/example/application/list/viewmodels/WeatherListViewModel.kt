@@ -160,7 +160,5 @@ class WeatherListViewModel(
         private const val BAD_INTERNET = "bad internet connection"
         private const val VISIBLE = 0
         private const val INVISIBLE = 4
-        const val CITY = "city"
-        const val DAY = "day"
     }
 }
