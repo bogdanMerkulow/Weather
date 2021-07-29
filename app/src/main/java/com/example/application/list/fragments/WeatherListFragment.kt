@@ -50,7 +50,6 @@ class WeatherListFragment : Fragment() {
         val rcWeatherList: RecyclerView = binding.rvWeatherList
         val progress: RelativeLayout = binding.progressCircular
         val headerText: TextView = binding.headerText
-        val headerImage: ImageView = binding.headerImage
         val changeCityButton = binding.changeCity
         val fragmentContainer = binding.swipeRefresh
 
@@ -79,7 +78,7 @@ class WeatherListFragment : Fragment() {
         }
 
         listViewModel.headerImageUrl.observe(viewLifecycleOwner) { imageUrl ->
-            setHeaderImageUrl(imageUrl, headerImage)
+            setHeaderImageUrl(imageUrl)
         }
 
         listViewModel.reload.observe(viewLifecycleOwner) { reload ->
@@ -123,10 +122,10 @@ class WeatherListFragment : Fragment() {
         }
     }
 
-    private fun setHeaderImageUrl(url: String, headerImage: ImageView) {
+    private fun setHeaderImageUrl(url: String) {
         Glide
             .with(this)
             .load(url)
-            .into(headerImage)
+            .into(binding.headerImage)
     }
 }
