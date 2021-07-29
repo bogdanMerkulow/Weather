@@ -5,5 +5,5 @@ import retrofit2.http.GET
 
 interface LocationService {
     @GET("?234")
-    fun getLocation(): Call<LocationResponse>
+    suspend fun getLocation(): LocationResponse
 }

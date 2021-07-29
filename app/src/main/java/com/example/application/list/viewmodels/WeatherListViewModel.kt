@@ -17,8 +17,6 @@ import com.example.application.models.Weather
 import com.google.android.gms.tasks.Task
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Response
 import timber.log.Timber
 import java.net.SocketTimeoutException
 import java.text.SimpleDateFormat
@@ -60,48 +58,44 @@ class WeatherListViewModel(
         _reload.postValue(VISIBLE)
 
         try {
-            val call: Call<WeatherResponse> = weatherService.getCurrentWeatherData(
+            val weatherResponse: WeatherResponse = weatherService.getCurrentWeatherData(
                 city = currentCity,
                 latitude = coords.latitude,
                 longitude = coords.longitude
             )
 
-            val response = call.execute()
+            val weather = mutableListOf<Weather>()
+            var lastDay = 0
 
-            if (response.isSuccessful) {
-                val weatherResponse = response.body()!!
-                val weather = mutableListOf<Weather>()
-                var lastDay = 0
+            currentCity = weatherResponse.city.name
+            _title.postValue(weatherResponse.city.name)
+            _header.postValue(Weather(temp = weatherResponse.list[0].main.temp - KELVIN.toInt()).getTemp())
+            _headerImageUrl.postValue(Weather(iconName = weatherResponse.list[0].weather[0].icon).getIconUrl())
 
-                currentCity = weatherResponse.city.name
-                _title.postValue(weatherResponse.city.name)
-                _header.postValue(Weather(temp = weatherResponse.list[0].main.temp - KELVIN.toInt()).getTemp())
-                _headerImageUrl.postValue(Weather(iconName = weatherResponse.list[0].weather[0].icon).getIconUrl())
+            Timber.i("response successful weather items count for ${weatherResponse.city.name}: ${weatherResponse.list.size}")
 
-                Timber.i("response successful weather items count for ${weatherResponse.city.name}: ${weatherResponse.list.size}")
+            weatherResponse.list.forEach { weatherItem ->
+                val unixTimestamp = weatherItem.dt.times(1000)
+                val currentDay = dateFormatDay.format(unixTimestamp)
 
-                weatherResponse.list.forEach { weatherItem ->
-                    val unixTimestamp = weatherItem.dt.times(1000)
-                    val currentDay = dateFormatDay.format(unixTimestamp)
-
-                    if (lastDay != currentDay.toInt()) {
-                        weather.add(weatherItem.toWeather())
-                    }
-
-                    lastDay = currentDay.toInt()
+                if (lastDay != currentDay.toInt()) {
+                    weather.add(weatherItem.toWeather())
                 }
 
-                _data.postValue(weather)
-            } else {
+                lastDay = currentDay.toInt()
+            }
+
+            _data.postValue(weather)
+
+        } catch (e: Exception) {
+            Timber.i("No internet connection")
+            if (e.message == "HTTP 404 Not Found") {
                 _title.postValue(NO_CITY)
                 _header.postValue(DEFAULT_CITY)
                 _reload.postValue(INVISIBLE)
                 Timber.i("City $currentCity not found")
                 return@launch
             }
-
-        } catch (e: Exception) {
-            Timber.i("No internet connection")
             _title.postValue(NO_INTERNET)
         } catch (e: SocketTimeoutException) {
             Timber.i("Connection timeout error")
@@ -121,15 +115,12 @@ class WeatherListViewModel(
                     loadData()
                 } else {
                     try {
-                        val call: Call<LocationResponse> = locationService.getLocation()
-                        val response: Response<LocationResponse> = call.execute()
-                        if (response.isSuccessful) {
-                            val locationResponse = response.body()!!
-                            coords.latitude = locationResponse.lat.toString()
-                            coords.longitude = locationResponse.lon.toString()
-                            Timber.i("IP location: lat: ${coords.latitude} / lon: ${coords.longitude}")
-                            loadData()
-                        }
+                        val response: LocationResponse = locationService.getLocation()
+                        coords.latitude = response.lat.toString()
+                        coords.longitude = response.lon.toString()
+                        Timber.i("IP location: lat: ${coords.latitude} / lon: ${coords.longitude}")
+                        loadData()
+
                     } catch (e: Exception) {
                         Timber.i("No internet connection")
                         _title.postValue(NO_INTERNET)

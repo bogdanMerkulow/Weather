@@ -11,7 +11,6 @@ import com.example.application.extensions.toWeather
 import com.example.application.models.Weather
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import retrofit2.Call
 import timber.log.Timber
 import java.net.SocketTimeoutException
 import java.text.SimpleDateFormat
@@ -37,11 +36,9 @@ class WeatherDetailViewModel(private val weatherService: WeatherService) : ViewM
         _reload.postValue(VISIBLE)
 
         try {
-            val call: Call<WeatherResponse> = weatherService.getCurrentWeatherData(city = q)
-            val response = call.execute()
+            val weatherResponse: WeatherResponse = weatherService.getCurrentWeatherData(city = q)
 
-            if (response.isSuccessful) {
-                val weatherResponse = response.body()!!
+            if (weatherResponse.message != CITY_NOT_FOUND) {
                 val weather = mutableListOf<Weather>()
 
                 Timber.i("response successful weather items count for ${weatherResponse.city.name}: ${weatherResponse.list.size}")
@@ -77,6 +74,7 @@ class WeatherDetailViewModel(private val weatherService: WeatherService) : ViewM
         private const val DEFAULT_CITY = ""
         private const val NO_INTERNET = "no internet connection  pull to refresh"
         private const val BAD_INTERNET = "bad internet connection"
+        private const val CITY_NOT_FOUND = "city not found"
         private const val VISIBLE = 0
         private const val INVISIBLE = 4
     }
