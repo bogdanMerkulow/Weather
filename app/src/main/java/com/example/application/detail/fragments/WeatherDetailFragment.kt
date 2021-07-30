@@ -36,12 +36,8 @@ class WeatherDetailFragment : Fragment() {
         adapter = RecyclerViewAdapter(WeatherViewHolderFactory(), R.layout.weather_list)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        val rootView = binding.root
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         val rcWeatherList: RecyclerView = binding.rvWeatherList
         val progress: RelativeLayout = binding.progressCircular
 
@@ -63,9 +59,13 @@ class WeatherDetailFragment : Fragment() {
         viewModel.title.observe(viewLifecycleOwner) { title ->
             activity?.title = title
         }
-
-        return rootView
     }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View = binding.root
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

@@ -38,12 +38,8 @@ class WeatherListFragment : Fragment() {
         listViewModel.loadLocation()
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        val rootView = binding.root
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         val rcWeatherList: RecyclerView = binding.rvWeatherList
         val progress: RelativeLayout = binding.progressCircular
         val headerText: TextView = binding.headerText
@@ -89,9 +85,13 @@ class WeatherListFragment : Fragment() {
         listViewModel.clickData.observe(viewLifecycleOwner) { data ->
             onItemClick(data)
         }
-
-        return rootView
     }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View  = binding.root
 
     override fun onDestroyView() {
         super.onDestroyView()
